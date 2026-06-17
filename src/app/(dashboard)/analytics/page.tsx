@@ -62,7 +62,6 @@ export default function AnalyticsPage() {
              <p className="text-text-muted text-sm text-center">More insights coming soon...</p>
           </div>
         </BlurFade>
-        </BlurFade>
       </div>
       </>
       )}
