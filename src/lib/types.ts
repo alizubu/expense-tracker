@@ -14,7 +14,6 @@ export type ProfileType =
 
 export interface User {
   id: string;
-  clerkId: string;
   name: string;
   email: string;
   currency: string;

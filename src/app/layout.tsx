@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
 };
 
-import { ClerkProvider } from "@clerk/nextjs";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 
 export default function RootLayout({
   children,
@@ -48,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <AuthProvider>
       <html lang="en" className="dark">
         <body
           className={`${inter.variable} font-sans antialiased bg-background-primary text-text-primary`}
@@ -67,6 +67,6 @@ export default function RootLayout({
           />
         </body>
       </html>
-    </ClerkProvider>
+    </AuthProvider>
   );
 }

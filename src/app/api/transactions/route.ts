@@ -1,17 +1,13 @@
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-async function getDbUser(clerkId: string) {
-  return prisma.user.findUnique({ where: { clerkId } });
-}
-
 export async function GET(req: NextRequest) {
-  const { userId } = auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const user = await getDbUser(userId);
-  if (!user) return NextResponse.json([], { status: 200 });
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const { searchParams } = new URL(req.url);
   const profileId = searchParams.get("profileId");
@@ -19,7 +15,7 @@ export async function GET(req: NextRequest) {
   const month = searchParams.get("month");
   const year = searchParams.get("year");
 
-  const where: any = { userId: user.id };
+  const where: any = { userId: session.user.id };
   if (profileId) where.profileId = profileId;
   if (type) where.type = type;
   if (month && year) {
@@ -42,11 +38,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { userId } = auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const user = await getDbUser(userId);
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const body = await req.json();
   const { profileId, toProfileId, type, amount, category, title, note, date } = body;
@@ -54,7 +49,7 @@ export async function POST(req: NextRequest) {
   // Create transaction
   const transaction = await prisma.transaction.create({
     data: {
-      userId: user.id,
+      userId: session.user.id,
       profileId,
       toProfileId: toProfileId ?? null,
       type,
@@ -92,11 +87,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const { userId } = auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const user = await getDbUser(userId);
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
@@ -105,6 +99,11 @@ export async function DELETE(req: NextRequest) {
   // Get transaction first to reverse balance
   const transaction = await prisma.transaction.findUnique({ where: { id } });
   if (!transaction) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  // Verify ownership
+  if (transaction.userId !== session.user.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   // Reverse the balance effect
   if (transaction.type === "INCOME") {

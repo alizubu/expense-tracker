@@ -1,20 +1,16 @@
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-async function getDbUser(clerkId: string) {
-  return prisma.user.findUnique({ where: { clerkId } });
-}
-
 export async function GET() {
-  const { userId } = auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const user = await getDbUser(userId);
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const profiles = await prisma.profile.findMany({
-    where: { userId: user.id },
+    where: { userId: session.user.id },
     orderBy: { sortOrder: "asc" },
   });
 
@@ -22,18 +18,17 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { userId } = auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const user = await getDbUser(userId);
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const body = await req.json();
   const { name, type, icon, color, balance, description } = body;
 
   const profile = await prisma.profile.create({
     data: {
-      userId: user.id,
+      userId: session.user.id,
       name,
       type: type ?? "CUSTOM",
       icon: icon ?? "💰",

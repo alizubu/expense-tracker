@@ -3,7 +3,7 @@
 import { useUIStore } from "@/store/useUIStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 
@@ -11,14 +11,14 @@ export function ClientLayoutWrapper({ children }: { children: React.ReactNode })
   const { sidebarCollapsed } = useUIStore();
   const { fetchProfiles } = useProfileStore();
   const { fetchTransactions } = useTransactionStore();
-  const { isLoaded, user } = useUser();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (isLoaded && user) {
+    if (status === "authenticated" && session?.user) {
       fetchProfiles();
       fetchTransactions();
     }
-  }, [isLoaded, user]);
+  }, [status, session, fetchProfiles, fetchTransactions]);
 
   return (
     <div

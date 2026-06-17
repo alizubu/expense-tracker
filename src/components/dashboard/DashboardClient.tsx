@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 
 interface DashboardData {
   netBalance: number;
@@ -13,7 +13,7 @@ interface DashboardData {
 }
 
 export function DashboardClient() {
-  const { user, isLoaded } = useUser();
+  const { data: session, status } = useSession();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,9 +22,9 @@ export function DashboardClient() {
   const [year, setYear] = useState(now.getFullYear());
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (status !== "authenticated") return;
     fetchDashboard();
-  }, [isLoaded, month, year]);
+  }, [status, month, year]);
 
   const fetchDashboard = async () => {
     setLoading(true);
@@ -34,7 +34,7 @@ export function DashboardClient() {
     setLoading(false);
   };
 
-  if (!isLoaded || loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500" />

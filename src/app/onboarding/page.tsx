@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 
 const PROFILE_TYPES = [
   { type: "MONEYBAG", label: "Moneybag", emoji: "💰", color: "#7C3AED" },
@@ -13,7 +13,7 @@ const PROFILE_TYPES = [
 ];
 
 export default function OnboardingPage() {
-  const { user } = useUser();
+  const { data: session } = useSession();
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -53,7 +53,7 @@ export default function OnboardingPage() {
         {step === 1 && (
           <div>
             <h1 className="text-2xl font-semibold text-white mb-2">
-              Welcome, {user?.firstName}! 👋
+              Welcome, {session?.user?.name?.split(" ")[0]}! 👋
             </h1>
             <p className="text-slate-400 mb-8">
               Let's set up your wallet profiles. Select the ones you use:
