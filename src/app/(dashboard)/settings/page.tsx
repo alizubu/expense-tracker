@@ -8,12 +8,14 @@ import { useTransactionStore } from "@/store/useTransactionStore";
 import { CURRENCIES } from "@/lib/currencies";
 import { EXPENSE_CATEGORIES } from "@/lib/categories";
 import { Moon, Sun, Download, Globe, Palette, LogOut, Shield, User, Save, Loader2 } from "lucide-react";
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
 export default function SettingsPage() {
-  const { theme, setTheme, selectedCurrency, setCurrency } = useUIStore();
+  const { selectedCurrency, setCurrency } = useUIStore();
+  const { theme, setTheme } = useTheme();
   const { transactions } = useTransactionStore();
   const { data: session, update: updateSession } = useSession();
   const [name, setName] = useState("");
