@@ -43,14 +43,18 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),
       });
+      
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to create profile");
+        const errorMessage = errorData.details || errorData.error || `Server error: ${res.status}`;
+        console.error("[useProfileStore] AddProfile Error Payload:", errorData);
+        throw new Error(errorMessage);
       }
+      
       const newProfile = await res.json();
       set((state) => ({ profiles: [...state.profiles, newProfile] }));
     } catch (error) {
-      console.error(error);
+      console.error("[useProfileStore] AddProfile Exception:", error);
       throw error;
     }
   },

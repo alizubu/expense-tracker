@@ -28,11 +28,12 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
+      console.warn("[POST /api/profiles] Unauthorized access attempt");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
-    console.log("[POST /api/profiles] body:", body);
+    console.log("[POST /api/profiles] Received payload:", body);
 
     const { name, type, icon, color, balance, description } = body;
 
@@ -44,25 +45,34 @@ export async function POST(req: NextRequest) {
       where: { userId: session.user.id },
     });
 
+    console.log(`[POST /api/profiles] Found ${existingCount} existing profiles for user`);
+
+    const profileData = {
+      userId: session.user.id,
+      name: name.trim(),
+      type: type ?? "CUSTOM",
+      icon: icon ?? "Wallet",
+      color: color ?? "#7C3AED",
+      balance: typeof balance === "number" ? balance : parseFloat(balance) || 0,
+      description: description ?? null,
+      sortOrder: existingCount,
+    };
+
+    console.log("[POST /api/profiles] Attempting to create profile with data:", profileData);
+
     const profile = await prisma.profile.create({
-      data: {
-        userId: session.user.id,
-        name: name.trim(),
-        type: type ?? "CUSTOM",
-        icon: icon ?? "💰",
-        color: color ?? "#7C3AED",
-        balance: typeof balance === "number" ? balance : parseFloat(balance) || 0,
-        description: description ?? null,
-        sortOrder: existingCount,
-      },
+      data: profileData,
     });
 
-    console.log("[POST /api/profiles] Created:", profile);
+    console.log("[POST /api/profiles] Successfully created profile:", profile.id);
     return NextResponse.json(profile, { status: 201 });
-  } catch (error) {
-    console.error("[POST /api/profiles] Error:", error);
+  } catch (error: any) {
+    console.error("[POST /api/profiles] FATAL ERROR:", error);
     return NextResponse.json(
-      { error: "Failed to create profile", details: String(error) },
+      { 
+        error: "Failed to create profile", 
+        details: error instanceof Error ? error.message : String(error) 
+      },
       { status: 500 }
     );
   }

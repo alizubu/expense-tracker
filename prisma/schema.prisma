@@ -3,13 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id           String        @id @default(cuid())
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
   password     String
   name         String
   email        String        @unique
@@ -22,11 +21,11 @@ model User {
 }
 
 model Profile {
-  id           String        @id @default(cuid())
-  userId       String
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String        @db.ObjectId
   name         String
   type         String        @default("CUSTOM")
-  icon         String        @default("💰")
+  icon         String        @default("Wallet")
   color        String        @default("#7C3AED")
   balance      Float         @default(0)
   description  String?
@@ -39,10 +38,10 @@ model Profile {
 }
 
 model Transaction {
-  id            String   @id @default(cuid())
-  userId        String
-  profileId     String
-  toProfileId   String?
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  profileId     String   @db.ObjectId
+  toProfileId   String?  @db.ObjectId
   type          String   // INCOME | EXPENSE | TRANSFER
   amount        Float
   category      String
@@ -59,8 +58,8 @@ model Transaction {
 }
 
 model Budget {
-  id        String   @id @default(cuid())
-  userId    String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
   category  String
   limit     Float
   period    String   @default("monthly")
