@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Transaction } from "@/lib/types";
-import { MOCK_TRANSACTIONS } from "@/lib/mock-data";
+
 import { generateId } from "@/lib/utils";
 
 interface TransactionFilters {
@@ -17,10 +17,10 @@ interface TransactionState {
   transactions: Transaction[];
   filters: TransactionFilters;
   isLoading: boolean;
-  // Actions
-  addTransaction: (transaction: Omit<Transaction, "id" | "createdAt">) => void;
+  fetchTransactions: () => Promise<void>;
+  addTransaction: (transaction: Omit<Transaction, "id" | "createdAt" | "updatedAt" | "userId">) => Promise<void>;
   updateTransaction: (id: string, updates: Partial<Transaction>) => void;
-  deleteTransaction: (id: string) => void;
+  deleteTransaction: (id: string) => Promise<void>;
   duplicateTransaction: (id: string) => void;
   setFilters: (filters: Partial<TransactionFilters>) => void;
   resetFilters: () => void;
@@ -38,19 +38,34 @@ const defaultFilters: TransactionFilters = {
 };
 
 export const useTransactionStore = create<TransactionState>((set, get) => ({
-  transactions: MOCK_TRANSACTIONS,
+  transactions: [],
   filters: defaultFilters,
   isLoading: false,
 
-  addTransaction: (transaction) => {
-    const newTransaction: Transaction = {
-      ...transaction,
-      id: `txn_${generateId()}`,
-      createdAt: new Date().toISOString(),
-    };
-    set((state) => ({
-      transactions: [newTransaction, ...state.transactions],
-    }));
+  fetchTransactions: async () => {
+    set({ isLoading: true });
+    try {
+      const res = await fetch("/api/transactions");
+      const data = await res.json();
+      set({ transactions: Array.isArray(data) ? data : [], isLoading: false });
+    } catch (error) {
+      console.error(error);
+      set({ transactions: [], isLoading: false });
+    }
+  },
+
+  addTransaction: async (transaction) => {
+    try {
+      const res = await fetch("/api/transactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(transaction),
+      });
+      const newTxn = await res.json();
+      set((state) => ({ transactions: [newTxn, ...state.transactions] }));
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   updateTransaction: (id, updates) => {
@@ -61,10 +76,15 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     }));
   },
 
-  deleteTransaction: (id) => {
-    set((state) => ({
-      transactions: state.transactions.filter((t) => t.id !== id),
-    }));
+  deleteTransaction: async (id) => {
+    try {
+      await fetch(`/api/transactions?id=${id}`, { method: "DELETE" });
+      set((state) => ({
+        transactions: state.transactions.filter((t) => t.id !== id),
+      }));
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   duplicateTransaction: (id) => {

@@ -9,82 +9,53 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(cuid())
-  clerkId    String    @unique
-  name       String
-  email      String    @unique
-  currency   String    @default("BDT")
-  timezone   String    @default("Asia/Dhaka")
-  createdAt  DateTime  @default(now())
-  profiles   Profile[]
+  id           String        @id @default(cuid())
+  clerkId      String        @unique
+  name         String
+  email        String        @unique
+  currency     String        @default("BDT")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  profiles     Profile[]
   transactions Transaction[]
+  budgets      Budget[]
 }
 
 model Profile {
-  id          String   @id @default(cuid())
-  userId      String
-  name        String
-  type        ProfileType
-  icon        String   // emoji or icon name
-  color       String   // hex color
-  balance     Float    @default(0)
-  description String?
-  isDefault   Boolean  @default(false)
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id])
-  transactions Transaction[]
-}
-
-enum ProfileType {
-  MONEYBAG
-  CASH
-  BANK
-  MOBILE_BANKING
-  SAVINGS
-  INVESTMENT
-  CRYPTO
-  CUSTOM
+  id           String        @id @default(cuid())
+  userId       String
+  name         String
+  type         String        @default("CUSTOM")
+  icon         String        @default("💰")
+  color        String        @default("#7C3AED")
+  balance      Float         @default(0)
+  description  String?
+  sortOrder    Int           @default(0)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[] @relation("FromProfile")
+  toTransactions Transaction[] @relation("ToProfile")
 }
 
 model Transaction {
-  id           String          @id @default(cuid())
-  userId       String
-  profileId    String
-  toProfileId  String?         // for transfers
-  type         TransactionType
-  amount       Float
-  category     String
-  subCategory  String?
-  title        String
-  note         String?
-  date         DateTime
-  isRecurring  Boolean         @default(false)
-  recurringId  String?
-  attachmentUrl String?
-  tags         String[]
-  createdAt    DateTime        @default(now())
-  user         User     @relation(fields: [userId], references: [id])
-  profile      Profile  @relation(fields: [profileId], references: [id])
-}
-
-enum TransactionType {
-  INCOME
-  EXPENSE
-  TRANSFER
-}
-
-model RecurringRule {
-  id        String   @id @default(cuid())
-  userId    String
-  title     String
-  amount    Float
-  type      TransactionType
-  category  String
-  profileId String
-  frequency String   // daily | weekly | monthly | yearly
-  nextDate  DateTime
-  isActive  Boolean  @default(true)
+  id            String   @id @default(cuid())
+  userId        String
+  profileId     String
+  toProfileId   String?
+  type          String   // INCOME | EXPENSE | TRANSFER
+  amount        Float
+  category      String
+  title         String
+  note          String?
+  date          DateTime @default(now())
+  isRecurring   Boolean  @default(false)
+  tags          String[] @default([])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile       Profile  @relation("FromProfile", fields: [profileId], references: [id], onDelete: Cascade)
+  toProfile     Profile? @relation("ToProfile", fields: [toProfileId], references: [id])
 }
 
 model Budget {
@@ -92,8 +63,11 @@ model Budget {
   userId    String
   category  String
   limit     Float
-  period    String   // monthly | weekly
-  spent     Float    @default(0)
+  period    String   @default("monthly")
   month     Int
   year      Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, category, month, year])
 }

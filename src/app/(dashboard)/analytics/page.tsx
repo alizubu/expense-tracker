@@ -1,6 +1,8 @@
 "use client";
 
 import { BlurFade } from "@/components/magicui/blur-fade";
+import { useTransactionStore } from "@/store/useTransactionStore";
+import { PieChart } from "lucide-react";
 import AnalyticsStatsRow from "@/components/analytics/AnalyticsStatsRow";
 import MonthlyBarChart from "@/components/analytics/MonthlyBarChart";
 import CategoryDonutChart from "@/components/analytics/CategoryDonutChart";
@@ -9,6 +11,8 @@ import ProfileAreaChart from "@/components/analytics/ProfileAreaChart";
 import TopCategories from "@/components/analytics/TopCategories";
 
 export default function AnalyticsPage() {
+  const { transactions } = useTransactionStore();
+
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <BlurFade delay={0}>
@@ -18,7 +22,17 @@ export default function AnalyticsPage() {
         </div>
       </BlurFade>
 
-      <AnalyticsStatsRow />
+      {transactions.length === 0 ? (
+        <BlurFade delay={0.1}>
+          <div className="flex flex-col items-center justify-center h-64 border border-white/10 rounded-2xl bg-[#16161E] text-center p-6">
+            <PieChart className="w-12 h-12 text-text-muted mb-4" />
+            <h2 className="text-xl font-semibold text-white mb-2">No data available</h2>
+            <p className="text-slate-400">Add transactions to see your analytics and insights.</p>
+          </div>
+        </BlurFade>
+      ) : (
+        <>
+          <AnalyticsStatsRow />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <BlurFade delay={0.2} className="lg:col-span-2">
@@ -48,7 +62,10 @@ export default function AnalyticsPage() {
              <p className="text-text-muted text-sm text-center">More insights coming soon...</p>
           </div>
         </BlurFade>
+        </BlurFade>
       </div>
+      </>
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Profile } from "@/lib/types";
-import { MOCK_PROFILES } from "@/lib/mock-data";
+
 import { generateId } from "@/lib/utils";
 
 interface ProfileState {
@@ -8,7 +8,8 @@ interface ProfileState {
   activeProfileId: string | null;
   isLoading: boolean;
   // Actions
-  addProfile: (profile: Omit<Profile, "id" | "createdAt">) => void;
+  fetchProfiles: () => Promise<void>;
+  addProfile: (profile: Omit<Profile, "id" | "createdAt" | "updatedAt" | "userId">) => Promise<void>;
   updateProfile: (id: string, updates: Partial<Profile>) => void;
   deleteProfile: (id: string) => void;
   setActiveProfile: (id: string | null) => void;
@@ -19,19 +20,34 @@ interface ProfileState {
 }
 
 export const useProfileStore = create<ProfileState>((set, get) => ({
-  profiles: MOCK_PROFILES,
+  profiles: [],
   activeProfileId: null,
   isLoading: false,
 
-  addProfile: (profile) => {
-    const newProfile: Profile = {
-      ...profile,
-      id: `profile_${generateId()}`,
-      createdAt: new Date().toISOString(),
-    };
-    set((state) => ({
-      profiles: [...state.profiles, newProfile],
-    }));
+  fetchProfiles: async () => {
+    set({ isLoading: true });
+    try {
+      const res = await fetch("/api/profiles");
+      const data = await res.json();
+      set({ profiles: Array.isArray(data) ? data : [], isLoading: false });
+    } catch (error) {
+      console.error(error);
+      set({ profiles: [], isLoading: false });
+    }
+  },
+
+  addProfile: async (profile) => {
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile),
+      });
+      const newProfile = await res.json();
+      set((state) => ({ profiles: [...state.profiles, newProfile] }));
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   updateProfile: (id, updates) => {

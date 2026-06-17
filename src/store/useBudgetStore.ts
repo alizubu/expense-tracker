@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { MOCK_BUDGETS } from "@/lib/mock-data";
+
 
 export interface Budget {
   id: string;
@@ -20,7 +20,7 @@ interface BudgetState {
 }
 
 export const useBudgetStore = create<BudgetState>((set) => ({
-  budgets: MOCK_BUDGETS as Budget[],
+  budgets: [],
   addBudget: (budget) => set((state) => ({
     budgets: [
       ...state.budgets,

@@ -2,29 +2,30 @@ import { SignUp } from "@clerk/nextjs";
 
 export default function SignUpPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background-primary p-4">
-      <div className="w-full max-w-md animate-in fade-in zoom-in duration-500">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold tracking-heading text-text-primary">Create Account</h1>
-          <p className="mt-2 text-text-muted">Start tracking your expenses today</p>
+    <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-semibold text-white">
+            Create your account
+          </h1>
+          <p className="text-slate-400 mt-2">
+            Start tracking your expenses for free
+          </p>
         </div>
-        <SignUp 
+        <SignUp
           appearance={{
             elements: {
-              rootBox: "mx-auto w-full",
-              card: "bg-background-card border border-white/[0.08] shadow-2xl rounded-2xl w-full",
-              headerTitle: "hidden",
-              headerSubtitle: "hidden",
-              socialButtonsBlockButton: "border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] text-text-primary",
-              socialButtonsBlockButtonText: "text-text-primary font-medium",
-              dividerLine: "bg-white/[0.08]",
-              dividerText: "text-text-muted",
-              formFieldLabel: "text-text-muted",
-              formFieldInput: "bg-white/[0.02] border border-white/[0.1] text-text-primary focus:border-brand-purple rounded-xl",
-              formButtonPrimary: "bg-brand-purple hover:bg-brand-purple-light text-white font-semibold rounded-xl",
-              footerActionText: "text-text-muted",
-              footerActionLink: "text-brand-purple hover:text-brand-purple-light"
-            }
+              rootBox: "w-full",
+              card: "bg-[#16161E] border border-white/10 shadow-xl",
+              headerTitle: "text-white",
+              headerSubtitle: "text-slate-400",
+              formFieldLabel: "text-slate-300",
+              formFieldInput:
+                "bg-[#1C1C27] border-white/10 text-white placeholder:text-slate-500",
+              formButtonPrimary:
+                "bg-violet-600 hover:bg-violet-700 text-white",
+              footerActionLink: "text-violet-400 hover:text-violet-300",
+            },
           }}
         />
       </div>
