@@ -26,17 +26,22 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { name, type, icon, color, balance, description } = body;
 
-  const profile = await prisma.profile.create({
-    data: {
-      userId: session.user.id,
-      name,
-      type: type ?? "CUSTOM",
-      icon: icon ?? "💰",
-      color: color ?? "#7C3AED",
-      balance: balance ?? 0,
-      description,
-    },
-  });
+  try {
+    const profile = await prisma.profile.create({
+      data: {
+        userId: session.user.id,
+        name,
+        type: type ?? "CUSTOM",
+        icon: icon ?? "💰",
+        color: color ?? "#7C3AED",
+        balance: balance ?? 0,
+        description,
+      },
+    });
 
-  return NextResponse.json(profile);
+    return NextResponse.json(profile);
+  } catch (error: any) {
+    console.error("Failed to create profile:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
