@@ -40,29 +40,33 @@ export const metadata: Metadata = {
   },
 };
 
+import { ClerkProvider } from "@clerk/nextjs";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body
-        className={`${inter.variable} font-sans antialiased bg-background-primary text-text-primary`}
-      >
-        {children}
-        <Toaster
-          theme="dark"
-          position="bottom-right"
-          toastOptions={{
-            style: {
-              background: "#1C1C27",
-              border: "1px solid rgba(255,255,255,0.08)",
-              color: "#F8FAFC",
-            },
-          }}
-        />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className="dark">
+        <body
+          className={`${inter.variable} font-sans antialiased bg-background-primary text-text-primary`}
+        >
+          {children}
+          <Toaster
+            theme="dark"
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: "#1C1C27",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: "#F8FAFC",
+              },
+            }}
+          />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
