@@ -7,6 +7,7 @@ export type ProfileType =
   | "CASH"
   | "BANK"
   | "MOBILE_BANKING"
+  | "Bkash"
   | "SAVINGS"
   | "INVESTMENT"
   | "CRYPTO"

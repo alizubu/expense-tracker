@@ -11,6 +11,7 @@ export const PROFILE_TYPES: ProfileType[] = [
   { type: "CASH",           label: "Cash",             emoji: "💵", icon: "Banknote",     color: "#10B981" },
   { type: "BANK",           label: "Bank Account",     emoji: "🏦", icon: "Landmark",     color: "#3B82F6" },
   { type: "MOBILE_BANKING", label: "Mobile Banking",   emoji: "📱", icon: "Smartphone",   color: "#F59E0B" },
+  { type: "Bkash",          label: "bKash",            emoji: "🦅", icon: "Wallet",       color: "#E11471" },
   { type: "SAVINGS",        label: "Savings Account",  emoji: "🐷", icon: "PiggyBank",    color: "#EC4899" },
   { type: "INVESTMENT",     label: "Investment",       emoji: "📈", icon: "TrendingUp",   color: "#22C55E" },
   { type: "CRYPTO",         label: "Crypto Wallet",    emoji: "🔐", icon: "Bitcoin",      color: "#F97316" },
