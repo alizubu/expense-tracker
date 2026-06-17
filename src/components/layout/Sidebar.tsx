@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -33,6 +34,7 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const { sidebarCollapsed, toggleSidebar, selectedCurrency, theme, setTheme } =
     useUIStore();
 
@@ -138,15 +140,15 @@ export function Sidebar() {
           )}
         >
           <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-purple to-brand-purple-light flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
-            AR
+            {session?.user?.name ? session.user.name.substring(0, 2).toUpperCase() : "U"}
           </div>
           {!sidebarCollapsed && (
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-text-primary truncate">
-                Arif Rahman
+                {session?.user?.name || "User"}
               </p>
               <p className="text-xs text-text-muted truncate">
-                arif@example.com
+                {session?.user?.email || "user@example.com"}
               </p>
             </div>
           )}

@@ -43,10 +43,15 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),
       });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to create profile");
+      }
       const newProfile = await res.json();
       set((state) => ({ profiles: [...state.profiles, newProfile] }));
     } catch (error) {
       console.error(error);
+      throw error;
     }
   },
 

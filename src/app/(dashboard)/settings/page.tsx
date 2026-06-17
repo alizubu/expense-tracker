@@ -7,12 +7,54 @@ import { useUIStore } from "@/store/useUIStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { CURRENCIES } from "@/lib/currencies";
 import { EXPENSE_CATEGORIES } from "@/lib/categories";
-import { Moon, Sun, Download, Globe, Palette, LogOut, Shield } from "lucide-react";
+import { Moon, Sun, Download, Globe, Palette, LogOut, Shield, User, Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 
 export default function SettingsPage() {
   const { theme, setTheme, selectedCurrency, setCurrency } = useUIStore();
   const { transactions } = useTransactionStore();
+  const { data: session, update: updateSession } = useSession();
+  const [name, setName] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("/api/user");
+        if (res.ok) {
+          const data = await res.json();
+          setName(data.name || "");
+          if (data.currency) setCurrency(data.currency);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user settings", error);
+      }
+    };
+    if (session?.user) {
+      fetchUser();
+    }
+  }, [session, setCurrency]);
+
+  const handleSaveProfile = async () => {
+    if (!name) { toast.error("Name is required"); return; }
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/user", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, currency: selectedCurrency }),
+      });
+      if (!res.ok) throw new Error("Failed to update settings");
+      await updateSession({ name });
+      toast.success("Settings updated successfully!");
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleExportCSV = () => {
     if (transactions.length === 0) {
@@ -56,6 +98,53 @@ export default function SettingsPage() {
       </BlurFade>
 
       <div className="space-y-6">
+        <BlurFade delay={0.05}>
+          <MagicCard className="p-6">
+            <h2 className="text-lg font-semibold text-text-primary flex items-center gap-2 mb-4">
+              <User className="h-5 w-5 text-brand-purple" />
+              Profile Information
+            </h2>
+            <div className="space-y-4">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 border-b border-white/[0.05]">
+                <div>
+                  <p className="font-medium text-text-primary">Full Name</p>
+                  <p className="text-sm text-text-muted">Your display name</p>
+                </div>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="rounded-xl border border-white/[0.1] bg-white/[0.02] px-4 py-2 text-text-primary outline-none focus:border-brand-purple w-full md:w-64"
+                />
+              </div>
+
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 border-b border-white/[0.05]">
+                <div>
+                  <p className="font-medium text-text-primary">Email Address</p>
+                  <p className="text-sm text-text-muted">Used for login (cannot be changed)</p>
+                </div>
+                <input
+                  type="email"
+                  value={session?.user?.email || ""}
+                  disabled
+                  className="rounded-xl border border-white/[0.1] bg-white/[0.02] px-4 py-2 text-text-muted outline-none cursor-not-allowed w-full md:w-64"
+                />
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button
+                  onClick={handleSaveProfile}
+                  disabled={isSaving}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-purple/20 text-brand-purple-light hover:bg-brand-purple/30 transition-colors text-sm font-medium disabled:opacity-50"
+                >
+                  {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                  {isSaving ? "Saving..." : "Save Profile"}
+                </button>
+              </div>
+            </div>
+          </MagicCard>
+        </BlurFade>
+
         <BlurFade delay={0.1}>
           <MagicCard className="p-6">
             <h2 className="text-lg font-semibold text-text-primary flex items-center gap-2 mb-4">
@@ -160,7 +249,7 @@ export default function SettingsPage() {
                 <p className="font-medium text-text-primary">Sign Out</p>
                 <p className="text-sm text-text-muted">Log out of your current session</p>
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-expense/10 text-expense hover:bg-expense/20 transition-colors text-sm font-medium">
+              <button onClick={() => import("next-auth/react").then(({ signOut }) => signOut())} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-expense/10 text-expense hover:bg-expense/20 transition-colors text-sm font-medium">
                 <LogOut className="h-4 w-4" /> Sign Out
               </button>
             </div>

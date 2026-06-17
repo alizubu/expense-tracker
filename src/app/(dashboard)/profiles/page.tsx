@@ -40,22 +40,31 @@ export default function ProfilesPage() {
   const [newBalance, setNewBalance] = useState(0);
   const [newDescription, setNewDescription] = useState("");
 
-  const handleCreate = () => {
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleCreate = async () => {
     if (!newName) { toast.error("Profile name is required"); return; }
     const profileType = getProfileType(newType);
-    addProfile({
-      name: newName,
-      type: newType as any,
-      icon: profileType?.icon || "Wallet",
-      color: newColor,
-      balance: newBalance,
-      description: newDescription || undefined,
-      isDefault: profiles.length === 0,
-      sortOrder: profiles.length,
-    });
-    toast.success(`Profile "${newName}" created!`);
-    setShowCreateModal(false);
-    setNewName(""); setNewBalance(0); setNewDescription("");
+    setIsCreating(true);
+    try {
+      await addProfile({
+        name: newName,
+        type: newType as any,
+        icon: profileType?.icon || "Wallet",
+        color: newColor,
+        balance: newBalance,
+        description: newDescription || undefined,
+        isDefault: profiles.length === 0,
+        sortOrder: profiles.length,
+      });
+      toast.success(`Profile "${newName}" created!`);
+      setShowCreateModal(false);
+      setNewName(""); setNewBalance(0); setNewDescription("");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create profile");
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   return (
@@ -185,7 +194,15 @@ export default function ProfilesPage() {
                 <input type="text" value={newDescription} onChange={e => setNewDescription(e.target.value)} placeholder="A brief description..." className="w-full rounded-lg border border-white/[0.08] bg-background-card px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-purple/50 focus:outline-none" />
               </div>
 
-              <ShimmerButton onClick={handleCreate} className="w-full py-3"><Plus className="h-4 w-4" /> Create Profile</ShimmerButton>
+              <ShimmerButton onClick={handleCreate} className="w-full py-3" disabled={isCreating}>
+                {isCreating ? (
+                  "Creating..."
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4" /> Create Profile
+                  </>
+                )}
+              </ShimmerButton>
             </div>
           </div>
         </div>
