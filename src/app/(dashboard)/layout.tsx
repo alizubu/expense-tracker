@@ -9,22 +9,14 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background-primary">
-      {/* Sidebar — desktop only */}
+    <div className="min-h-screen bg-[#0A0A0F]">
       <Sidebar />
-
-      {/* Main content area wrapped for client-side state */}
       <ClientLayoutWrapper>
-        {/* Topbar */}
         <Topbar />
-
-        {/* Page content */}
         <main className="flex-1 px-4 py-6 pb-24 lg:px-6 lg:pb-6">
           {children}
         </main>
       </ClientLayoutWrapper>
-
-      {/* Mobile bottom navigation */}
       <MobileNav />
     </div>
   );
