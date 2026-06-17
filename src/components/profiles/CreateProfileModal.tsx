@@ -43,7 +43,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
       await addProfile({
         name: name.trim(),
         type: selectedType.type as any,
-        icon: selectedType.emoji, // The prompt's API expects emoji to be sent as icon
+        icon: selectedType.icon,
         color: selectedType.color,
         balance: parseFloat(balance) || 0,
         description: description.trim() || undefined,

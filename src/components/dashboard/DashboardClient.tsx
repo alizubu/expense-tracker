@@ -3,6 +3,12 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { CreateProfileModal } from "@/components/profiles/CreateProfileModal";
+import * as LucideIcons from "lucide-react";
+
+function getIcon(iconName: string) {
+  const Icon = (LucideIcons as Record<string, any>)[iconName];
+  return Icon || LucideIcons.Wallet;
+}
 
 interface DashboardData {
   netBalance: number;
@@ -25,7 +31,7 @@ export function DashboardClient() {
 
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
-    const res = await fetch(`/api/dashboard?month=${month}&year=${year}`);
+    const res = await fetch(`/api/dashboard?month=${month}&year=${year}`, { cache: "no-store" });
     const json = await res.json();
     setData(json);
     setLoading(false);
@@ -93,18 +99,26 @@ export function DashboardClient() {
           Profiles
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {data?.profiles.map((profile) => (
+          {data?.profiles.map((profile) => {
+            const Icon = getIcon(profile.icon);
+            return (
             <div
               key={profile.id}
               className="bg-[#16161E] border border-white/10 rounded-xl p-4"
             >
-              <span className="text-2xl">{profile.icon}</span>
-              <p className="text-white font-medium mt-2">{profile.name}</p>
+              <div
+                className="w-10 h-10 flex items-center justify-center rounded-xl mb-3"
+                style={{ backgroundColor: profile.color + "20" }}
+              >
+                <Icon className="h-5 w-5" style={{ color: profile.color }} />
+              </div>
+              <p className="text-white font-medium">{profile.name}</p>
               <p className="text-xl font-semibold text-white mt-1">
                 ৳ {profile.balance.toLocaleString("en-BD")}
               </p>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -121,13 +135,15 @@ export function DashboardClient() {
         ) : (
           <div className="bg-[#16161E] border border-white/10 rounded-xl divide-y
                           divide-white/5">
-            {data?.recentTransactions.map((txn) => (
+            {data?.recentTransactions.map((txn) => {
+              const TxnIcon = getIcon(txn.profile?.icon);
+              return (
               <div key={txn.id} className="flex items-center gap-4 p-4">
                 <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
+                  className="w-9 h-9 rounded-lg flex items-center justify-center"
                   style={{ background: txn.profile?.color + "20" }}
                 >
-                  {txn.profile?.icon}
+                  <TxnIcon className="h-4 w-4" style={{ color: txn.profile?.color }} />
                 </div>
                 <div className="flex-1">
                   <p className="text-white text-sm font-medium">{txn.title}</p>
@@ -148,7 +164,8 @@ export function DashboardClient() {
                   ৳ {txn.amount.toLocaleString("en-BD")}
                 </p>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

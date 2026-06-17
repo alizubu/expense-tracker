@@ -27,7 +27,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
   fetchProfiles: async () => {
     set({ isLoading: true });
     try {
-      const res = await fetch("/api/profiles");
+      const res = await fetch("/api/profiles", { cache: "no-store" });
       const data = await res.json();
       set({ profiles: Array.isArray(data) ? data : [], isLoading: false });
     } catch (error) {
