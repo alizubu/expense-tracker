@@ -17,55 +17,19 @@ import { toast } from "sonner";
 import * as LucideIcons from "lucide-react";
 import Link from "next/link";
 
+import { CreateProfileModal } from "@/components/profiles/CreateProfileModal";
+
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
   return Icon || LucideIcons.Wallet;
 }
 
-const PRESET_COLORS = [
-  "#7C3AED", "#3B82F6", "#10B981", "#F59E0B", "#EF4444",
-  "#EC4899", "#06B6D4", "#F97316", "#22C55E", "#8B5CF6",
-  "#A78BFA", "#64748B",
-];
-
 export default function ProfilesPage() {
-  const { profiles, addProfile, deleteProfile } = useProfileStore();
+  const { profiles } = useProfileStore();
   const { transactions } = useTransactionStore();
   const { selectedCurrency } = useUIStore();
   const symbol = getCurrencySymbol(selectedCurrency);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [newType, setNewType] = useState("MONEYBAG");
-  const [newColor, setNewColor] = useState("#7C3AED");
-  const [newBalance, setNewBalance] = useState(0);
-  const [newDescription, setNewDescription] = useState("");
-
-  const [isCreating, setIsCreating] = useState(false);
-
-  const handleCreate = async () => {
-    if (!newName) { toast.error("Profile name is required"); return; }
-    const profileType = getProfileType(newType);
-    setIsCreating(true);
-    try {
-      await addProfile({
-        name: newName,
-        type: newType as any,
-        icon: profileType?.icon || "Wallet",
-        color: newColor,
-        balance: newBalance,
-        description: newDescription || undefined,
-        isDefault: profiles.length === 0,
-        sortOrder: profiles.length,
-      });
-      toast.success(`Profile "${newName}" created!`);
-      setShowCreateModal(false);
-      setNewName(""); setNewBalance(0); setNewDescription("");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to create profile");
-    } finally {
-      setIsCreating(false);
-    }
-  };
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -144,69 +108,10 @@ export default function ProfilesPage() {
         </BlurFade>
       </div>
 
-      {/* Create Profile Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
-          <div className="relative z-10 w-full max-w-md animate-scale-in rounded-2xl border border-white/[0.08] bg-background-secondary p-6">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-semibold text-text-primary">Create Profile</h2>
-              <button onClick={() => setShowCreateModal(false)} className="rounded-lg p-1.5 text-text-muted hover:bg-white/[0.05]"><X className="h-5 w-5" /></button>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="mb-1.5 block text-xs font-medium text-text-secondary">Name</label>
-                <input type="text" value={newName} onChange={e => setNewName(e.target.value)} placeholder="e.g. Main Wallet" className="w-full rounded-lg border border-white/[0.08] bg-background-card px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-purple/50 focus:outline-none" />
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs font-medium text-text-secondary">Type</label>
-                <div className="grid grid-cols-4 gap-2">
-                  {PROFILE_TYPES.map(pt => (
-                    <button key={pt.type} onClick={() => { setNewType(pt.type); setNewColor(pt.color); }} className={cn("flex flex-col items-center gap-1 rounded-lg p-2 transition-all", newType === pt.type ? "bg-white/[0.08] ring-1 ring-brand-purple/30" : "bg-white/[0.02] hover:bg-white/[0.04]")}>
-                      <span className="text-lg">{pt.emoji}</span>
-                      <span className="text-[9px] text-text-muted leading-tight text-center">{pt.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs font-medium text-text-secondary">Color</label>
-                <div className="flex gap-2 flex-wrap">
-                  {PRESET_COLORS.map(c => (
-                    <button key={c} onClick={() => setNewColor(c)} className={cn("h-7 w-7 rounded-full transition-all", newColor === c ? "ring-2 ring-white ring-offset-2 ring-offset-background-secondary scale-110" : "hover:scale-105")} style={{ backgroundColor: c }} />
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs font-medium text-text-secondary">Starting Balance</label>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-text-muted">{symbol}</span>
-                  <NumericFormat value={newBalance || ""} onValueChange={v => setNewBalance(v.floatValue || 0)} thousandSeparator="," decimalScale={2} placeholder="0.00" className="flex-1 rounded-lg border border-white/[0.08] bg-background-card px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-purple/50 focus:outline-none tabular-nums" />
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs font-medium text-text-secondary">Description (optional)</label>
-                <input type="text" value={newDescription} onChange={e => setNewDescription(e.target.value)} placeholder="A brief description..." className="w-full rounded-lg border border-white/[0.08] bg-background-card px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-purple/50 focus:outline-none" />
-              </div>
-
-              <ShimmerButton onClick={handleCreate} className="w-full py-3" disabled={isCreating}>
-                {isCreating ? (
-                  "Creating..."
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4" /> Create Profile
-                  </>
-                )}
-              </ShimmerButton>
-            </div>
-          </div>
-        </div>
-      )}
+      <CreateProfileModal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+      />
     </div>
   );
 }

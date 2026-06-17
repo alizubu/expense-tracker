@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
+import { CreateProfileModal } from "@/components/profiles/CreateProfileModal";
 
 interface DashboardData {
   netBalance: number;
@@ -16,23 +17,24 @@ export function DashboardClient() {
   const { data: session, status } = useSession();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
 
   const now = new Date();
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [year, setYear] = useState(now.getFullYear());
 
-  useEffect(() => {
-    if (status !== "authenticated") return;
-    fetchDashboard();
-  }, [status, month, year]);
-
-  const fetchDashboard = async () => {
+  const fetchDashboard = useCallback(async () => {
     setLoading(true);
     const res = await fetch(`/api/dashboard?month=${month}&year=${year}`);
     const json = await res.json();
     setData(json);
     setLoading(false);
-  };
+  }, [month, year]);
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    fetchDashboard();
+  }, [status, fetchDashboard]);
 
   if (status === "loading" || loading) {
     return (
@@ -54,7 +56,7 @@ export function DashboardClient() {
           Create a wallet profile to start tracking your money
         </p>
         <button
-          onClick={() => {/* open create profile modal */}}
+          onClick={() => setProfileModalOpen(true)}
           className="px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white
                      font-medium rounded-xl transition"
         >
@@ -150,6 +152,12 @@ export function DashboardClient() {
           </div>
         )}
       </div>
+
+      <CreateProfileModal
+        open={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
+        onCreated={fetchDashboard}
+      />
     </div>
   );
 }

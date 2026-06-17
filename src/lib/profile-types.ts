@@ -1,0 +1,68 @@
+export const PROFILE_TYPES = [
+  {
+    type: "MONEYBAG",
+    label: "Moneybag",
+    emoji: "💰",
+    icon: "Wallet",
+    color: "#7C3AED",
+    description: "General purpose wallet",
+  },
+  {
+    type: "CASH",
+    label: "Cash",
+    emoji: "💵",
+    icon: "Banknote",
+    color: "#10B981",
+    description: "Physical cash on hand",
+  },
+  {
+    type: "BANK",
+    label: "Bank Account",
+    emoji: "🏦",
+    icon: "Landmark",
+    color: "#3B82F6",
+    description: "Bank account balance",
+  },
+  {
+    type: "BKASH",
+    label: "bKash",
+    emoji: "📱",
+    icon: "Smartphone",
+    color: "#E2136E",
+    description: "bKash mobile banking",
+  },
+  {
+    type: "SAVINGS",
+    label: "Savings",
+    emoji: "🐷",
+    icon: "PiggyBank",
+    color: "#F59E0B",
+    description: "Long term savings",
+  },
+  {
+    type: "INVESTMENT",
+    label: "Investment",
+    emoji: "📈",
+    icon: "TrendingUp",
+    color: "#22C55E",
+    description: "Stocks, bonds, funds",
+  },
+  {
+    type: "CRYPTO",
+    label: "Crypto",
+    emoji: "🔐",
+    icon: "Bitcoin",
+    color: "#F97316",
+    description: "Cryptocurrency wallet",
+  },
+  {
+    type: "CUSTOM",
+    label: "Custom",
+    emoji: "✨",
+    icon: "Star",
+    color: "#A78BFA",
+    description: "Any other wallet",
+  },
+] as const;
+
+export type ProfileType = (typeof PROFILE_TYPES)[number]["type"];
