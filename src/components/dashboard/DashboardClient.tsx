@@ -95,9 +95,17 @@ export function DashboardClient() {
 
       {/* Profiles */}
       <div>
-        <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-3">
-          Profiles
-        </h2>
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider">
+            Profiles
+          </h2>
+          <button 
+            onClick={() => setProfileModalOpen(true)}
+            className="text-xs font-medium text-brand-purple hover:text-brand-purple-light transition-colors"
+          >
+            + Add New
+          </button>
+        </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {data?.profiles.map((profile) => {
             const Icon = getIcon(profile.icon);

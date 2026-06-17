@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -22,6 +23,8 @@ import { useUIStore } from "@/store/useUIStore";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import { getCurrencySymbol } from "@/lib/currencies";
 
+import { useTheme } from "next-themes";
+
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", route: "/" },
   { icon: ArrowLeftRight, label: "Transactions", route: "/transactions" },
@@ -35,8 +38,13 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const { sidebarCollapsed, toggleSidebar, selectedCurrency, theme, setTheme } =
-    useUIStore();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  const { sidebarCollapsed, toggleSidebar, selectedCurrency } = useUIStore();
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <aside
@@ -119,16 +127,18 @@ export function Sidebar() {
             <span className="text-xs text-text-muted">
               Currency: {getCurrencySymbol(selectedCurrency)} {selectedCurrency}
             </span>
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-lg p-1.5 text-text-muted hover:bg-white/[0.05] hover:text-text-secondary transition-colors"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </button>
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="rounded-lg p-1.5 text-text-muted hover:bg-white/[0.05] hover:text-text-secondary transition-colors"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+              </button>
+            )}
           </div>
         )}
 

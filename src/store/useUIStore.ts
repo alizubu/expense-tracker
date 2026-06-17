@@ -8,7 +8,6 @@ interface UIState {
   selectedMonth: number;
   selectedYear: number;
   searchQuery: string;
-  theme: "dark" | "light";
   // Actions
   toggleSidebar: () => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
@@ -19,7 +18,6 @@ interface UIState {
   setSelectedMonth: (month: number) => void;
   setSelectedYear: (year: number) => void;
   setSearchQuery: (query: string) => void;
-  setTheme: (theme: "dark" | "light") => void;
 }
 
 const now = new Date();
@@ -32,7 +30,6 @@ export const useUIStore = create<UIState>((set) => ({
   selectedMonth: now.getMonth() + 1,
   selectedYear: now.getFullYear(),
   searchQuery: "",
-  theme: "dark",
 
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
@@ -43,5 +40,4 @@ export const useUIStore = create<UIState>((set) => ({
   setSelectedMonth: (month) => set({ selectedMonth: month }),
   setSelectedYear: (year) => set({ selectedYear: year }),
   setSearchQuery: (query) => set({ searchQuery: query }),
-  setTheme: (theme) => set({ theme }),
 }));

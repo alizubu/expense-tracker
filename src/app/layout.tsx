@@ -41,6 +41,7 @@ export const metadata: Metadata = {
 };
 
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -48,25 +49,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AuthProvider>
-      <html lang="en" className="dark">
-        <body
-          className={`${inter.variable} font-sans antialiased bg-background-primary text-text-primary`}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${inter.variable} font-sans antialiased bg-background-primary text-text-primary transition-colors duration-300`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
         >
-          {children}
-          <Toaster
-            theme="dark"
-            position="bottom-right"
-            toastOptions={{
-              style: {
-                background: "#1C1C27",
-                border: "1px solid rgba(255,255,255,0.08)",
-                color: "#F8FAFC",
-              },
-            }}
-          />
-        </body>
-      </html>
-    </AuthProvider>
+          <AuthProvider>
+            {children}
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
+                className: "dark:bg-[#1C1C27] dark:text-[#F8FAFC] dark:border-white/10 bg-white text-slate-900 border-slate-200",
+              }}
+            />
+          </AuthProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

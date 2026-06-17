@@ -89,7 +89,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div className="w-full max-w-lg bg-[#16161E] border border-white/10
-                        rounded-2xl shadow-2xl animate-scale-in">
+                        rounded-2xl shadow-2xl animate-scale-in max-h-[90vh] flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-white/10">
             <h2 className="text-lg font-semibold text-white">Add New Profile</h2>
@@ -103,7 +103,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
           </div>
 
           {/* Body */}
-          <div className="p-6 space-y-5">
+          <div className="p-6 space-y-5 overflow-y-auto">
             {/* Profile Type Selector */}
             <div>
               <label className="text-sm text-slate-400 mb-3 block">Wallet Type</label>
