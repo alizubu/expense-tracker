@@ -44,7 +44,6 @@ export default function ProfilesPage() {
     if (!newName) { toast.error("Profile name is required"); return; }
     const profileType = getProfileType(newType);
     addProfile({
-      userId: "user_001",
       name: newName,
       type: newType as any,
       icon: profileType?.icon || "Wallet",

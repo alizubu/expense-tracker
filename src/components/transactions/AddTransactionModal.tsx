@@ -63,7 +63,6 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
     }
 
     addTransaction({
-      userId: "user_001",
       profileId,
       toProfileId: type === "TRANSFER" ? toProfileId : undefined,
       type,
