@@ -2,26 +2,158 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design System Variables ─────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0A0A0F;
+  --background-secondary: #111118;
+  --background-card: #16161E;
+  --background-elevated: #1C1C27;
+  --foreground: #F8FAFC;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --brand-purple: #7C3AED;
+  --brand-purple-light: #A78BFA;
+  --income: #10B981;
+  --expense: #EF4444;
+  --transfer: #3B82F6;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #475569;
+  --sidebar-width: 280px;
+  --sidebar-collapsed: 64px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base Styles ─────────────────────────────────────────── */
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Typography ──────────────────────────────────────────── */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ── Tabular Numbers ─────────────────────────────────────── */
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Scrollbar Styling ───────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+/* ── Glass Morphism Utilities ────────────────────────────── */
+
 @layer utilities {
+  .glass {
+    background: rgba(22, 22, 30, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-tooltip {
+    background: rgba(28, 28, 39, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
   .text-balance {
     text-wrap: balance;
   }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── Skeleton Loading ────────────────────────────────────── */
+
+@layer components {
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--background-card);
+    border-radius: 0.5rem;
+  }
+
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    animation: shimmer 2s linear infinite;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.04) 50%,
+      transparent 100%
+    );
+  }
+}
+
+/* ── Budget Progress Bar Colors ──────────────────────────── */
+
+@layer utilities {
+  .budget-progress-safe {
+    background: linear-gradient(90deg, #10B981, #34D399);
+  }
+
+  .budget-progress-warning {
+    background: linear-gradient(90deg, #F59E0B, #FBBF24);
+  }
+
+  .budget-progress-danger {
+    background: linear-gradient(90deg, #EF4444, #F87171);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+/* ── Transition utilities ────────────────────────────────── */
+
+.transition-sidebar {
+  transition: width 0.2s ease, padding 0.2s ease, margin 0.2s ease;
 }

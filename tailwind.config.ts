@@ -6,11 +6,116 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: {
+          DEFAULT: "#0A0A0F",
+          primary: "#0A0A0F",
+          secondary: "#111118",
+          card: "#16161E",
+          elevated: "#1C1C27",
+        },
+        border: {
+          DEFAULT: "rgba(255,255,255,0.08)",
+          hover: "rgba(255,255,255,0.15)",
+        },
+        brand: {
+          purple: "#7C3AED",
+          "purple-light": "#A78BFA",
+        },
+        income: "#10B981",
+        expense: "#EF4444",
+        transfer: "#3B82F6",
+        text: {
+          primary: "#F8FAFC",
+          secondary: "#94A3B8",
+          muted: "#475569",
+        },
+      },
+      letterSpacing: {
+        heading: "-0.02em",
+      },
+      lineHeight: {
+        body: "1.6",
+      },
+      borderRadius: {
+        xl: "0.75rem",
+        "2xl": "1rem",
+      },
+      keyframes: {
+        gradient: {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
+        meteor: {
+          "0%": { transform: "rotate(215deg) translateX(0)", opacity: "1" },
+          "70%": { opacity: "1" },
+          "100%": {
+            transform: "rotate(215deg) translateX(-500px)",
+            opacity: "0",
+          },
+        },
+        "shimmer-slide": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        "border-beam-spin": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "sparkle-spin": {
+          "0%": { transform: "rotate(0deg) scale(0)", opacity: "0" },
+          "50%": { transform: "rotate(180deg) scale(1)", opacity: "1" },
+          "100%": { transform: "rotate(360deg) scale(0)", opacity: "0" },
+        },
+        "slide-in": {
+          "0%": { transform: "translateY(-10px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "slide-out-left": {
+          "0%": { transform: "translateX(0)", opacity: "1" },
+          "100%": { transform: "translateX(-100%)", opacity: "0" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "scale-in": {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "slide-up": {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        pulse: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+      },
+      animation: {
+        gradient: "gradient 8s linear infinite",
+        meteor: "meteor 5s linear infinite",
+        "shimmer-slide": "shimmer-slide 3s ease-in-out infinite",
+        "border-beam-spin": "border-beam-spin 12s linear infinite",
+        "sparkle-spin": "sparkle-spin 1.5s ease-in-out infinite",
+        "slide-in": "slide-in 0.3s ease-out",
+        "slide-out-left": "slide-out-left 0.3s ease-in forwards",
+        "fade-in": "fade-in 0.2s ease-out",
+        "scale-in": "scale-in 0.2s ease-out",
+        "slide-up": "slide-up 0.3s ease-out",
+        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        shimmer: "shimmer 2s linear infinite",
       },
     },
   },

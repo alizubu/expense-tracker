@@ -107,7 +107,7 @@ export function getExpenseCategories(): Category[] {
 }
 
 export function getCategoryGroups(): string[] {
-  return [...new Set(EXPENSE_CATEGORIES.map((cat) => cat.group))];
+  return Array.from(new Set(EXPENSE_CATEGORIES.map((cat) => cat.group)));
 }
 
 export function searchCategories(query: string): Category[] {
