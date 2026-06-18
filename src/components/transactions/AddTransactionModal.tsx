@@ -103,7 +103,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+      <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center">
         {/* Backdrop */}
         <motion.div 
           initial={{ opacity: 0 }}
@@ -120,10 +120,10 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="relative z-10 w-full max-w-[480px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-t-[var(--radius-xl)] sm:rounded-[var(--radius-xl)] max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+          className="relative z-10 w-full max-w-[480px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-t-[var(--radius-xl)] sm:rounded-[var(--radius-xl)] max-h-[90vh] flex flex-col shadow-2xl"
         >
           {/* Header */}
-          <div className="sticky top-0 z-20 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-6 py-4">
+          <div className="flex-none sticky top-0 z-20 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-6 py-4">
             <h2 className="text-[15px] font-semibold text-[var(--text-primary)]">New Transaction</h2>
             <button
               onClick={onClose}
@@ -133,7 +133,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
             </button>
           </div>
 
-          <div className="p-6 space-y-6">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar pb-10">
             {/* Type Switcher */}
             <div className="flex p-1 rounded-[var(--radius-md)] bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
               {tabs.map((tab) => {

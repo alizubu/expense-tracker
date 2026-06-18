@@ -1,1 +1,1 @@
-export { GET, POST, DELETE } from './profilesHandler';
+export { GET, POST, DELETE, PATCH } from './profilesHandler';

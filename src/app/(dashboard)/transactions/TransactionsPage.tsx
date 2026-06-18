@@ -10,7 +10,6 @@ import { getCurrencySymbol } from "@/lib/currencies";
 import { formatGroupDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { Search, Filter, Download, Trash2, MoreVertical, X } from "lucide-react";
-import { AddTransactionModal } from "@/components/transactions/AddTransactionModal";
 import * as LucideIcons from "lucide-react";
 
 function getIcon(iconName: string) {
@@ -267,7 +266,7 @@ export default function TransactionsPage() {
       </BlurFade>
 
       {/* Modal */}
-      {activeModal === "addTransaction" && <AddTransactionModal onClose={closeModal} />}
+      {/* GlobalModals handles AddTransactionModal */}
     </div>
   );
 }

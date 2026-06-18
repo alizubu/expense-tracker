@@ -87,7 +87,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
       />
 
       {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
         <div className="w-full max-w-lg bg-[#16161E] border border-white/10
                         rounded-2xl shadow-2xl animate-scale-in max-h-[90vh] flex flex-col">
           {/* Header */}
@@ -182,7 +182,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
                 </div>
                 <div>
                   <p className="text-white font-medium">{name || selectedType.label}</p>
-                  <p className="text-slate-400 text-sm">৳ {parseFloat(balance || "0").toLocaleString("en-BD")}</p>
+                  <p className="text-slate-400 text-sm">৳ {parseFloat(balance || "0").toLocaleString("en-US")}</p>
                 </div>
               </div>
             </div>

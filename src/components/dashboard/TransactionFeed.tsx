@@ -16,7 +16,7 @@ interface TransactionFeedProps {
 }
 
 export function TransactionFeed({ transactions }: TransactionFeedProps) {
-  const { selectedCurrency } = useUIStore();
+  const { selectedCurrency, openModal } = useUIStore();
   const symbol = getCurrencySymbol(selectedCurrency);
 
   return (
@@ -39,7 +39,10 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
             <LucideIcons.Receipt className="w-5 h-5 text-[var(--text-muted)]" />
           </div>
           <p className="text-[13px] text-[var(--text-muted)] mb-4">No transactions yet</p>
-          <button className="h-8 px-4 text-[12px] font-medium rounded-md bg-[var(--accent)] text-white hover:bg-[#6D28D9] transition-colors">
+          <button 
+            onClick={() => openModal("addTransaction")}
+            className="h-8 px-4 text-[12px] font-medium rounded-md bg-[var(--accent)] text-white hover:bg-[#6D28D9] transition-colors"
+          >
             + Add your first
           </button>
         </div>

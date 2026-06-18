@@ -38,6 +38,7 @@ export const metadata: Metadata = {
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { PageTransitionProvider } from "@/components/providers/PageTransitionProvider";
+import { GlobalModals } from "@/components/providers/GlobalModals";
 
 export default function RootLayout({
   children,
@@ -59,6 +60,7 @@ export default function RootLayout({
             <PageTransitionProvider>
               {children}
             </PageTransitionProvider>
+            <GlobalModals />
             <Toaster
               position="bottom-right"
               toastOptions={{

@@ -10,8 +10,8 @@ interface ProfileState {
   // Actions
   fetchProfiles: () => Promise<void>;
   addProfile: (profile: Omit<Profile, "id" | "createdAt" | "updatedAt" | "userId">) => Promise<void>;
-  updateProfile: (id: string, updates: Partial<Profile>) => void;
-  deleteProfile: (id: string) => void;
+  updateProfile: (id: string, updates: Partial<Profile>) => Promise<void>;
+  deleteProfile: (id: string) => Promise<void>;
   setActiveProfile: (id: string | null) => void;
   reorderProfiles: (fromIndex: number, toIndex: number) => void;
   updateBalance: (profileId: string, amount: number) => void;
@@ -62,18 +62,39 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     }
   },
 
-  updateProfile: (id, updates) => {
-    set((state) => ({
-      profiles: state.profiles.map((p) =>
-        p.id === id ? { ...p, ...updates } : p
-      ),
-    }));
+  updateProfile: async (id, updates) => {
+    try {
+      const res = await fetch("/api/profiles", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...updates }),
+      });
+      if (!res.ok) throw new Error("Failed to update profile");
+      const updatedProfile = await res.json();
+      set((state) => ({
+        profiles: state.profiles.map((p) =>
+          p.id === id ? { ...p, ...updatedProfile } : p
+        ),
+      }));
+    } catch (error) {
+      console.error("[useProfileStore] updateProfile Error:", error);
+      throw error;
+    }
   },
 
-  deleteProfile: (id) => {
-    set((state) => ({
-      profiles: state.profiles.filter((p) => p.id !== id),
-    }));
+  deleteProfile: async (id) => {
+    try {
+      const res = await fetch(`/api/profiles?id=${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete profile");
+      set((state) => ({
+        profiles: state.profiles.filter((p) => p.id !== id),
+      }));
+    } catch (error) {
+      console.error("[useProfileStore] deleteProfile Error:", error);
+      throw error;
+    }
   },
 
   setActiveProfile: (id) => set({ activeProfileId: id }),

@@ -1,12 +1,18 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { useUIStore } from "@/store/useUIStore";
 
 export function Topbar() {
   const pathname = usePathname();
   const { openModal } = useUIStore();
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const getPageTitle = () => {
     if (pathname === "/") return "Dashboard";
@@ -48,6 +54,14 @@ export function Topbar() {
 
       {/* Right: Actions */}
       <div className="flex items-center gap-3">
+        {mounted && (
+          <button
+            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            className="flex h-[34px] w-[34px] items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-all"
+          >
+            {resolvedTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+        )}
         <button
           onClick={() => openModal("addTransaction")}
           className="flex h-[34px] items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent)] px-[14px] text-[13px] font-medium text-white transition-all hover:bg-[#6D28D9] hover:scale-95"

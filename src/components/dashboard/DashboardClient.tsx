@@ -82,7 +82,7 @@ export function DashboardClient() {
   }
 
   const netBalance = getTotalBalance();
-  const profilesToRender = data?.profiles || storeProfiles;
+  const profilesToRender = storeProfiles;
 
   if (profilesToRender.length === 0) {
     return (

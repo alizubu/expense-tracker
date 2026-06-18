@@ -105,3 +105,43 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Failed to delete profile" }, { status: 500 });
   }
 }
+
+export async function PATCH(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const { id, name, type, icon, color, description } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Profile ID is required" }, { status: 400 });
+    }
+
+    const profile = await prisma.profile.findFirst({
+      where: { id, userId: session.user.id },
+    });
+
+    if (!profile) {
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    }
+
+    const updatedProfile = await prisma.profile.update({
+      where: { id },
+      data: {
+        ...(name && { name: name.trim() }),
+        ...(type && { type }),
+        ...(icon && { icon }),
+        ...(color && { color }),
+        ...(description !== undefined && { description }),
+      },
+    });
+
+    return NextResponse.json(updatedProfile);
+  } catch (error) {
+    console.error("[PATCH /api/profiles] Error:", error);
+    return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
+  }
+}
