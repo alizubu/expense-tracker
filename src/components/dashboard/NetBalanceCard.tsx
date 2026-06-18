@@ -1,124 +1,104 @@
 "use client";
 
-import { MagicCard } from "@/components/magicui/magic-card";
-import { Meteors } from "@/components/magicui/meteors";
+import { useMemo } from "react";
+import { motion } from "framer-motion";
+import { ResponsiveContainer, LineChart, Line } from "recharts";
 import { NumberTicker } from "@/components/magicui/number-ticker";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
-import { TrendingUp, TrendingDown, Percent, ChevronDown } from "lucide-react";
 
-const months = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+const mockSparklineData = [
+  { value: 100 }, { value: 120 }, { value: 115 }, { value: 130 }, { value: 140 }, { value: 135 }, { value: 150 }
 ];
 
 export function NetBalanceCard() {
-  const { selectedCurrency, selectedMonth, selectedYear, setSelectedMonth } = useUIStore();
+  const { selectedCurrency, selectedMonth, selectedYear } = useUIStore();
   const { getTotalBalance } = useProfileStore();
   const { transactions } = useTransactionStore();
+  
   const symbol = getCurrencySymbol(selectedCurrency);
   const totalBalance = getTotalBalance();
 
-  // Calculate this month's income/expense
-  const now = new Date();
-  const monthTransactions = transactions.filter((t) => {
-    const d = new Date(t.date);
-    return d.getMonth() + 1 === selectedMonth && d.getFullYear() === selectedYear;
-  });
+  const { totalIncome, totalExpense, savingsRate } = useMemo(() => {
+    const monthTransactions = transactions.filter((t) => {
+      const d = new Date(t.date);
+      return d.getMonth() + 1 === selectedMonth && d.getFullYear() === selectedYear;
+    });
 
-  const totalIncome = monthTransactions
-    .filter((t) => t.type === "INCOME")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const totalExpense = monthTransactions
-    .filter((t) => t.type === "EXPENSE")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const savingsRate = totalIncome > 0 ? Math.round(((totalIncome - totalExpense) / totalIncome) * 100) : 0;
+    const inc = monthTransactions.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0);
+    const exp = monthTransactions.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0);
+    const rate = inc > 0 ? Math.round(((inc - exp) / inc) * 100) : 0;
+    
+    return { totalIncome: inc, totalExpense: exp, savingsRate: rate };
+  }, [transactions, selectedMonth, selectedYear]);
 
   return (
-    <MagicCard className="relative overflow-hidden p-6 lg:p-8" gradientColor="#7C3AED" gradientOpacity={0.1}>
-      {/* Meteors background */}
-      <Meteors number={15} />
-
-      <div className="relative z-10">
-        {/* Month selector */}
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button className="flex items-center gap-1.5 rounded-lg bg-white/[0.05] px-3 py-1.5 text-sm text-text-secondary hover:bg-white/[0.08] transition-colors">
-              {months[selectedMonth - 1]} {selectedYear}
-              <ChevronDown className="h-3.5 w-3.5" />
-            </button>
-          </div>
-          <div className="flex items-center gap-1">
-            {["BDT", "USD", "EUR"].map((cur) => (
-              <button
-                key={cur}
-                onClick={() => useUIStore.getState().setCurrency(cur)}
-                className={`rounded-md px-2 py-1 text-xs font-medium transition-colors ${
-                  selectedCurrency === cur
-                    ? "bg-brand-purple/20 text-brand-purple-light"
-                    : "text-text-muted hover:text-text-secondary"
-                }`}
-              >
-                {getCurrencySymbol(cur)} {cur}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Main balance */}
-        <div className="mb-1">
-          <p className="text-sm font-medium text-text-secondary mb-1">Net Balance</p>
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-semibold text-text-secondary">{symbol}</span>
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="flex flex-col w-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] overflow-hidden hover:border-[var(--border-strong)] transition-colors duration-150"
+    >
+      <div className="flex flex-col md:flex-row p-6 md:p-8">
+        {/* Left Side (70%) */}
+        <div className="flex-1 md:w-[70%]">
+          <p className="text-[10px] font-medium tracking-[0.1em] text-[var(--text-muted)] uppercase mb-2">
+            Net Balance
+          </p>
+          <div className="flex items-baseline gap-2 mb-6">
+            <span className="font-mono text-2xl text-[var(--text-secondary)]">{symbol}</span>
             <NumberTicker
               value={totalBalance}
-              className="text-4xl font-bold text-text-primary lg:text-5xl"
-              decimalPlaces={2}
-              duration={800}
+              className="font-mono text-[48px] font-semibold text-[var(--text-primary)] tracking-tight"
+              decimalPlaces={0}
+              duration={1.2}
             />
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <div className="px-[10px] py-[4px] rounded-[20px] bg-[var(--green-dim)] text-[var(--green)] font-mono text-[13px] flex items-center gap-1">
+              <span>↑</span>
+              <span>{symbol}{totalIncome.toLocaleString()}</span>
+            </div>
+            <div className="px-[10px] py-[4px] rounded-[20px] bg-[var(--red-dim)] text-[var(--red)] font-mono text-[13px] flex items-center gap-1">
+              <span>↓</span>
+              <span>{symbol}{totalExpense.toLocaleString()}</span>
+            </div>
+            <div className="px-[10px] py-[4px] rounded-[20px] bg-[rgba(124,58,237,0.12)] text-[var(--accent-light)] font-mono text-[13px] flex items-center gap-1">
+              <span>%</span>
+              <span>{savingsRate}%</span>
+            </div>
           </div>
         </div>
 
-        {/* Stat pills */}
-        <div className="mt-6 flex flex-wrap gap-3">
-          {/* Income pill */}
-          <div className="flex items-center gap-2 rounded-full bg-income/10 px-4 py-2">
-            <TrendingUp className="h-4 w-4 text-income" />
-            <div>
-              <p className="text-[10px] font-medium text-income/70 uppercase tracking-wider">Income</p>
-              <p className="text-sm font-semibold text-income tabular-nums">
-                {symbol} {totalIncome.toLocaleString("en-US", { minimumFractionDigits: 0 })}
-              </p>
-            </div>
-          </div>
-
-          {/* Expense pill */}
-          <div className="flex items-center gap-2 rounded-full bg-expense/10 px-4 py-2">
-            <TrendingDown className="h-4 w-4 text-expense" />
-            <div>
-              <p className="text-[10px] font-medium text-expense/70 uppercase tracking-wider">Expense</p>
-              <p className="text-sm font-semibold text-expense tabular-nums">
-                {symbol} {totalExpense.toLocaleString("en-US", { minimumFractionDigits: 0 })}
-              </p>
-            </div>
-          </div>
-
-          {/* Savings rate pill */}
-          <div className="flex items-center gap-2 rounded-full bg-brand-purple/10 px-4 py-2">
-            <Percent className="h-4 w-4 text-brand-purple-light" />
-            <div>
-              <p className="text-[10px] font-medium text-brand-purple-light/70 uppercase tracking-wider">Savings</p>
-              <p className="text-sm font-semibold text-brand-purple-light tabular-nums">
-                {savingsRate}%
-              </p>
-            </div>
+        {/* Right Side (30%) - Sparkline */}
+        <div className="mt-6 md:mt-0 md:w-[30%] flex items-center justify-end">
+          <div className="h-[60px] w-full max-w-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={mockSparklineData}>
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="var(--accent)" 
+                  strokeWidth={2} 
+                  dot={false}
+                  isAnimationActive={true}
+                  animationDuration={1500}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
-    </MagicCard>
+
+      {/* Bottom Strip */}
+      <div className="border-t border-[var(--border-subtle)] px-6 md:px-8 py-2 bg-[var(--bg-base)]">
+        <p className="text-[11px] text-[var(--text-muted)]">
+          Last updated just now
+        </p>
+      </div>
+    </motion.div>
   );
 }

@@ -1,117 +1,101 @@
 "use client";
 
-import { useTransactionStore } from "@/store/useTransactionStore";
-import { useProfileStore } from "@/store/useProfileStore";
-import { useUIStore } from "@/store/useUIStore";
-import { getCategoryById } from "@/lib/categories";
-import { getCurrencySymbol } from "@/lib/currencies";
-import { formatRelativeDate } from "@/lib/formatters";
-import { cn } from "@/lib/utils";
-import { Sparkles } from "@/components/magicui/sparkles";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import * as LucideIcons from "lucide-react";
+import { getCurrencySymbol } from "@/lib/currencies";
+import { useUIStore } from "@/store/useUIStore";
 
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
-  return Icon || LucideIcons.CircleDot;
+  return Icon || LucideIcons.Wallet;
 }
 
-export function TransactionFeed() {
-  const { transactions } = useTransactionStore();
-  const { getProfile } = useProfileStore();
+interface TransactionFeedProps {
+  transactions: any[];
+}
+
+export function TransactionFeed({ transactions }: TransactionFeedProps) {
   const { selectedCurrency } = useUIStore();
   const symbol = getCurrencySymbol(selectedCurrency);
 
-  // Get last 10 transactions sorted by date
-  const recentTransactions = [...transactions]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 10);
-
-  if (recentTransactions.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <LucideIcons.Receipt className="h-12 w-12 text-text-muted mb-3" />
-        <p className="text-sm text-text-muted">No transactions yet</p>
-        <p className="text-xs text-text-muted mt-1">Add your first transaction to get started</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-1">
-      {recentTransactions.map((transaction, index) => {
-        const category = getCategoryById(transaction.category);
-        const profile = getProfile(transaction.profileId);
-        const Icon = category ? getIcon(category.icon) : LucideIcons.CircleDot;
+    <div className="flex flex-col w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-[13px] font-medium text-[var(--text-primary)]">
+          Recent transactions
+        </h2>
+        <Link 
+          href="/transactions"
+          className="text-[12px] font-medium text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+        >
+          View all
+        </Link>
+      </div>
 
-        const amountColor =
-          transaction.type === "INCOME"
-            ? "text-income"
-            : transaction.type === "EXPENSE"
-            ? "text-expense"
-            : "text-transfer";
-
-        const amountSign =
-          transaction.type === "INCOME" ? "+" : transaction.type === "EXPENSE" ? "-" : "";
-
-        const formattedAmount = `${amountSign}${symbol} ${transaction.amount.toLocaleString("en-US", {
-          minimumFractionDigits: 0,
-        })}`;
-
-        return (
-          <div
-            key={transaction.id}
-            className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-white/[0.03] animate-slide-in"
-            style={{ animationDelay: `${index * 50}ms` }}
-          >
-            {/* Category Icon */}
-            <div
-              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg"
-              style={{
-                backgroundColor: (category?.color || "#64748B") + "18",
-              }}
-            >
-              <Icon
-                className="h-4 w-4"
-                style={{ color: category?.color || "#64748B" }}
-              />
-            </div>
-
-            {/* Title & category */}
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-text-primary truncate">
-                {transaction.title}
-              </p>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-text-muted">
-                  {category?.label || transaction.category}
-                </span>
-                {profile && (
-                  <>
-                    <span className="text-xs text-text-muted">•</span>
-                    <span className="text-xs text-text-muted">{profile.name}</span>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Amount & time */}
-            <div className="text-right flex-shrink-0">
-              <p className={cn("text-sm font-semibold tabular-nums", amountColor)}>
-                {transaction.type === "INCOME" ? (
-                  <Sparkles color="#10B981" count={3}>
-                    {formattedAmount}
-                  </Sparkles>
-                ) : (
-                  formattedAmount
-                )}
-              </p>
-              <p className="text-xs text-text-muted">
-                {formatRelativeDate(transaction.date)}
-              </p>
-            </div>
+      {transactions.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-10 text-center">
+          <div className="w-12 h-12 rounded-full bg-[var(--bg-hover)] flex items-center justify-center mb-3">
+            <LucideIcons.Receipt className="w-5 h-5 text-[var(--text-muted)]" />
           </div>
-        );
-      })}
+          <p className="text-[13px] text-[var(--text-muted)] mb-4">No transactions yet</p>
+          <button className="h-8 px-4 text-[12px] font-medium rounded-md bg-[var(--accent)] text-white hover:bg-[#6D28D9] transition-colors">
+            + Add your first
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col">
+          {transactions.slice(0, 10).map((txn, index) => {
+            const TxnIcon = getIcon(txn.profile?.icon);
+            const isExpense = txn.type === "EXPENSE";
+            const isIncome = txn.type === "INCOME";
+
+            return (
+              <motion.div
+                key={txn.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.04, duration: 0.2 }}
+                className="group flex h-[52px] items-center border-b border-[var(--border-subtle)] last:border-0 hover:bg-[var(--bg-hover)] hover:rounded-[var(--radius-sm)] transition-colors px-2 -mx-2 cursor-pointer"
+              >
+                {/* Left */}
+                <div className="flex items-center gap-3 w-[60%]">
+                  <div
+                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full"
+                    style={{ background: `${txn.profile?.color}15` }}
+                  >
+                    <TxnIcon className="h-4 w-4" style={{ color: txn.profile?.color }} />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[14px] font-medium text-[var(--text-primary)] truncate">
+                      {txn.title}
+                    </span>
+                    <span className="text-[12px] text-[var(--text-muted)] truncate">
+                      {txn.category} · {txn.profile?.name}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Right */}
+                <div className="flex-1 flex justify-end">
+                  <span
+                    className={`font-mono text-[14px] font-medium ${
+                      isIncome
+                        ? "text-[var(--green)]"
+                        : isExpense
+                        ? "text-[var(--red)]"
+                        : "text-[var(--text-secondary)]"
+                    }`}
+                  >
+                    {isIncome ? "+" : isExpense ? "-" : ""}
+                    {symbol}{Math.abs(txn.amount).toLocaleString()}
+                  </span>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

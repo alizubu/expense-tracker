@@ -1,79 +1,66 @@
 "use client";
 
-import { Search, Plus, Bell, Menu } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
+import { Search, Plus } from "lucide-react";
 import { useUIStore } from "@/store/useUIStore";
-import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
-import { Wallet } from "lucide-react";
 
 export function Topbar() {
-  const { sidebarCollapsed, openModal, toggleSidebar } = useUIStore();
+  const pathname = usePathname();
+  const { openModal } = useUIStore();
+
+  const getPageTitle = () => {
+    if (pathname === "/") return "Dashboard";
+    const segment = pathname.split("/")[1];
+    return segment ? segment.charAt(0).toUpperCase() + segment.slice(1) : "Overview";
+  };
 
   return (
     <header
-      className={cn(
-        "sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[0.08] bg-background-primary/80 px-4 backdrop-blur-xl lg:px-6",
-        "lg:ml-[var(--sidebar-offset)]"
-      )}
+      className="sticky top-0 z-30 flex h-[56px] items-center justify-between border-b border-[var(--border-subtle)] px-6"
       style={{
-        ["--sidebar-offset" as string]: sidebarCollapsed ? "64px" : "280px",
+        background: "rgba(10, 10, 15, 0.8)",
+        backdropFilter: "blur(12px)",
       }}
     >
-      {/* Left — Mobile menu + Brand */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={toggleSidebar}
-          className="rounded-lg p-2 text-text-muted hover:bg-white/[0.05] hover:text-text-secondary transition-colors lg:hidden"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+      {/* Left: Dynamic Title */}
+      <div className="flex flex-col">
+        <h1 className="text-[15px] font-semibold text-[var(--text-primary)]">
+          {getPageTitle()}
+        </h1>
+        {pathname.split("/").length > 2 && (
+          <span className="text-[13px] text-[var(--text-muted)]">
+            Overview / {getPageTitle()}
+          </span>
+        )}
+      </div>
 
-        {/* Mobile brand */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-purple/20">
-            <Wallet className="h-3.5 w-3.5 text-brand-purple" />
-          </div>
-          <AnimatedGradientText className="text-base font-bold tracking-heading">
-            ExpenseTracker
-          </AnimatedGradientText>
-        </div>
-
-        {/* Desktop search */}
-        <div className="hidden lg:flex items-center">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
-            <input
-              type="text"
-              placeholder="Search transactions... (⌘K)"
-              className="h-9 w-72 rounded-lg border border-white/[0.08] bg-background-card pl-9 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-purple/50 focus:outline-none focus:ring-1 focus:ring-brand-purple/25 transition-colors"
-            />
-          </div>
+      {/* Center: Search */}
+      <div className="hidden lg:flex flex-1 justify-center">
+        <div className="relative flex items-center w-[320px]">
+          <Search className="absolute left-3 h-[14px] w-[14px] text-[var(--text-muted)]" />
+          <input
+            type="text"
+            placeholder="Search transactions...  ⌘K"
+            className="h-[36px] w-full rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] pl-9 pr-4 text-[13px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-[var(--accent-glow)] transition-all"
+          />
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        {/* Mobile search */}
-        <button className="rounded-lg p-2 text-text-muted hover:bg-white/[0.05] hover:text-text-secondary transition-colors lg:hidden">
-          <Search className="h-5 w-5" />
-        </button>
-
-        {/* Quick Add */}
+      {/* Right: Actions */}
+      <div className="flex items-center gap-3">
         <button
           onClick={() => openModal("addTransaction")}
-          className="flex items-center gap-2 rounded-lg bg-brand-purple/15 px-3 py-2 text-sm font-medium text-brand-purple-light hover:bg-brand-purple/25 transition-colors"
+          className="flex h-[34px] items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent)] px-[14px] text-[13px] font-medium text-white transition-all hover:bg-[#6D28D9] hover:scale-95"
         >
-          <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">Add</span>
+          <Plus className="mr-1 h-4 w-4" /> Add
         </button>
-
-        {/* Sign Out */}
         <button
           onClick={() => {
             import("next-auth/react").then(({ signOut }) => signOut());
           }}
-          className="ml-2 flex items-center gap-2 rounded-lg bg-red-500/10 px-3 py-2 text-sm font-medium text-red-400 hover:bg-red-500/20 transition-colors"
+          className="flex h-[34px] items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border-default)] px-[14px] text-[13px] font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-all"
         >
-          <span className="hidden sm:inline">Sign Out</span>
+          Sign Out
         </button>
       </div>
     </header>

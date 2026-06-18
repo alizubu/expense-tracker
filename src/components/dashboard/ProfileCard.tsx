@@ -1,85 +1,66 @@
 "use client";
 
-import { MagicCard } from "@/components/magicui/magic-card";
-import { BorderBeam } from "@/components/magicui/border-beam";
-import { cn } from "@/lib/utils";
-import { useProfileStore } from "@/store/useProfileStore";
-import { useUIStore } from "@/store/useUIStore";
-import { getCurrencySymbol } from "@/lib/currencies";
-import { getProfileType } from "@/lib/profiles";
-import { Plus } from "lucide-react";
+import { motion } from "framer-motion";
+import { MoreHorizontal } from "lucide-react";
 import * as LucideIcons from "lucide-react";
+import { NumberTicker } from "@/components/magicui/number-ticker";
 
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
   return Icon || LucideIcons.Wallet;
 }
 
-export function ProfileCards() {
-  const { profiles, activeProfileId, setActiveProfile } = useProfileStore();
-  const { selectedCurrency, openModal } = useUIStore();
-  const symbol = getCurrencySymbol(selectedCurrency);
+interface ProfileCardProps {
+  profile: any;
+  netBalance: number;
+}
+
+export function ProfileCard({ profile, netBalance }: ProfileCardProps) {
+  const Icon = getIcon(profile.icon);
+  const percentage = netBalance > 0 ? (profile.balance / netBalance) * 100 : 0;
 
   return (
-    <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-      {profiles.map((profile) => {
-        const isActive = activeProfileId === profile.id;
-        const profileType = getProfileType(profile.type);
-        const Icon = getIcon(profile.icon);
-
-        return (
-          <button
-            key={profile.id}
-            onClick={() => setActiveProfile(isActive ? null : profile.id)}
-            className="flex-shrink-0"
-          >
-            <MagicCard
-              className={cn(
-                "relative w-44 cursor-pointer p-4 transition-all duration-200",
-                isActive ? "ring-1 ring-brand-purple/30" : "opacity-80 hover:opacity-100"
-              )}
-              gradientColor={profile.color}
-              gradientOpacity={0.12}
-            >
-              {isActive && <BorderBeam colorFrom={profile.color} colorTo={profile.color + "80"} />}
-
-              <div className="flex items-center gap-2.5 mb-3">
-                <div
-                  className="flex h-9 w-9 items-center justify-center rounded-lg"
-                  style={{ backgroundColor: profile.color + "20" }}
-                >
-                  <Icon className="h-4.5 w-4.5" style={{ color: profile.color }} />
-                </div>
-                <div className="text-left">
-                  <p className="text-sm font-medium text-text-primary truncate max-w-[80px]">
-                    {profile.name}
-                  </p>
-                  <p className="text-[10px] text-text-muted">
-                    {profileType?.label || profile.type}
-                  </p>
-                </div>
-              </div>
-
-              <p className="text-lg font-bold text-text-primary tabular-nums text-left">
-                {symbol} {profile.balance.toLocaleString("en-US", { minimumFractionDigits: 0 })}
-              </p>
-            </MagicCard>
-          </button>
-        );
-      })}
-
-      {/* Add Profile Card */}
-      <button
-        onClick={() => openModal("createProfile")}
-        className="flex-shrink-0"
-      >
-        <div className="flex h-full w-44 items-center justify-center rounded-xl border border-dashed border-white/[0.1] bg-white/[0.02] p-4 transition-colors hover:border-white/[0.2] hover:bg-white/[0.04]">
-          <div className="flex flex-col items-center gap-2 text-text-muted">
-            <Plus className="h-6 w-6" />
-            <span className="text-xs font-medium">Add Profile</span>
+    <motion.div
+      whileHover={{ y: -1 }}
+      className="flex flex-col justify-between h-[140px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-[var(--radius-md)] p-4 hover:border-[var(--border-default)] transition-all duration-150"
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent-glow)] text-[var(--accent-light)]">
+            <Icon className="h-3.5 w-3.5" />
           </div>
+          <span className="text-[14px] font-medium text-[var(--text-primary)]">
+            {profile.name}
+          </span>
         </div>
-      </button>
-    </div>
+        <button className="text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors">
+          <MoreHorizontal className="h-4 w-4" />
+        </button>
+      </div>
+
+      <div className="mt-4">
+        <div className="flex items-baseline gap-1">
+          <span className="font-mono text-[14px] text-[var(--text-muted)]">৳</span>
+          <NumberTicker
+            value={profile.balance}
+            className="font-mono text-[24px] font-semibold text-[var(--text-primary)] tracking-tight"
+            decimalPlaces={0}
+            duration={1.2}
+          />
+        </div>
+      </div>
+
+      <div className="mt-auto pt-4">
+        <div className="h-1 w-full rounded-sm bg-[var(--border-subtle)] overflow-hidden">
+          <div
+            className="h-full rounded-sm"
+            style={{
+              width: `${Math.min(Math.max(percentage, 0), 100)}%`,
+              background: "linear-gradient(to right, var(--accent), var(--accent-light))",
+            }}
+          />
+        </div>
+      </div>
+    </motion.div>
   );
 }

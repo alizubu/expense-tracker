@@ -17,12 +17,15 @@ interface ProfileState {
   updateBalance: (profileId: string, amount: number) => void;
   getProfile: (id: string) => Profile | undefined;
   getTotalBalance: () => number;
+  setProfiles: (profiles: Profile[]) => void;
 }
 
 export const useProfileStore = create<ProfileState>((set, get) => ({
   profiles: [],
   activeProfileId: null,
   isLoading: false,
+
+  setProfiles: (profiles) => set({ profiles }),
 
   fetchProfiles: async () => {
     set({ isLoading: true });
