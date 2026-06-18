@@ -15,7 +15,7 @@ interface CreateProfileModalProps {
 export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileModalProps) {
   const { addProfile } = useProfileStore();
   const [selectedType, setSelectedType] = useState<(typeof PROFILE_TYPES)[number]>(PROFILE_TYPES[0]);
-  const [name, setName] = useState(PROFILE_TYPES[0].label);
+  const [name, setName] = useState<string>(PROFILE_TYPES[0].label);
   const [balance, setBalance] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
