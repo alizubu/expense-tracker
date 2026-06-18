@@ -15,7 +15,7 @@ interface CreateProfileModalProps {
 export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileModalProps) {
   const { addProfile } = useProfileStore();
   const [selectedType, setSelectedType] = useState<(typeof PROFILE_TYPES)[number]>(PROFILE_TYPES[0]);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(PROFILE_TYPES[0].label);
   const [balance, setBalance] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,7 +54,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
       toast.success("Profile created successfully!");
 
       // Success — reset and close
-      setName("");
+      setName(PROFILE_TYPES[0].label);
       setBalance("");
       setDescription("");
       setSelectedType(PROFILE_TYPES[0]);
@@ -70,7 +70,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
 
   const handleClose = () => {
     if (loading) return;
-    setName("");
+    setName(PROFILE_TYPES[0].label);
     setBalance("");
     setDescription("");
     setError("");
@@ -88,15 +88,15 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
 
       {/* Modal */}
       <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-        <div className="w-full max-w-lg bg-[#16161E] border border-white/10
-                        rounded-2xl shadow-2xl animate-scale-in max-h-[90vh] flex flex-col">
+        <div className="w-full max-w-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)]
+                        rounded-[var(--radius-xl)] shadow-2xl animate-scale-in max-h-[90vh] flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/10">
-            <h2 className="text-lg font-semibold text-white">Add New Profile</h2>
+          <div className="flex items-center justify-between p-6 border-b border-[var(--border-subtle)]">
+            <h2 className="text-[15px] font-semibold text-[var(--text-primary)]">Add New Profile</h2>
             <button
               onClick={handleClose}
               disabled={loading}
-              className="text-slate-400 hover:text-white transition p-1 rounded-lg hover:bg-white/10"
+              className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors p-1"
             >
               <X size={20} />
             </button>
@@ -106,7 +106,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
           <div className="p-6 space-y-5 overflow-y-auto">
             {/* Profile Type Selector */}
             <div>
-              <label className="text-sm text-slate-400 mb-3 block">Wallet Type</label>
+              <label className="text-[12px] font-medium text-[var(--text-secondary)] mb-3 block">Wallet Type</label>
               <div className="grid grid-cols-4 gap-2">
                 {PROFILE_TYPES.map((p) => (
                   <button
@@ -114,12 +114,12 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
                     onClick={() => handleTypeSelect(p)}
                     className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all text-center ${
                       selectedType.type === p.type
-                        ? "border-brand-purple bg-brand-purple/10"
-                        : "border-white/10 hover:border-white/20 hover:bg-white/5"
+                        ? "border-[var(--accent)] bg-[var(--accent-glow)]"
+                        : "border-[var(--border-subtle)] hover:border-[var(--border-default)] hover:bg-[var(--bg-hover)]"
                     }`}
                   >
                     <span className="text-2xl">{p.emoji}</span>
-                    <span className="text-xs text-white font-medium leading-tight">{p.label}</span>
+                    <span className="text-[11px] text-[var(--text-primary)] font-medium leading-tight">{p.label}</span>
                   </button>
                 ))}
               </div>
@@ -127,7 +127,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
 
             {/* Profile Name */}
             <div>
-              <label className="text-sm text-slate-400 mb-2 block">
+              <label className="text-[12px] font-medium text-[var(--text-secondary)] mb-2 block">
                 Profile Name <span className="text-red-400">*</span>
               </label>
               <input
@@ -135,44 +135,44 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
                 placeholder={`e.g. My ${selectedType.label}`}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-[#1C1C27] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-purple transition"
+                className="w-full h-10 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] px-3 text-[13px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-all"
               />
             </div>
 
             {/* Starting Balance */}
             <div>
-              <label className="text-sm text-slate-400 mb-2 block">Starting Balance</label>
+              <label className="text-[12px] font-medium text-[var(--text-secondary)] mb-2 block">Starting Balance</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">৳</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] font-medium">৳</span>
                 <input
                   type="number"
                   placeholder="0.00"
                   value={balance}
                   onChange={(e) => setBalance(e.target.value)}
                   min="0"
-                  className="w-full bg-[#1C1C27] border border-white/10 rounded-xl pl-8 pr-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-purple transition"
+                  className="w-full h-10 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] pl-8 pr-3 text-[13px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-all"
                 />
               </div>
-              <p className="text-xs text-slate-500 mt-1">Enter how much you currently have in this wallet</p>
+              <p className="text-[11px] text-[var(--text-muted)] mt-1">Enter how much you currently have in this wallet</p>
             </div>
 
             {/* Description */}
             <div>
-              <label className="text-sm text-slate-400 mb-2 block">
-                Description <span className="text-slate-600 text-xs">(optional)</span>
+              <label className="text-[12px] font-medium text-[var(--text-secondary)] mb-2 block">
+                Description <span className="text-[var(--text-muted)] text-[11px]">(optional)</span>
               </label>
               <input
                 type="text"
                 placeholder="e.g. Dutch-Bangla Bank account"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-[#1C1C27] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:border-brand-purple transition"
+                className="w-full h-10 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] px-3 text-[13px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-all"
               />
             </div>
 
             {/* Preview */}
-            <div className="bg-[#1C1C27] rounded-xl p-4 border border-white/5">
-              <p className="text-xs text-slate-500 mb-2">Preview</p>
+            <div className="bg-[var(--bg-surface)] rounded-[var(--radius-md)] p-4 border border-[var(--border-subtle)]">
+              <p className="text-[11px] text-[var(--text-muted)] mb-2 uppercase tracking-wider font-semibold">Preview</p>
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
@@ -181,15 +181,15 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
                   {selectedType.emoji}
                 </div>
                 <div>
-                  <p className="text-white font-medium">{name || selectedType.label}</p>
-                  <p className="text-slate-400 text-sm">৳ {parseFloat(balance || "0").toLocaleString("en-US")}</p>
+                  <p className="text-[14px] text-[var(--text-primary)] font-medium">{name || selectedType.label}</p>
+                  <p className="text-[var(--text-secondary)] text-[12px]">৳ {parseFloat(balance || "0").toLocaleString("en-US")}</p>
                 </div>
               </div>
             </div>
 
             {/* Error */}
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-sm">
+              <div className="bg-[var(--red-dim)] border border-[rgba(244,63,94,0.2)] rounded-[var(--radius-sm)] px-4 py-3 text-[var(--red)] text-[12px]">
                 {error}
               </div>
             )}
@@ -200,14 +200,14 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
             <button
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 py-3 border border-white/10 text-slate-400 hover:border-white/20 hover:text-white rounded-xl transition disabled:opacity-50"
+              className="flex-1 h-10 border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-[var(--radius-sm)] transition-all text-[13px] font-medium disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={loading || !name.trim()}
-              className="flex-1 py-3 bg-brand-purple hover:bg-brand-purple/90 text-white font-medium rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 h-10 bg-[var(--accent)] hover:bg-[#6D28D9] text-white font-medium rounded-[var(--radius-sm)] transition-all text-[13px] shadow-[0_0_20px_var(--accent-glow)] flex items-center justify-center disabled:opacity-50"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

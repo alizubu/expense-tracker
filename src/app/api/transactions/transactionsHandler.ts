@@ -14,8 +14,9 @@ export async function GET(req: NextRequest) {
   const type = searchParams.get("type");
   const month = searchParams.get("month");
   const year = searchParams.get("year");
+  const trash = searchParams.get("trash") === "true";
 
-  const where: any = { userId: session.user.id };
+  const where: any = { userId: session.user.id, isDeleted: trash };
   if (profileId) where.profileId = profileId;
   if (type) where.type = type;
   if (month && year) {
@@ -127,7 +128,75 @@ export async function DELETE(req: NextRequest) {
     });
   }
 
-  await prisma.transaction.delete({ where: { id } });
+  await prisma.transaction.update({ where: { id }, data: { isDeleted: true } });
 
   return NextResponse.json({ success: true });
+}
+
+export async function PUT(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = await req.json();
+  const { id, ...data } = body;
+  if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
+
+  const oldTxn = await prisma.transaction.findUnique({ where: { id } });
+  if (!oldTxn || oldTxn.userId !== session.user.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // Handle Restore
+  if (data.isDeleted === false && oldTxn.isDeleted === true) {
+    if (oldTxn.type === "INCOME") {
+      await prisma.profile.update({ where: { id: oldTxn.profileId }, data: { balance: { increment: oldTxn.amount } } });
+    } else if (oldTxn.type === "EXPENSE") {
+      await prisma.profile.update({ where: { id: oldTxn.profileId }, data: { balance: { decrement: oldTxn.amount } } });
+    } else if (oldTxn.type === "TRANSFER" && oldTxn.toProfileId) {
+      await prisma.profile.update({ where: { id: oldTxn.profileId }, data: { balance: { decrement: oldTxn.amount } } });
+      await prisma.profile.update({ where: { id: oldTxn.toProfileId }, data: { balance: { increment: oldTxn.amount } } });
+    }
+    const updated = await prisma.transaction.update({ where: { id }, data: { isDeleted: false } });
+    return NextResponse.json(updated);
+  }
+
+  // Handle Edit
+  if (!oldTxn.isDeleted && (data.amount !== undefined || data.type !== undefined || data.profileId !== undefined)) {
+    // Reverse old
+    if (oldTxn.type === "INCOME") {
+      await prisma.profile.update({ where: { id: oldTxn.profileId }, data: { balance: { decrement: oldTxn.amount } } });
+    } else if (oldTxn.type === "EXPENSE") {
+      await prisma.profile.update({ where: { id: oldTxn.profileId }, data: { balance: { increment: oldTxn.amount } } });
+    } else if (oldTxn.type === "TRANSFER" && oldTxn.toProfileId) {
+      await prisma.profile.update({ where: { id: oldTxn.profileId }, data: { balance: { increment: oldTxn.amount } } });
+      await prisma.profile.update({ where: { id: oldTxn.toProfileId }, data: { balance: { decrement: oldTxn.amount } } });
+    }
+
+    // Apply new
+    const newType = data.type ?? oldTxn.type;
+    const newAmount = data.amount ?? oldTxn.amount;
+    const newProfileId = data.profileId ?? oldTxn.profileId;
+    const newToProfileId = data.toProfileId !== undefined ? data.toProfileId : oldTxn.toProfileId;
+
+    if (newType === "INCOME") {
+      await prisma.profile.update({ where: { id: newProfileId }, data: { balance: { increment: newAmount } } });
+    } else if (newType === "EXPENSE") {
+      await prisma.profile.update({ where: { id: newProfileId }, data: { balance: { decrement: newAmount } } });
+    } else if (newType === "TRANSFER" && newToProfileId) {
+      await prisma.profile.update({ where: { id: newProfileId }, data: { balance: { decrement: newAmount } } });
+      await prisma.profile.update({ where: { id: newToProfileId }, data: { balance: { increment: newAmount } } });
+    }
+  }
+
+  const updated = await prisma.transaction.update({
+    where: { id },
+    data: {
+      ...data,
+      date: data.date ? new Date(data.date) : undefined,
+    }
+  });
+
+  return NextResponse.json(updated);
 }

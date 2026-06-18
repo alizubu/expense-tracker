@@ -1,1 +1,1 @@
-export { GET, POST, DELETE } from './transactionsHandler';
+export { GET, POST, PUT, DELETE } from './transactionsHandler';

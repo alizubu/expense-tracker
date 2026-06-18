@@ -11,6 +11,7 @@ interface TransactionFilters {
   dateRange: { from: Date | null; to: Date | null };
   sortBy: "date" | "amount" | "category";
   sortOrder: "asc" | "desc";
+  showDeleted: boolean;
 }
 
 interface TransactionState {
@@ -19,8 +20,9 @@ interface TransactionState {
   isLoading: boolean;
   fetchTransactions: () => Promise<void>;
   addTransaction: (transaction: Omit<Transaction, "id" | "createdAt" | "updatedAt" | "userId">) => Promise<void>;
-  updateTransaction: (id: string, updates: Partial<Transaction>) => void;
+  updateTransaction: (id: string, updates: Partial<Transaction>) => Promise<void>;
   deleteTransaction: (id: string) => Promise<void>;
+  restoreTransaction: (id: string) => Promise<void>;
   duplicateTransaction: (id: string) => void;
   setFilters: (filters: Partial<TransactionFilters>) => void;
   resetFilters: () => void;
@@ -35,6 +37,7 @@ const defaultFilters: TransactionFilters = {
   dateRange: { from: null, to: null },
   sortBy: "date",
   sortOrder: "desc",
+  showDeleted: false,
 };
 
 export const useTransactionStore = create<TransactionState>((set, get) => ({
@@ -45,7 +48,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   fetchTransactions: async () => {
     set({ isLoading: true });
     try {
-      const res = await fetch("/api/transactions");
+      const res = await fetch(`/api/transactions?trash=${get().filters.showDeleted ? "true" : "false"}`);
       const data = await res.json();
       set({ transactions: Array.isArray(data) ? data : [], isLoading: false });
     } catch (error) {
@@ -68,17 +71,43 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     }
   },
 
-  updateTransaction: (id, updates) => {
-    set((state) => ({
-      transactions: state.transactions.map((t) =>
-        t.id === id ? { ...t, ...updates } : t
-      ),
-    }));
+  updateTransaction: async (id, updates) => {
+    try {
+      const res = await fetch("/api/transactions", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...updates }),
+      });
+      const updatedTxn = await res.json();
+      set((state) => ({
+        transactions: state.transactions.map((t) =>
+          t.id === id ? updatedTxn : t
+        ),
+      }));
+      // also refetch to sync balances if necessary, but this requires profile store
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   deleteTransaction: async (id) => {
     try {
       await fetch(`/api/transactions?id=${id}`, { method: "DELETE" });
+      set((state) => ({
+        transactions: state.transactions.filter((t) => t.id !== id),
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  restoreTransaction: async (id) => {
+    try {
+      await fetch("/api/transactions", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, isDeleted: false }),
+      });
       set((state) => ({
         transactions: state.transactions.filter((t) => t.id !== id),
       }));

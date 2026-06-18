@@ -49,7 +49,7 @@ export function MagicCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#16161E] transition-colors hover:border-white/[0.15]",
+        "relative overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] transition-colors hover:border-[var(--border-default)]",
         className
       )}
     >

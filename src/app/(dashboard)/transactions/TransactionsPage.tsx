@@ -9,8 +9,9 @@ import { getCategoryById } from "@/lib/categories";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { formatGroupDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { Search, Filter, Download, Trash2, MoreVertical, X } from "lucide-react";
+import { Search, Filter, Download, Trash2, MoreVertical, X, ArchiveRestore } from "lucide-react";
 import * as LucideIcons from "lucide-react";
+import { EditTransactionModal } from "@/components/transactions/EditTransactionModal";
 
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
@@ -25,8 +26,16 @@ export default function TransactionsPage() {
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [editTxnId, setEditTxnId] = useState<string | null>(null);
 
   const filtered = getFilteredTransactions();
+  const editTransaction = transactions.find(t => t.id === editTxnId);
+
+  const toggleTrashView = () => {
+    setFilters({ showDeleted: !filters.showDeleted });
+    // Trigger a refetch
+    useTransactionStore.getState().fetchTransactions();
+  };
 
   // Group by date
   const grouped = useMemo(() => {
@@ -115,6 +124,20 @@ export default function TransactionsPage() {
             <option value="amount">Sort by Amount</option>
             <option value="category">Sort by Category</option>
           </select>
+
+          {/* Trash Toggle */}
+          <button
+            onClick={toggleTrashView}
+            className={cn(
+              "flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors ml-auto",
+              filters.showDeleted
+                ? "bg-[var(--red-dim)] text-[var(--red)] border border-[rgba(244,63,94,0.2)]"
+                : "bg-white/[0.04] text-text-secondary hover:text-text-primary hover:bg-white/[0.08] border border-white/[0.06]"
+            )}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            {filters.showDeleted ? "Exit Trash" : "View Trash"}
+          </button>
         </div>
       </BlurFade>
 
@@ -229,22 +252,36 @@ export default function TransactionsPage() {
                           <MoreVertical className="h-4 w-4" />
                         </button>
                         {openMenuId === transaction.id && (
-                          <div className="absolute right-0 top-full mt-1 z-20 w-36 rounded-lg border border-white/[0.08] bg-background-elevated py-1 shadow-xl">
-                            <button className="flex w-full items-center gap-2 px-3 py-2 text-xs text-text-secondary hover:bg-white/[0.05]">
-                              <LucideIcons.Pencil className="h-3.5 w-3.5" /> Edit
-                            </button>
-                            <button
-                              onClick={() => { useTransactionStore.getState().duplicateTransaction(transaction.id); setOpenMenuId(null); }}
-                              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-text-secondary hover:bg-white/[0.05]"
-                            >
-                              <LucideIcons.Copy className="h-3.5 w-3.5" /> Duplicate
-                            </button>
-                            <button
-                              onClick={() => { deleteTransaction(transaction.id); setOpenMenuId(null); }}
-                              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-expense hover:bg-white/[0.05]"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" /> Delete
-                            </button>
+                          <div className="absolute right-0 top-full mt-1 z-20 w-36 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] py-1 shadow-xl">
+                            {!filters.showDeleted ? (
+                              <>
+                                <button
+                                  onClick={() => { setEditTxnId(transaction.id); setOpenMenuId(null); }}
+                                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                                >
+                                  <LucideIcons.Pencil className="h-3.5 w-3.5" /> Edit
+                                </button>
+                                <button
+                                  onClick={() => { useTransactionStore.getState().duplicateTransaction(transaction.id); setOpenMenuId(null); }}
+                                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                                >
+                                  <LucideIcons.Copy className="h-3.5 w-3.5" /> Duplicate
+                                </button>
+                                <button
+                                  onClick={() => { deleteTransaction(transaction.id); setOpenMenuId(null); }}
+                                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-[var(--red)] hover:bg-[var(--bg-hover)]"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" /> Delete
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                onClick={() => { useTransactionStore.getState().restoreTransaction(transaction.id); setOpenMenuId(null); }}
+                                className="flex w-full items-center gap-2 px-3 py-2 text-xs text-[var(--green)] hover:bg-[var(--bg-hover)]"
+                              >
+                                <ArchiveRestore className="h-3.5 w-3.5" /> Restore
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>
@@ -267,6 +304,12 @@ export default function TransactionsPage() {
 
       {/* Modal */}
       {/* GlobalModals handles AddTransactionModal */}
+      {editTxnId && editTransaction && (
+        <EditTransactionModal
+          transaction={editTransaction}
+          onClose={() => setEditTxnId(null)}
+        />
+      )}
     </div>
   );
 }
