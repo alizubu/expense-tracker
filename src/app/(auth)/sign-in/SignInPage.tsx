@@ -5,26 +5,92 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
-import { Wallet, ArrowRight, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { Wallet, ArrowRight, Loader2, Eye, EyeOff } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
+/* ─── MagicUI imports ─────────────────────────────────────────────────────── */
+import { Meteors } from "@/components/magicui/meteors";
+import { BorderBeam } from "@/components/magicui/border-beam";
+import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
+import { Sparkles } from "@/components/magicui/sparkles";
+
+/* ─── Tiny shimmer-line component (inline, no extra file needed) ─────────── */
+function GridLines() {
+  return (
+    <svg
+      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.04]"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid)" />
+    </svg>
+  );
+}
+
+/* ─── Floating orb blobs ─────────────────────────────────────────────────── */
+function Orbs() {
+  return (
+    <>
+      {/* top-left purple */}
+      <motion.div
+        aria-hidden
+        animate={{ scale: [1, 1.15, 1], opacity: [0.35, 0.55, 0.35] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -top-32 -left-32 h-[480px] w-[480px] rounded-full bg-violet-600/25 blur-[120px]"
+      />
+      {/* bottom-right indigo */}
+      <motion.div
+        aria-hidden
+        animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
+        className="pointer-events-none absolute -bottom-40 -right-20 h-[420px] w-[420px] rounded-full bg-indigo-500/20 blur-[100px]"
+      />
+      {/* center accent */}
+      <motion.div
+        aria-hidden
+        animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.22, 0.1] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/15 blur-[80px]"
+      />
+    </>
+  );
+}
+
+/* ─── Stagger helpers ────────────────────────────────────────────────────── */
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.45, ease, delay },
+});
+
+const fadeLeft = (delay = 0) => ({
+  initial: { opacity: 0, x: -16 },
+  animate: { opacity: 1, x: 0 },
+  transition: { duration: 0.4, ease, delay },
+});
+
+/* ════════════════════════════════════════════════════════════════════════════
+   SIGN-IN PAGE
+   ════════════════════════════════════════════════════════════════════════════ */
 export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState<"email" | "password" | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const res = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
+      const res = await signIn("credentials", { email, password, redirect: false });
       if (res?.error) {
         toast.error("Invalid email or password");
       } else {
@@ -32,7 +98,7 @@ export default function SignInPage() {
         router.push("/");
         router.refresh();
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred during sign in");
     } finally {
       setLoading(false);
@@ -40,123 +106,230 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Animated Elements */}
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple/20 rounded-full blur-[128px] pointer-events-none"
-      />
-      <motion.div
-        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[128px] pointer-events-none"
-      />
+    <div className="relative min-h-screen overflow-hidden bg-[#08080f] flex items-center justify-center p-4">
 
+      {/* ── Background layers ─────────────────────────────────────── */}
+      <GridLines />
+      <Orbs />
+
+      {/* MagicUI meteors — subtle, not overwhelming */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <Meteors number={14} />
+      </div>
+
+      {/* ── Card ─────────────────────────────────────────────────── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-full max-w-md relative z-10"
+        {...fadeUp(0)}
+        className="relative z-10 w-full max-w-[420px]"
       >
-        <div className="bg-[#16161E]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
-          <div className="flex flex-col items-center mb-8">
+        {/* Outer glow ring */}
+        <div className="absolute -inset-[1px] rounded-[28px] bg-gradient-to-br from-violet-600/40 via-transparent to-indigo-600/30 blur-[2px]" />
+
+        {/* Card body */}
+        <div className="relative rounded-[26px] border border-white/[0.08] bg-[#0f0f1a]/90 px-8 py-9 shadow-2xl backdrop-blur-2xl">
+
+          {/* BorderBeam — MagicUI animated conic border */}
+          <BorderBeam
+            size={220}
+            duration={10}
+            colorFrom="#7c3aed"
+            colorTo="#4f46e5"
+            borderWidth={1.2}
+          />
+
+          {/* ── Header ──────────────────────────────────────────── */}
+          <div className="mb-9 flex flex-col items-center">
+            {/* Logo icon with Sparkles */}
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
-              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-purple/20 mb-6 shadow-[0_0_30px_rgba(124,58,237,0.3)]"
+              initial={{ scale: 0, rotate: -15 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.1 }}
+              className="relative mb-5"
             >
-              <Wallet className="h-7 w-7 text-brand-purple-light" />
+              <div className="flex h-[60px] w-[60px] items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 shadow-[0_0_32px_rgba(124,58,237,0.45)]">
+                <Wallet className="h-7 w-7 text-white" />
+              </div>
+              {/* Sparkles around the logo */}
+              <div className="pointer-events-none absolute -inset-3">
+                <Sparkles
+                  density={6}
+                  color="#a78bfa"
+                  size={1.2}
+                  speed={1.4}
+                  opacity={0.7}
+                />
+              </div>
             </motion.div>
+
+            {/* Animated gradient badge */}
+            <motion.div {...fadeUp(0.18)} className="mb-3">
+              <AnimatedGradientText className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-[11px] font-medium tracking-widest text-violet-300 uppercase">
+                ExpenseTracker
+              </AnimatedGradientText>
+            </motion.div>
+
             <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-3xl font-bold text-white tracking-tight"
+              {...fadeUp(0.24)}
+              className="text-[26px] font-bold tracking-tight text-white"
             >
               Welcome back
             </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-slate-400 mt-2 text-sm"
-            >
-              Sign in to your ExpenseTracker
+            <motion.p {...fadeUp(0.3)} className="mt-1.5 text-[13px] text-slate-500">
+              Sign in to continue to your account
             </motion.p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <label className="block text-sm font-medium text-slate-300 mb-2">Email address</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full h-12 px-4 bg-white/[0.03] border border-white/10 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:border-brand-purple/50 focus:bg-white/[0.05] transition-all"
-                placeholder="you@example.com"
-              />
+          {/* ── Form ────────────────────────────────────────────── */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+
+            {/* Email */}
+            <motion.div {...fadeLeft(0.36)}>
+              <label className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-slate-400">
+                Email
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => setFocusedField("email")}
+                  onBlur={() => setFocusedField(null)}
+                  required
+                  inputMode="email"
+                  placeholder="you@example.com"
+                  className="
+                    w-full rounded-xl border bg-white/[0.03] px-4 py-3 text-[14px] text-white
+                    placeholder:text-slate-600 outline-none transition-all duration-200
+                    border-white/[0.08]
+                    focus:border-violet-500/60 focus:bg-violet-500/[0.04]
+                    focus:shadow-[0_0_0_3px_rgba(124,58,237,0.12)]
+                  "
+                />
+                {/* animated underline when focused */}
+                <AnimatePresence>
+                  {focusedField === "email" && (
+                    <motion.div
+                      key="email-line"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      exit={{ scaleX: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="absolute bottom-0 left-4 right-4 h-[1.5px] origin-left rounded-full bg-gradient-to-r from-violet-500 to-indigo-500"
+                    />
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-slate-300">Password</label>
-                <Link href="#" className="text-xs text-brand-purple hover:text-brand-purple-light transition-colors">
+
+            {/* Password */}
+            <motion.div {...fadeLeft(0.42)}>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="block text-[12px] font-medium uppercase tracking-wider text-slate-400">
+                  Password
+                </label>
+                <Link
+                  href="#"
+                  className="text-[11px] text-violet-400 transition-colors hover:text-violet-300"
+                >
                   Forgot password?
                 </Link>
               </div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full h-12 px-4 bg-white/[0.03] border border-white/10 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:border-brand-purple/50 focus:bg-white/[0.05] transition-all"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setFocusedField("password")}
+                  onBlur={() => setFocusedField(null)}
+                  required
+                  placeholder="••••••••"
+                  className="
+                    w-full rounded-xl border bg-white/[0.03] px-4 py-3 pr-11 text-[14px] text-white
+                    placeholder:text-slate-600 outline-none transition-all duration-200
+                    border-white/[0.08]
+                    focus:border-violet-500/60 focus:bg-violet-500/[0.04]
+                    focus:shadow-[0_0_0_3px_rgba(124,58,237,0.12)]
+                  "
+                />
+                {/* show/hide toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-300"
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+                <AnimatePresence>
+                  {focusedField === "password" && (
+                    <motion.div
+                      key="pw-line"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      exit={{ scaleX: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="absolute bottom-0 left-4 right-4 h-[1.5px] origin-left rounded-full bg-gradient-to-r from-violet-500 to-indigo-500"
+                    />
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="pt-2"
-            >
+
+            {/* Submit */}
+            <motion.div {...fadeUp(0.5)} className="pt-2">
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.015 }}
+                whileTap={{ scale: 0.975 }}
                 type="submit"
                 disabled={loading}
-                className="group relative w-full h-12 bg-gradient-to-r from-brand-purple to-indigo-600 hover:from-brand-purple-light hover:to-indigo-500 text-white font-medium rounded-xl transition-all disabled:opacity-50 flex items-center justify-center overflow-hidden"
+                className="
+                  group relative w-full overflow-hidden rounded-xl py-3
+                  bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600
+                  text-[14px] font-semibold text-white
+                  shadow-[0_0_24px_rgba(124,58,237,0.35)]
+                  hover:shadow-[0_0_36px_rgba(124,58,237,0.55)]
+                  disabled:cursor-not-allowed disabled:opacity-50
+                  transition-shadow duration-300
+                "
               >
-                {loading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <>
-                    <span className="relative z-10">Sign In</span>
-                    <ArrowRight className="absolute right-4 h-5 w-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
-                  </>
-                )}
+                {/* shimmer sweep on hover */}
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+
+                <span className="relative flex items-center justify-center gap-2">
+                  {loading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      Sign In
+                      <motion.span
+                        initial={false}
+                        className="inline-flex"
+                        animate={{ x: 0, opacity: 1 }}
+                      >
+                        <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                      </motion.span>
+                    </>
+                  )}
+                </span>
               </motion.button>
             </motion.div>
           </form>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="text-center text-sm text-slate-400 mt-8"
-          >
+          {/* ── Divider ─────────────────────────────────────────── */}
+          <motion.div {...fadeUp(0.56)} className="my-7 flex items-center gap-4">
+            <div className="h-px flex-1 bg-white/[0.06]" />
+            <span className="text-[11px] text-slate-600 tracking-widest uppercase">or</span>
+            <div className="h-px flex-1 bg-white/[0.06]" />
+          </motion.div>
+
+          {/* ── Sign up link ─────────────────────────────────────── */}
+          <motion.p {...fadeUp(0.62)} className="text-center text-[13px] text-slate-500">
             Don't have an account?{" "}
-            <Link href="/sign-up" className="text-brand-purple hover:text-brand-purple-light font-medium transition-colors">
-              Create an account
+            <Link
+              href="/sign-up"
+              className="font-semibold text-violet-400 transition-colors hover:text-violet-300 underline underline-offset-2 decoration-violet-500/40"
+            >
+              Create one free
             </Link>
           </motion.p>
         </div>
