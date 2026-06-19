@@ -152,12 +152,12 @@ export default function SignUpPage() {
       </div>
 
       {/* ── Card ────────────────────────────────────────────── */}
-      <motion.div {...fadeUp(0)} className="relative z-10 w-full max-w-[420px]">
+      <motion.div {...fadeUp(0)} className="relative z-10 w-full max-w-[460px]">
 
         {/* outer glow: violet top-right → pink bottom-left */}
         <div className="absolute -inset-[1px] rounded-[28px] bg-gradient-to-br from-violet-600/35 via-transparent to-pink-600/28 blur-[2px]" />
 
-        <div className="relative rounded-[26px] border border-white/[0.08] bg-[#0f0f1a]/92 px-8 py-8 shadow-2xl backdrop-blur-2xl overflow-hidden">
+        <div className="relative rounded-[26px] border border-white/[0.08] bg-[#0f0f1a]/92 px-8 py-6 shadow-2xl backdrop-blur-2xl overflow-hidden">
 
           {/* BorderBeam — violet → pink (distinct from SignIn's violet → indigo) */}
           <BorderBeam
@@ -169,12 +169,12 @@ export default function SignUpPage() {
           />
 
           {/* ── Header ─────────────────────────────────────── */}
-          <div className="mb-6 flex flex-col items-center">
+          <div className="mb-5 flex flex-col items-center">
             <motion.div
               initial={{ scale: 0, rotate: -15 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.1 }}
-              className="relative mb-5"
+              className="relative mb-4"
             >
               {/* gradient: violet → purple → pink */}
               <div className="flex h-[60px] w-[60px] items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 via-purple-600 to-pink-600 shadow-[0_0_32px_rgba(124,58,237,0.45)]">
@@ -200,7 +200,7 @@ export default function SignUpPage() {
           </div>
 
           {/* ── Progress dots (fills as each field is typed) ── */}
-          <motion.div {...fadeUp(0.32)} className="mb-6 flex items-center justify-center gap-2">
+          <motion.div {...fadeUp(0.32)} className="mb-5 flex items-center justify-center gap-2">
             {[name, email, password].map((val, i) => (
               <motion.div
                 key={i}
@@ -233,7 +233,7 @@ export default function SignUpPage() {
                   required
                   placeholder="John Doe"
                   className="
-                    w-full rounded-xl border bg-white/[0.03] py-3 pl-9 pr-4
+                    w-full rounded-xl border bg-white/[0.03] py-2.5 pl-9 pr-4
                     text-[14px] text-white placeholder:text-slate-600
                     outline-none transition-all duration-200
                     border-white/[0.08]
@@ -262,7 +262,7 @@ export default function SignUpPage() {
                   inputMode="email"
                   placeholder="you@example.com"
                   className="
-                    w-full rounded-xl border bg-white/[0.03] py-3 pl-9 pr-4
+                    w-full rounded-xl border bg-white/[0.03] py-2.5 pl-9 pr-4
                     text-[14px] text-white placeholder:text-slate-600
                     outline-none transition-all duration-200
                     border-white/[0.08]
@@ -290,7 +290,7 @@ export default function SignUpPage() {
                   required
                   placeholder="Min. 8 characters"
                   className="
-                    w-full rounded-xl border bg-white/[0.03] py-3 pl-9 pr-11
+                    w-full rounded-xl border bg-white/[0.03] py-2.5 pl-9 pr-11
                     text-[14px] text-white placeholder:text-slate-600
                     outline-none transition-all duration-200
                     border-white/[0.08]
@@ -362,7 +362,7 @@ export default function SignUpPage() {
                 type="submit"
                 disabled={loading}
                 className="
-                  group relative w-full overflow-hidden rounded-xl py-3
+                  group relative w-full overflow-hidden rounded-xl py-2.5
                   bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600
                   text-[14px] font-semibold text-white
                   shadow-[0_0_24px_rgba(124,58,237,0.35)]
@@ -388,7 +388,7 @@ export default function SignUpPage() {
           </form>
 
           {/* ── Divider ──────────────────────────────────────── */}
-          <motion.div {...fadeUp(0.62)} className="my-6 flex items-center gap-4">
+          <motion.div {...fadeUp(0.62)} className="my-5 flex items-center gap-4">
             <div className="h-px flex-1 bg-white/[0.06]" />
             <span className="text-[11px] tracking-widest uppercase text-slate-600">or</span>
             <div className="h-px flex-1 bg-white/[0.06]" />
