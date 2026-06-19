@@ -39,68 +39,57 @@ export function NetBalanceCard() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="flex flex-col w-full bg-[#FFFFFF] rounded-[16px] overflow-hidden"
-      style={{
-        border: "1px solid rgba(0,0,0,0.06)",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05)",
-        padding: "24px 28px"
-      }}
+      className="flex flex-col w-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] shadow-[0_1px_3px_rgba(0,0,0,0.06),_0_4px_16px_rgba(0,0,0,0.04)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),_0_1px_3px_rgba(0,0,0,0.3)] overflow-hidden hover:border-[var(--border-strong)] transition-colors duration-150"
     >
-      <div className="flex flex-col md:flex-row">
-        {/* Left Side (65%) */}
-        <div className="flex flex-col md:w-[65%]">
-          <p className="text-[11px] font-medium tracking-[0.06em] text-[#9CA3AF] mb-2">
-            Net balance
+      <div className="flex flex-col md:flex-row p-6 md:p-8">
+        {/* Left Side (70%) */}
+        <div className="flex-1 md:w-[70%]">
+          <p className="text-[12px] uppercase tracking-[0.05em] text-[var(--text-muted)] mb-2">
+            Net Balance
           </p>
           <div className="flex items-baseline gap-2 mb-6">
-            <span className="font-mono text-3xl font-semibold text-[#111111]">{symbol}</span>
+            <span className="font-mono text-2xl text-[var(--text-secondary)]">{symbol}</span>
             <NumberTicker
               value={totalBalance}
-              className="font-mono text-[52px] font-bold text-[#111111] tracking-tight"
+              className="font-mono text-[clamp(2rem,4vw,3rem)] font-bold text-[var(--text-primary)] tracking-tight"
               decimalPlaces={0}
-              duration={1.5}
+              duration={1.2}
             />
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-4">
-            <div className="px-[12px] py-[4px] rounded-[20px] bg-[#ECFDF5] text-[#059669] font-mono text-[12px] flex items-center gap-1 border border-[rgba(5,150,105,0.15)]">
+          <div className="flex flex-wrap gap-3">
+            <div className="flex items-center gap-1 rounded-full px-[10px] py-[4px] text-[12px] font-medium bg-[var(--green-dim)] text-[var(--green)] border border-[color-mix(in_srgb,var(--green)_20%,transparent)]">
               <span>↑</span>
               <span>{symbol}{totalIncome.toLocaleString()}</span>
             </div>
-            <div className="px-[12px] py-[4px] rounded-[20px] bg-[#FEF2F2] text-[#DC2626] font-mono text-[12px] flex items-center gap-1 border border-[rgba(220,38,38,0.15)]">
+            <div className="flex items-center gap-1 rounded-full px-[10px] py-[4px] text-[12px] font-medium bg-[var(--red-dim)] text-[var(--red)] border border-[color-mix(in_srgb,var(--red)_20%,transparent)]">
               <span>↓</span>
               <span>{symbol}{totalExpense.toLocaleString()}</span>
             </div>
-            <div className="px-[12px] py-[4px] rounded-[20px] bg-[#EEF2FF] text-[#4F46E5] font-mono text-[12px] flex items-center gap-1 border border-[rgba(79,70,229,0.15)]">
-              <span>{savingsRate}% saved</span>
+            <div className="flex items-center gap-1 rounded-full px-[10px] py-[4px] text-[12px] font-medium bg-[var(--accent-glow)] text-[var(--accent-light)] border border-[color-mix(in_srgb,var(--accent)_20%,transparent)]">
+              <span>%</span>
+              <span>{savingsRate}%</span>
             </div>
-          </div>
-          
-          <div className="mt-2 pt-[16px] border-t border-[rgba(0,0,0,0.05)]">
-            <p className="text-[11px] text-[#9CA3AF]">
-              Last updated just now
-            </p>
           </div>
         </div>
 
-        {/* Right Side (35%) - Sparkline */}
-        <div className="mt-6 md:mt-0 md:w-[35%] flex items-center justify-end">
-          <div className="h-[80px] w-full max-w-[220px]">
+        {/* Right Side (30%) - Sparkline */}
+        <div className="mt-6 md:mt-0 md:w-[30%] flex items-center justify-end">
+          <div className="h-[64px] w-full max-w-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={mockSparklineData}>
                 <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="rgba(124,58,237,0.15)" stopOpacity={1}/>
-                    <stop offset="95%" stopColor="rgba(124,58,237,0)" stopOpacity={0}/>
+                  <linearGradient id="sparklineGlow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--accent-glow)" stopOpacity={1}/>
+                    <stop offset="95%" stopColor="var(--accent-glow)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <Area 
                   type="monotone" 
                   dataKey="value" 
-                  stroke="#7C3AED" 
+                  stroke="var(--accent)" 
+                  fill="url(#sparklineGlow)"
                   strokeWidth={2} 
-                  fillOpacity={1} 
-                  fill="url(#colorValue)" 
                   isAnimationActive={true}
                   animationDuration={1500}
                 />
@@ -108,6 +97,13 @@ export function NetBalanceCard() {
             </ResponsiveContainer>
           </div>
         </div>
+      </div>
+
+      {/* Bottom Strip */}
+      <div className="border-t border-[var(--border-subtle)] px-6 md:px-8 py-2 bg-[var(--bg-base)]">
+        <p className="text-[12px] text-[var(--text-muted)]">
+          Last updated just now
+        </p>
       </div>
     </motion.div>
   );

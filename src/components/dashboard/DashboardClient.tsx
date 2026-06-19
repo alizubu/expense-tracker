@@ -122,12 +122,12 @@ export function DashboardClient() {
         {/* Left Column (60%) */}
         <div className="col-span-1 lg:col-span-3 flex flex-col space-y-6">
           {/* Profiles Section */}
-          <div className="flex flex-col w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6">
+          <div className="flex flex-col w-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-6">
              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[13px] font-medium text-[var(--text-primary)]">Your Profiles</h2>
+                <h2 className="text-[13px] font-semibold text-[var(--text-primary)]">Your Profiles</h2>
                 <button 
                   onClick={() => setProfileModalOpen(true)}
-                  className="text-[12px] font-medium text-[var(--accent)] hover:text-[var(--accent-light)] transition-colors"
+                  className="text-[13px] font-medium text-[var(--accent-light)] hover:underline transition-all"
                 >
                   + Add New
                 </button>
@@ -145,7 +145,7 @@ export function DashboardClient() {
 
         {/* Right Column (40%) */}
         <div className="col-span-1 lg:col-span-2">
-          <div className="flex flex-col w-full h-full min-h-[400px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] p-6">
+          <div className="flex flex-col w-full h-full min-h-[400px] bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-6">
             <h2 className="text-[13px] font-medium text-[var(--text-primary)] mb-6">
               Spending by Category
             </h2>
@@ -185,8 +185,8 @@ export function DashboardClient() {
                   </ResponsiveContainer>
                   {/* Center Label Overlay */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-4">
-                    <span className="text-[11px] text-[var(--text-muted)] uppercase tracking-wider mb-1">Total Spent</span>
-                    <span className="font-mono text-[24px] font-semibold text-[var(--text-primary)]">
+                    <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.08em] mb-1">Total Spent</span>
+                    <span className="font-mono text-[1.25rem] font-bold text-[var(--text-primary)]">
                       ৳ {donutData.reduce((acc, curr) => acc + curr.value, 0).toLocaleString()}
                     </span>
                   </div>

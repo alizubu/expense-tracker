@@ -9,14 +9,9 @@ import { useProfileStore } from "@/store/useProfileStore";
 import { EditProfileModal } from "@/components/profiles/EditProfileModal";
 import { toast } from "sonner";
 
-function getProfileIcon(type: string, iconStr: string) {
-  const typeUpper = type?.toUpperCase();
-  if (typeUpper === "CASH" || typeUpper === "Cash") return LucideIcons.Banknote;
-  if (typeUpper === "BANK_ACCOUNT" || typeUpper === "Bank Account") return LucideIcons.Building2;
-  if (iconStr && (LucideIcons as Record<string, any>)[iconStr]) {
-    return (LucideIcons as Record<string, any>)[iconStr];
-  }
-  return LucideIcons.Wallet;
+function getIcon(iconName: string) {
+  const Icon = (LucideIcons as Record<string, any>)[iconName];
+  return Icon || LucideIcons.Wallet;
 }
 
 interface ProfileCardProps {
@@ -25,7 +20,7 @@ interface ProfileCardProps {
 }
 
 export function ProfileCard({ profile, netBalance }: ProfileCardProps) {
-  const Icon = getProfileIcon(profile.type, profile.icon);
+  const Icon = getIcon(profile.icon);
   const percentage = netBalance > 0 ? (profile.balance / netBalance) * 100 : 0;
   
   const [menuOpen, setMenuOpen] = useState(false);
@@ -62,29 +57,22 @@ export function ProfileCard({ profile, netBalance }: ProfileCardProps) {
   return (
     <>
       <motion.div
-        className="flex flex-col h-[180px] bg-[#FFFFFF] rounded-[14px] cursor-pointer relative"
-        style={{
-          border: "1px solid rgba(0,0,0,0.07)",
-          padding: "18px 20px",
-          boxShadow: "0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04)",
-          transition: "all 160ms ease"
-        }}
-        whileHover={{
-          y: -2,
-          boxShadow: "0 4px 16px rgba(0,0,0,0.10), 0 12px 32px rgba(0,0,0,0.06)",
-          borderColor: "rgba(0,0,0,0.10)"
-        }}
+        whileHover={{ y: -1 }}
+        className="flex flex-col justify-between h-[140px] bg-[var(--bg-elevated)] border border-[var(--border-default)] rounded-[var(--radius-lg)] p-4 hover:border-[var(--border-strong)] hover:shadow-[0_0_0_3px_var(--accent-glow)] transition-all duration-150 relative"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[rgba(124,58,237,0.10)] text-[#7C3AED]">
-              <Icon className="h-[18px] w-[18px]" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-glow)] text-[var(--accent-light)]">
+              <Icon className="h-4 w-4" />
             </div>
+            <span className="text-[13px] text-[var(--text-secondary)]">
+              {profile.name}
+            </span>
           </div>
           <div className="relative" ref={menuRef}>
             <button 
               onClick={() => setMenuOpen(!menuOpen)}
-              className="text-[#9CA3AF] hover:text-[#111111] transition-colors p-1"
+              className="text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors p-1"
             >
               <MoreHorizontal className="h-4 w-4" />
             </button>
@@ -94,17 +82,17 @@ export function ProfileCard({ profile, netBalance }: ProfileCardProps) {
                   initial={{ opacity: 0, scale: 0.95, y: -10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                  className="absolute right-0 top-full mt-1 w-36 bg-[#FFFFFF] border border-[rgba(0,0,0,0.10)] rounded-[8px] shadow-lg py-1 z-10"
+                  className="absolute right-0 top-full mt-1 w-36 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-sm)] shadow-lg py-1 z-10"
                 >
                   <button
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEditModalOpen(true); setMenuOpen(false); }}
-                    className="w-full text-left px-3 py-1.5 text-[12px] text-[#6B7280] hover:text-[#111111] hover:bg-[#F3F4F6] flex items-center gap-2"
+                    className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] flex items-center gap-2"
                   >
                     <Edit2 className="h-3.5 w-3.5" /> Edit
                   </button>
                   <button
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDelete(); }}
-                    className="w-full text-left px-3 py-1.5 text-[12px] text-[#DC2626] hover:bg-[#FEF2F2] flex items-center gap-2"
+                    className="w-full text-left px-3 py-1.5 text-[12px] text-red-400 hover:text-red-300 hover:bg-red-500/10 flex items-center gap-2"
                   >
                     <Trash2 className="h-3.5 w-3.5" /> Delete
                   </button>
@@ -114,33 +102,32 @@ export function ProfileCard({ profile, netBalance }: ProfileCardProps) {
           </div>
         </div>
 
-        <div className="mt-[14px]">
-          <div className="text-[12px] font-medium text-[#6B7280] mb-1">
-            {profile.name}
-          </div>
+        <div className="mt-4">
           <div className="flex items-baseline gap-1">
-            <span className="font-mono text-[16px] font-medium text-[#6B7280]">৳</span>
+            <span className="font-mono text-[14px] text-[var(--text-muted)]">৳</span>
             <NumberTicker
               value={profile.balance}
-              className="font-mono text-[28px] font-bold text-[#111111] tracking-tight"
+              className="font-mono text-[24px] font-semibold text-[var(--text-primary)] tracking-tight"
               decimalPlaces={0}
               duration={1.2}
             />
           </div>
         </div>
 
-        <div className="mt-auto pt-[14px]">
-          <div className="h-[6px] w-full rounded-[3px] bg-[#F3F4F6] overflow-hidden">
+        <div className="mt-auto pt-4">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[11px] text-[var(--text-muted)]">
+              {percentage.toFixed(1)}% of total
+            </span>
+          </div>
+          <div className="h-[3px] w-full rounded-full bg-[var(--bg-hover)] overflow-hidden">
             <div
-              className="h-[6px] rounded-[3px]"
+              className="h-full rounded-full"
               style={{
                 width: `${Math.min(Math.max(percentage, 0), 100)}%`,
-                background: "linear-gradient(90deg, #7C3AED, #A78BFA)",
+                background: "linear-gradient(90deg, var(--accent), var(--accent-light))",
               }}
             />
-          </div>
-          <div className="mt-2 text-right text-[11px] text-[#9CA3AF]">
-            {percentage.toFixed(1)}% of total
           </div>
         </div>
       </motion.div>

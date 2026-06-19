@@ -92,16 +92,16 @@ export function SpendingChart() {
       <div className="flex-1 min-h-[200px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              innerRadius="55%"
-              outerRadius="80%"
-              paddingAngle={3}
-              dataKey="value"
-              stroke="none"
-            >
+              <Pie
+                data={chartData}
+                cx="50%"
+                cy="50%"
+                innerRadius="55%"
+                outerRadius="80%"
+                paddingAngle={2}
+                dataKey="value"
+                strokeWidth={0}
+              >
               {chartData.map((entry, index) => (
                 <Cell key={index} fill={entry.color} />
               ))}
@@ -112,14 +112,12 @@ export function SpendingChart() {
       </div>
 
       {/* Legend */}
-      <div className="mt-3 space-y-1.5">
+      <div className="mt-4 flex flex-col">
         {chartData.slice(0, 5).map((item) => (
-          <div key={item.name} className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
-              <span className="text-text-secondary">{item.name}</span>
-            </div>
-            <span className="text-text-primary tabular-nums font-medium">
+          <div key={item.name} className="flex items-center gap-2 py-[6px] border-b border-[var(--border-subtle)] last:border-0">
+            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: item.color }} />
+            <span className="flex-1 text-[13px] text-[var(--text-secondary)]">{item.name}</span>
+            <span className="font-mono text-[13px] font-semibold text-[var(--text-primary)]">
               {symbol} {item.value.toLocaleString("en-US")}
             </span>
           </div>
