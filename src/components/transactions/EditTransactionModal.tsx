@@ -132,13 +132,13 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                     }}
                     className={cn(
                       "flex-1 relative rounded-[var(--radius-sm)] py-2 text-[13px] font-medium transition-colors z-10",
-                      isActive ? "text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+                      isActive ? "text-white text-shadow-sm" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                     )}
                   >
                     {isActive && (
                       <motion.div
                         layoutId="modal-tab"
-                        className="absolute inset-0 rounded-[var(--radius-sm)] bg-[var(--bg-elevated)] shadow-sm border border-[var(--border-subtle)]"
+                        className="absolute inset-0 rounded-[var(--radius-sm)] bg-gradient-to-r from-[var(--accent)] to-[var(--accent-light)] shadow-[0_0_12px_var(--accent-glow)]"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
@@ -173,7 +173,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                 <select
                   value={profileId}
                   onChange={(e) => setProfileId(e.target.value)}
-                  className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-[var(--accent-glow)] transition-all"
+                  className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] hover:border-[var(--accent-light)] hover:shadow-[0_0_12px_var(--accent-glow)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-glow)] transition-all cursor-pointer appearance-none"
                 >
                   {profiles.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -192,7 +192,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                   <select
                     value={toProfileId}
                     onChange={(e) => setToProfileId(e.target.value)}
-                    className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-[var(--accent-glow)] transition-all"
+                    className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] hover:border-[var(--accent-light)] hover:shadow-[0_0_12px_var(--accent-glow)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-glow)] transition-all cursor-pointer appearance-none"
                   >
                     {profiles
                       .filter((p) => p.id !== profileId)
@@ -214,7 +214,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-[var(--accent-glow)] transition-all [color-scheme:dark]"
+                  className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] hover:border-[var(--accent-light)] hover:shadow-[0_0_12px_var(--accent-glow)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-glow)] transition-all cursor-pointer [color-scheme:dark]"
                 />
               </div>
             </div>
@@ -331,7 +331,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
             <button
               type="button"
               onClick={handleSubmit}
-              className="w-full h-12 mt-2 bg-[var(--accent)] hover:bg-[#6D28D9] text-white text-[14px] font-medium rounded-[var(--radius-md)] transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_var(--accent-glow)]"
+              className="w-full h-12 mt-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-light)] hover:from-[var(--accent-light)] hover:to-[var(--accent)] text-white text-[14px] font-semibold rounded-[var(--radius-md)] transition-all flex items-center justify-center gap-2 shadow-[0_4px_16px_var(--accent-glow)] hover:shadow-[0_8px_24px_var(--accent-glow)] active:scale-[0.98]"
             >
               Save Changes
             </button>

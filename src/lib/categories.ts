@@ -23,35 +23,21 @@ export const EXPENSE_CATEGORIES: Category[] = [
     group: "Food & Drink",
   },
   {
-    id: "coffee",
-    label: "Coffee & Tea",
-    icon: "Coffee",
-    color: "#92400E",
+    id: "drinks",
+    label: "Drinks",
+    icon: "CupSoda",
+    color: "#0EA5E9",
     group: "Food & Drink",
   },
   {
-    id: "fastfood",
-    label: "Fast Food",
-    icon: "Sandwich",
+    id: "food",
+    label: "Food",
+    icon: "Utensils",
     color: "#EF4444",
-    group: "Food & Drink",
-  },
-  {
-    id: "delivery",
-    label: "Food Delivery",
-    icon: "Bike",
-    color: "#8B5CF6",
     group: "Food & Drink",
   },
 
   // ── Transport ─────────────────────────────────────────
-  {
-    id: "fuel",
-    label: "Fuel",
-    icon: "Fuel",
-    color: "#3B82F6",
-    group: "Transport",
-  },
   {
     id: "rideshare",
     label: "Ride Share",
@@ -67,54 +53,19 @@ export const EXPENSE_CATEGORIES: Category[] = [
     group: "Transport",
   },
   {
-    id: "parking",
-    label: "Parking",
-    icon: "ParkingCircle",
-    color: "#64748B",
-    group: "Transport",
-  },
-  {
-    id: "flight",
-    label: "Flight",
-    icon: "Plane",
-    color: "#7C3AED",
+    id: "taxi",
+    label: "Taxi",
+    icon: "CarTaxiFront",
+    color: "#FACC15",
     group: "Transport",
   },
 
   // ── Housing & Utilities ───────────────────────────────
   {
-    id: "rent",
-    label: "Rent",
-    icon: "Home",
-    color: "#F97316",
-    group: "Housing",
-  },
-  {
-    id: "electricity",
-    label: "Electricity",
-    icon: "Zap",
-    color: "#EAB308",
-    group: "Housing",
-  },
-  {
     id: "laundry",
     label: "Laundry",
     icon: "WashingMachine",
     color: "#22D3EE",
-    group: "Housing",
-  },
-  {
-    id: "internet",
-    label: "Internet",
-    icon: "Wifi",
-    color: "#6366F1",
-    group: "Housing",
-  },
-  {
-    id: "gas",
-    label: "Gas",
-    icon: "Flame",
-    color: "#FB923C",
     group: "Housing",
   },
   {
@@ -138,20 +89,6 @@ export const EXPENSE_CATEGORIES: Category[] = [
     label: "Doctor / Hospital",
     icon: "Stethoscope",
     color: "#EF4444",
-    group: "Health",
-  },
-  {
-    id: "gym",
-    label: "Gym & Fitness",
-    icon: "Dumbbell",
-    color: "#10B981",
-    group: "Health",
-  },
-  {
-    id: "mentalhealth",
-    label: "Mental Health",
-    icon: "Brain",
-    color: "#A78BFA",
     group: "Health",
   },
 
@@ -194,31 +131,10 @@ export const EXPENSE_CATEGORIES: Category[] = [
 
   // ── Entertainment ─────────────────────────────────────
   {
-    id: "streaming",
-    label: "Streaming",
-    icon: "Tv2",
-    color: "#EC4899",
-    group: "Entertainment",
-  },
-  {
     id: "gaming",
     label: "Gaming",
     icon: "Gamepad2",
     color: "#8B5CF6",
-    group: "Entertainment",
-  },
-  {
-    id: "movies",
-    label: "Movies",
-    icon: "Clapperboard",
-    color: "#F59E0B",
-    group: "Entertainment",
-  },
-  {
-    id: "music",
-    label: "Music",
-    icon: "Music2",
-    color: "#10B981",
     group: "Entertainment",
   },
   {
@@ -237,13 +153,6 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
 
   // ── Education ─────────────────────────────────────────
-  {
-    id: "tuition",
-    label: "Tuition & Fees",
-    icon: "GraduationCap",
-    color: "#7C3AED",
-    group: "Education",
-  },
   {
     id: "books",
     label: "Books",
@@ -272,13 +181,6 @@ export const EXPENSE_CATEGORIES: Category[] = [
     label: "Loan Payment",
     icon: "Landmark",
     color: "#EF4444",
-    group: "Finance",
-  },
-  {
-    id: "insurance",
-    label: "Insurance",
-    icon: "ShieldCheck",
-    color: "#10B981",
     group: "Finance",
   },
   {
@@ -311,20 +213,6 @@ export const EXPENSE_CATEGORIES: Category[] = [
     color: "#FB7185",
     group: "Family",
   },
-  {
-    id: "school",
-    label: "School Expenses",
-    icon: "School",
-    color: "#FBBF24",
-    group: "Family",
-  },
-  {
-    id: "pets",
-    label: "Pets",
-    icon: "PawPrint",
-    color: "#A78BFA",
-    group: "Family",
-  },
 
   // ── Subscriptions ─────────────────────────────────────
   {
@@ -332,20 +220,6 @@ export const EXPENSE_CATEGORIES: Category[] = [
     label: "WiFi Bill",
     icon: "Wifi",
     color: "#38BDF8",
-    group: "Subscriptions",
-  },
-  {
-    id: "cloud",
-    label: "Cloud Storage",
-    icon: "Cloud",
-    color: "#94A3B8",
-    group: "Subscriptions",
-  },
-  {
-    id: "membership",
-    label: "Memberships",
-    icon: "BadgeCheck",
-    color: "#10B981",
     group: "Subscriptions",
   },
 
@@ -372,34 +246,6 @@ export const EXPENSE_CATEGORIES: Category[] = [
     group: "Income",
   },
   {
-    id: "dividend",
-    label: "Dividend",
-    icon: "CircleDollarSign",
-    color: "#22C55E",
-    group: "Income",
-  },
-  {
-    id: "rental",
-    label: "Rental Income",
-    icon: "Building2",
-    color: "#06B6D4",
-    group: "Income",
-  },
-  {
-    id: "bonus",
-    label: "Bonus",
-    icon: "Star",
-    color: "#EAB308",
-    group: "Income",
-  },
-  {
-    id: "refund",
-    label: "Refund",
-    icon: "Undo2",
-    color: "#10B981",
-    group: "Income",
-  },
-  {
     id: "gift_income",
     label: "Gift Received",
     icon: "PackagePlus",
@@ -408,13 +254,6 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
 
   // ── Other ─────────────────────────────────────────────
-  {
-    id: "donation",
-    label: "Donation / Zakat",
-    icon: "Heart",
-    color: "#EF4444",
-    group: "Other",
-  },
   {
     id: "fines",
     label: "Fines & Penalties",
