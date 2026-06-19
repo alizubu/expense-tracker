@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { ResponsiveContainer, LineChart, Line } from "recharts";
+import { ResponsiveContainer, AreaChart, Area } from "recharts";
 import { NumberTicker } from "@/components/magicui/number-ticker";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
@@ -39,65 +39,75 @@ export function NetBalanceCard() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="flex flex-col w-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-lg)] overflow-hidden hover:border-[var(--border-strong)] transition-colors duration-150"
+      className="flex flex-col w-full bg-[#FFFFFF] rounded-[16px] overflow-hidden"
+      style={{
+        border: "1px solid rgba(0,0,0,0.06)",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05)",
+        padding: "24px 28px"
+      }}
     >
-      <div className="flex flex-col md:flex-row p-6 md:p-8">
-        {/* Left Side (70%) */}
-        <div className="flex-1 md:w-[70%]">
-          <p className="text-[10px] font-medium tracking-[0.1em] text-[var(--text-muted)] uppercase mb-2">
-            Net Balance
+      <div className="flex flex-col md:flex-row">
+        {/* Left Side (65%) */}
+        <div className="flex flex-col md:w-[65%]">
+          <p className="text-[11px] font-medium tracking-[0.06em] text-[#9CA3AF] mb-2">
+            Net balance
           </p>
           <div className="flex items-baseline gap-2 mb-6">
-            <span className="font-mono text-2xl text-[var(--text-secondary)]">{symbol}</span>
+            <span className="font-mono text-3xl font-semibold text-[#111111]">{symbol}</span>
             <NumberTicker
               value={totalBalance}
-              className="font-mono text-[48px] font-semibold text-[var(--text-primary)] tracking-tight"
+              className="font-mono text-[52px] font-bold text-[#111111] tracking-tight"
               decimalPlaces={0}
-              duration={1.2}
+              duration={1.5}
             />
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <div className="px-[10px] py-[4px] rounded-[20px] bg-[var(--green-dim)] text-[var(--green)] font-mono text-[13px] flex items-center gap-1">
+          <div className="flex flex-wrap gap-2 mb-4">
+            <div className="px-[12px] py-[4px] rounded-[20px] bg-[#ECFDF5] text-[#059669] font-mono text-[12px] flex items-center gap-1 border border-[rgba(5,150,105,0.15)]">
               <span>↑</span>
               <span>{symbol}{totalIncome.toLocaleString()}</span>
             </div>
-            <div className="px-[10px] py-[4px] rounded-[20px] bg-[var(--red-dim)] text-[var(--red)] font-mono text-[13px] flex items-center gap-1">
+            <div className="px-[12px] py-[4px] rounded-[20px] bg-[#FEF2F2] text-[#DC2626] font-mono text-[12px] flex items-center gap-1 border border-[rgba(220,38,38,0.15)]">
               <span>↓</span>
               <span>{symbol}{totalExpense.toLocaleString()}</span>
             </div>
-            <div className="px-[10px] py-[4px] rounded-[20px] bg-[rgba(124,58,237,0.12)] text-[var(--accent-light)] font-mono text-[13px] flex items-center gap-1">
-              <span>%</span>
-              <span>{savingsRate}%</span>
+            <div className="px-[12px] py-[4px] rounded-[20px] bg-[#EEF2FF] text-[#4F46E5] font-mono text-[12px] flex items-center gap-1 border border-[rgba(79,70,229,0.15)]">
+              <span>{savingsRate}% saved</span>
             </div>
+          </div>
+          
+          <div className="mt-2 pt-[16px] border-t border-[rgba(0,0,0,0.05)]">
+            <p className="text-[11px] text-[#9CA3AF]">
+              Last updated just now
+            </p>
           </div>
         </div>
 
-        {/* Right Side (30%) - Sparkline */}
-        <div className="mt-6 md:mt-0 md:w-[30%] flex items-center justify-end">
-          <div className="h-[60px] w-full max-w-[200px]">
+        {/* Right Side (35%) - Sparkline */}
+        <div className="mt-6 md:mt-0 md:w-[35%] flex items-center justify-end">
+          <div className="h-[80px] w-full max-w-[220px]">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={mockSparklineData}>
-                <Line 
+              <AreaChart data={mockSparklineData}>
+                <defs>
+                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="rgba(124,58,237,0.15)" stopOpacity={1}/>
+                    <stop offset="95%" stopColor="rgba(124,58,237,0)" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <Area 
                   type="monotone" 
                   dataKey="value" 
-                  stroke="var(--accent)" 
+                  stroke="#7C3AED" 
                   strokeWidth={2} 
-                  dot={false}
+                  fillOpacity={1} 
+                  fill="url(#colorValue)" 
                   isAnimationActive={true}
                   animationDuration={1500}
                 />
-              </LineChart>
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
-      </div>
-
-      {/* Bottom Strip */}
-      <div className="border-t border-[var(--border-subtle)] px-6 md:px-8 py-2 bg-[var(--bg-base)]">
-        <p className="text-[11px] text-[var(--text-muted)]">
-          Last updated just now
-        </p>
       </div>
     </motion.div>
   );

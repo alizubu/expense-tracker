@@ -5,23 +5,46 @@
 /* ── Design System Variables ─────────────────────────────── */
 
 :root {
-  --bg-base: #F8FAFC;
-  --bg-surface: #FFFFFF;
-  --bg-elevated: #F1F5F9;
-  --bg-hover: #E2E8F0;
-  --border-subtle: rgba(0,0,0,0.06);
-  --border-default: rgba(0,0,0,0.10);
-  --border-strong: rgba(0,0,0,0.18);
-  --accent: #7C3AED;
-  --accent-light: #8B5CF6;
-  --accent-glow: rgba(124,58,237,0.15);
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  --green: #10B981;
-  --green-dim: rgba(16,185,129,0.12);
-  --red: #F43F5E;
-  --red-dim: rgba(244,63,94,0.12);
+  /* === LIGHT MODE PREMIUM TOKENS === */
+  --lm-bg-page: #FAFAF8;
+  --lm-bg-card: #FFFFFF;
+  --lm-bg-surface: #F7F7F5;
+  --lm-bg-hover: #F3F3F0;
+  --lm-bg-accent-dim: rgba(124, 58, 237, 0.06);
+  --lm-border-default: rgba(0, 0, 0, 0.07);
+  --lm-border-hover: rgba(0, 0, 0, 0.12);
+  --lm-shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  --lm-shadow-card-hover: 0 4px 12px rgba(0,0,0,0.10), 0 12px 32px rgba(0,0,0,0.06);
+  --lm-shadow-sidebar: 1px 0 0 rgba(0,0,0,0.06);
+  --lm-text-primary: #111111;
+  --lm-text-secondary: #6B7280;
+  --lm-text-muted: #9CA3AF;
+  --lm-accent: #7C3AED;
+  --lm-accent-light: #8B5CF6;
+  --lm-accent-dim: rgba(124,58,237,0.08);
+  --lm-green: #059669;
+  --lm-green-dim: rgba(5,150,105,0.08);
+  --lm-red: #DC2626;
+  --lm-red-dim: rgba(220,38,38,0.08);
+
+  --bg-base: var(--lm-bg-page);
+  --bg-surface: var(--lm-bg-surface);
+  --bg-elevated: var(--lm-bg-card);
+  --bg-hover: var(--lm-bg-hover);
+  --border-subtle: var(--lm-border-default);
+  --border-default: var(--lm-border-default);
+  --border-strong: var(--lm-border-hover);
+  --accent: var(--lm-accent);
+  --accent-light: var(--lm-accent-light);
+  --accent-glow: var(--lm-bg-accent-dim);
+  --text-primary: var(--lm-text-primary);
+  --text-secondary: var(--lm-text-secondary);
+  --text-muted: var(--lm-text-muted);
+  --green: var(--lm-green);
+  --green-dim: var(--lm-green-dim);
+  --red: var(--lm-red);
+  --red-dim: var(--lm-red-dim);
+
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -55,13 +78,40 @@
 }
 
 body {
-  background: var(--bg-base);
-  background-image: radial-gradient(circle at 1px 1px, var(--border-default) 1px, transparent 0);
-  background-size: 24px 24px;
+  background-color: var(--lm-bg-page);
+  background-image: none; /* remove dark mode dot grid */
   font-family: 'Geist', sans-serif;
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
+  background: var(--bg-base);
+  background-image: radial-gradient(circle at 1px 1px, var(--border-default) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* All card wrappers */
+.card, [class*="card"], .bg-card {
+  background: var(--lm-bg-card) !important;
+  box-shadow: var(--lm-shadow-card) !important;
+  border: 1px solid var(--lm-border-default) !important;
+}
+.card:hover, [class*="card"]:hover {
+  box-shadow: var(--lm-shadow-card-hover) !important;
+  border-color: var(--lm-border-hover) !important;
+  transform: translateY(-1px);
+  transition: all 180ms ease;
+}
+
+.dark .card, .dark [class*="card"], .dark .bg-card {
+  background: var(--bg-elevated) !important;
+  box-shadow: none !important;
+  border: 1px solid var(--border-subtle) !important;
+}
+.dark .card:hover, .dark [class*="card"]:hover {
+  border-color: var(--border-default) !important;
 }
 
 .font-mono, .amount, .number { font-family: 'Geist Mono', monospace; }
