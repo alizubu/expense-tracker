@@ -41,14 +41,10 @@ expense-tracker/
 │   │   ├── (dashboard)/          # Dashboard routes group
 │   │   │   ├── analytics/
 │   │   │   │   └── page.tsx      # Analytics view
-│   │   │   ├── budgets/
-│   │   │   │   └── page.tsx      # Budgets view
 │   │   │   ├── profiles/
 │   │   │   │   ├── [id]/
 │   │   │   │   │   └── page.tsx  # Dynamic profile details
 │   │   │   │   └── page.tsx      # Profiles list view
-│   │   │   ├── recurring/
-│   │   │   │   └── page.tsx      # Recurring transactions view
 │   │   │   ├── settings/
 │   │   │   │   └── page.tsx      # App settings view
 │   │   │   ├── transactions/
@@ -86,15 +82,12 @@ expense-tracker/
 │   │   │   ├── MonthlyBarChart.tsx
 │   │   │   ├── ProfileAreaChart.tsx
 │   │   │   └── TopCategories.tsx
-│   │   ├── budgets/
-│   │   │   └── SetBudgetModal.tsx
 │   │   ├── dashboard/
-│   │   │   ├── BudgetProgress.tsx
 │   │   │   ├── DashboardClient.tsx
-│   │   │   ├── NetBalanceCard.tsx
 │   │   │   ├── ProfileCard.tsx
-│   │   │   ├── QuickActions.tsx
+│   │   │   ├── QuickStats.tsx
 │   │   │   ├── SpendingChart.tsx
+│   │   │   ├── StatsStrip.tsx
 │   │   │   └── TransactionFeed.tsx
 │   │   ├── layout/
 │   │   │   ├── ClientLayoutWrapper.tsx
@@ -133,9 +126,7 @@ expense-tracker/
 │   │   ├── types.ts              # Global TS interfaces
 │   │   └── utils.ts              # Tailwind/general utility functions
 │   ├── store/                    # Zustand Global Stores
-│   │   ├── useBudgetStore.ts
 │   │   ├── useProfileStore.ts
-│   │   ├── useRecurringStore.ts
 │   │   ├── useTransactionStore.ts
 │   │   └── useUIStore.ts
 │   └── middleware.ts             # Next.js Edge Middleware for routing

@@ -21,29 +21,22 @@ export function Topbar() {
   };
 
   return (
-    <header
-      className="sticky top-0 z-30 flex h-[56px] items-center justify-between border-b border-[var(--border-subtle)] px-6 bg-[var(--bg-surface)] backdrop-blur-[8px]"
-    >
+    <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b border-white/[0.05] px-6 bg-[rgba(10,10,15,0.85)] backdrop-blur-[12px]">
       {/* Left: Dynamic Title */}
       <div className="flex flex-col">
-        <h1 className="text-[15px] font-semibold text-[var(--text-primary)]">
+        <h1 className="text-[15px] font-semibold text-[#f8fafc]">
           {getPageTitle()}
         </h1>
-        {pathname.split("/").length > 2 && (
-          <span className="text-[13px] text-[var(--text-muted)]">
-            Overview / {getPageTitle()}
-          </span>
-        )}
       </div>
 
       {/* Center: Search */}
       <div className="hidden lg:flex flex-1 justify-center">
         <div className="relative flex items-center w-[320px]">
-          <Search className="absolute left-3 h-[14px] w-[14px] text-[var(--text-muted)]" />
+          <Search className="absolute left-3 h-[14px] w-[14px] text-[#475569]" />
           <input
             type="text"
-            placeholder="Search transactions...  ⌘K"
-            className="h-[36px] w-full rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-elevated)] pl-9 pr-4 text-[13px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-[var(--accent-glow)] transition-all"
+            placeholder="Search transactions... ⌘K"
+            className="h-[34px] w-full rounded-[10px] border border-white/[0.07] bg-white/[0.04] pl-9 pr-3 text-[13px] text-[#94a3b8] placeholder:text-[#94a3b8] focus:border-[rgba(139,92,246,0.4)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(124,58,237,0.08)] transition-all"
           />
         </div>
       </div>
@@ -53,22 +46,22 @@ export function Topbar() {
         {mounted && (
           <button
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            className="flex h-[36px] w-[36px] items-center justify-center rounded-[var(--radius-sm)] bg-[var(--bg-elevated)] border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-all"
+            className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white/[0.04] border border-white/[0.07] text-[#94a3b8] hover:bg-white/[0.08] transition-all"
           >
-            {resolvedTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {resolvedTheme === "dark" ? <Sun className="h-[15px] w-[15px]" /> : <Moon className="h-[15px] w-[15px]" />}
           </button>
         )}
         <button
           onClick={() => openModal("addTransaction")}
-          className="flex h-[34px] items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent)] px-[14px] text-[13px] font-medium text-white transition-all hover:bg-[#6D28D9] hover:scale-95"
+          className="flex h-[34px] items-center justify-center rounded-[10px] bg-[#7c3aed] px-4 text-[13px] font-medium text-white transition-all hover:bg-[#6d28d9] active:scale-[0.97] shadow-[0_0_16px_rgba(124,58,237,0.3)]"
         >
-          <Plus className="mr-1 h-4 w-4" /> Add
+          <Plus className="mr-1.5 h-[14px] w-[14px]" /> Add
         </button>
         <button
           onClick={() => {
             import("next-auth/react").then(({ signOut }) => signOut());
           }}
-          className="flex h-[34px] items-center justify-center rounded-[var(--radius-sm)] bg-[var(--bg-elevated)] border border-[var(--border-default)] px-[14px] text-[13px] font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-all"
+          className="text-[13px] font-medium text-[#475569] hover:text-[#94a3b8] transition-colors bg-transparent border-none outline-none ml-2"
         >
           Sign Out
         </button>

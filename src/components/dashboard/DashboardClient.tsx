@@ -2,89 +2,101 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSession } from "next-auth/react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { motion } from "framer-motion";
 import { CreateProfileModal } from "@/components/profiles/CreateProfileModal";
-import { NetBalanceCard } from "@/components/dashboard/NetBalanceCard";
-import { ProfileCard } from "@/components/dashboard/ProfileCard";
-import { TransactionFeed } from "@/components/dashboard/TransactionFeed";
 import { useProfileStore } from "@/store/useProfileStore";
-
-interface DashboardData {
-  netBalance: number;
-  profiles: any[];
-  recentTransactions: any[];
-}
+import { useTransactionStore } from "@/store/useTransactionStore";
+import { StatsStrip } from "@/components/dashboard/StatsStrip";
+import { QuickStats } from "@/components/dashboard/QuickStats";
+import { ProfileCard } from "@/components/dashboard/ProfileCard";
+import { CategoryDonutChart } from "@/components/analytics/CategoryDonutChart";
+import { TransactionFeed } from "@/components/dashboard/TransactionFeed";
+import { TopCategories } from "@/components/analytics/TopCategories";
 
 export function DashboardClient() {
   const { status } = useSession();
-  const { profiles: storeProfiles, setProfiles, getTotalBalance } = useProfileStore();
-  const [data, setData] = useState<DashboardData | null>(null);
+  const { profiles, setProfiles, getTotalBalance, fetchProfiles } = useProfileStore();
+  const { transactions, fetchTransactions } = useTransactionStore();
   const [loading, setLoading] = useState(true);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
 
-  const now = new Date();
-  const [month] = useState(now.getMonth() + 1);
-  const [year] = useState(now.getFullYear());
-
+  const now = useMemo(() => new Date(), []);
+  
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/dashboard?month=${month}&year=${year}`, { cache: "no-store" });
-      const json = await res.json();
-      setData(json);
-      if (json.profiles) {
-        setProfiles(json.profiles);
-      }
+      await Promise.all([
+        fetchProfiles(),
+        fetchTransactions()
+      ]);
     } catch (e) {
       console.error(e);
     }
     setLoading(false);
-  }, [month, year, setProfiles]);
+  }, [fetchProfiles, fetchTransactions]);
 
   useEffect(() => {
     if (status !== "authenticated") return;
     fetchDashboard();
   }, [status, fetchDashboard]);
 
-  // Aggregate category spending for Donut chart
-  const donutData = useMemo(() => {
-    if (!data?.recentTransactions) return [];
-    const expenses = data.recentTransactions.filter((t) => t.type === "EXPENSE");
-    const categoryTotals: Record<string, number> = {};
-    
-    expenses.forEach((t) => {
-      categoryTotals[t.category] = (categoryTotals[t.category] || 0) + Math.abs(t.amount);
+  const currentMonthTxns = useMemo(() => {
+    return transactions.filter(t => {
+      const d = new Date(t.date);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
     });
+  }, [transactions, now]);
 
-    return Object.entries(categoryTotals)
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 5); // Top 5 categories
-  }, [data]);
+  const netBalance = getTotalBalance();
+  const income = currentMonthTxns.filter(t => t.type === "INCOME").reduce((sum, t) => sum + t.amount, 0);
+  const expenses = currentMonthTxns.filter(t => t.type === "EXPENSE").reduce((sum, t) => sum + t.amount, 0);
 
-  const COLORS = ["var(--accent)", "var(--accent-light)", "#38BDF8", "#F472B6", "#10B981"];
+  const sparklineData = useMemo(() => {
+    let running = netBalance - (income - expenses);
+    return currentMonthTxns
+      .sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .map(t => {
+        running += (t.type === "INCOME" ? t.amount : t.type === "EXPENSE" ? -t.amount : 0);
+        return { value: running };
+      });
+  }, [currentMonthTxns, netBalance, income, expenses]);
+
+  const transactionsCount = currentMonthTxns.length;
+  const avgDailySpend = expenses / Math.max(1, now.getDate());
+  const largestExpense = currentMonthTxns.filter(t => t.type === "EXPENSE").reduce((max, t) => Math.max(max, t.amount), 0);
+  
+  const expenseByCategory = currentMonthTxns
+    .filter(t => t.type === "EXPENSE")
+    .reduce((acc, t) => { 
+      acc[t.category] = (acc[t.category] || 0) + t.amount; 
+      return acc; 
+    }, {} as Record<string, number>);
+    
+  const topCategory = Object.entries(expenseByCategory).sort((a,b) => b[1] - a[1])[0]?.[0] || "-";
 
   if (status === "loading" || loading) {
     return (
       <div className="flex w-full h-[60vh] flex-col space-y-4">
-        <div className="h-[200px] w-full skeleton" />
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-          <div className="col-span-3 space-y-4">
-             <div className="h-[300px] w-full skeleton" />
-             <div className="h-[300px] w-full skeleton" />
-          </div>
-          <div className="col-span-2">
-             <div className="h-[300px] w-full skeleton" />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+          <div className="h-[96px] w-full skeleton" />
+          <div className="h-[96px] w-full skeleton" />
+          <div className="h-[96px] w-full skeleton" />
+          <div className="h-[96px] w-full skeleton" />
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+          <div className="h-[280px] w-full skeleton" />
+          <div className="h-[280px] w-full skeleton" />
+          <div className="h-[280px] w-full skeleton" />
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <div className="h-[400px] w-full skeleton" />
+          <div className="h-[400px] w-full skeleton" />
         </div>
       </div>
     );
   }
 
-  const netBalance = getTotalBalance();
-  const profilesToRender = storeProfiles;
-
-  if (profilesToRender.length === 0) {
+  if (profiles.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] w-full max-w-md mx-auto text-center p-8 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] shadow-2xl">
         <div className="w-16 h-16 bg-[var(--accent-glow)] rounded-full flex items-center justify-center mb-6">
@@ -112,90 +124,51 @@ export function DashboardClient() {
   }
 
   return (
-    <div className="flex flex-col space-y-6">
-      {/* Row 1: Hero */}
-      <NetBalanceCard />
+    <motion.div 
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="grid grid-rows-[auto_auto_1fr] gap-4 w-full max-w-[1400px] mx-auto min-h-full"
+    >
+      {/* ROW 1: Stats Strip */}
+      <StatsStrip 
+        netBalance={netBalance}
+        income={income}
+        expenses={expenses}
+        sparklineData={sparklineData.length > 0 ? sparklineData : [{ value: netBalance }, { value: netBalance }]}
+      />
 
-      {/* Row 2: Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        
-        {/* Left Column (60%) */}
-        <div className="col-span-1 lg:col-span-3 flex flex-col space-y-6">
-          {/* Profiles Section */}
-          <div className="flex flex-col w-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-6">
-             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[13px] font-semibold text-[var(--text-primary)]">Your Profiles</h2>
-                <button 
-                  onClick={() => setProfileModalOpen(true)}
-                  className="text-[13px] font-medium text-[var(--accent-light)] hover:underline transition-all"
-                >
-                  + Add New
-                </button>
-             </div>
-             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-               {profilesToRender.map(p => (
-                 <ProfileCard key={p.id} profile={p} netBalance={netBalance} />
-               ))}
-             </div>
-          </div>
-
-          {/* Transactions Section */}
-          <TransactionFeed transactions={data?.recentTransactions || []} />
+      {/* ROW 2: Middle Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[1fr_1fr_1.2fr] gap-4">
+        <div className="min-w-0">
+          <ProfileCard 
+            profiles={profiles} 
+            netBalance={netBalance} 
+            onAdd={() => setProfileModalOpen(true)} 
+          />
         </div>
-
-        {/* Right Column (40%) */}
-        <div className="col-span-1 lg:col-span-2">
-          <div className="flex flex-col w-full h-full min-h-[400px] bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-6">
-            <h2 className="text-[13px] font-medium text-[var(--text-primary)] mb-6">
-              Spending by Category
-            </h2>
-            <div className="flex-1 w-full h-full relative flex flex-col items-center justify-center">
-              {donutData.length === 0 ? (
-                 <p className="text-[13px] text-[var(--text-muted)]">No expenses this month</p>
-              ) : (
-                <>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={donutData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={80}
-                        outerRadius={110}
-                        paddingAngle={2}
-                        dataKey="value"
-                        stroke="none"
-                      >
-                        {donutData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'var(--bg-hover)', 
-                          borderColor: 'var(--border-default)',
-                          borderRadius: '8px',
-                          color: 'var(--text-primary)',
-                          fontFamily: 'var(--font-geist-sans)'
-                        }}
-                        itemStyle={{ fontFamily: 'var(--font-geist-mono)', color: 'var(--text-secondary)' }}
-                        formatter={(value: any) => `৳ ${Number(value).toLocaleString()}`}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  {/* Center Label Overlay */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-4">
-                    <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.08em] mb-1">Total Spent</span>
-                    <span className="font-mono text-[1.25rem] font-bold text-[var(--text-primary)]">
-                      ৳ {donutData.reduce((acc, curr) => acc + curr.value, 0).toLocaleString()}
-                    </span>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+        <div className="min-w-0">
+          <QuickStats 
+            transactionsCount={transactionsCount}
+            avgDailySpend={avgDailySpend}
+            largestExpense={largestExpense}
+            topCategory={topCategory}
+            profilesCount={profiles.length}
+          />
         </div>
+        <div className="min-w-0 lg:col-span-2 xl:col-span-1">
+          <CategoryDonutChart />
+        </div>
+      </div>
 
+      {/* ROW 3: Bottom Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-4">
+        <div className="min-w-0">
+          <TransactionFeed transactions={transactions} />
+        </div>
+        <div className="min-w-0">
+          <TopCategories />
+        </div>
       </div>
 
       <CreateProfileModal
@@ -203,6 +176,6 @@ export function DashboardClient() {
         onClose={() => setProfileModalOpen(false)}
         onCreated={fetchDashboard}
       />
-    </div>
+    </motion.div>
   );
 }

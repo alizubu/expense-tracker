@@ -5,10 +5,10 @@ import { useTransactionStore } from "@/store/useTransactionStore";
 import { PieChart } from "lucide-react";
 import AnalyticsStatsRow from "@/components/analytics/AnalyticsStatsRow";
 import MonthlyBarChart from "@/components/analytics/MonthlyBarChart";
-import CategoryDonutChart from "@/components/analytics/CategoryDonutChart";
+import { CategoryDonutChart } from "@/components/analytics/CategoryDonutChart";
 import DailyLineChart from "@/components/analytics/DailyLineChart";
 import ProfileAreaChart from "@/components/analytics/ProfileAreaChart";
-import TopCategories from "@/components/analytics/TopCategories";
+import { TopCategories } from "@/components/analytics/TopCategories";
 
 export default function AnalyticsPage() {
   const { transactions } = useTransactionStore();

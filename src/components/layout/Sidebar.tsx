@@ -4,13 +4,12 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { motion } from "framer-motion";
 import {
   LayoutDashboard,
   ArrowLeftRight,
   Users,
-  BarChart3,
-  Settings2,
+  BarChart2,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/useUIStore";
@@ -28,13 +27,13 @@ const navGroups = [
   {
     label: "MANAGE",
     items: [
-      { icon: BarChart3, label: "Analytics", route: "/analytics" },
+      { icon: BarChart2, label: "Analytics", route: "/analytics" },
     ],
   },
   {
     label: "SYSTEM",
     items: [
-      { icon: Settings2, label: "Settings", route: "/settings" },
+      { icon: Settings, label: "Settings", route: "/settings" },
     ],
   },
 ];
@@ -48,80 +47,76 @@ export function Sidebar() {
   React.useEffect(() => setMounted(true), []);
 
   return (
-    <aside
-      className="fixed left-0 top-0 z-40 hidden h-screen w-[240px] flex-col bg-[var(--bg-surface)] border-r border-[var(--border-subtle)] lg:flex"
-    >
+    <aside className="fixed left-0 top-0 z-40 hidden h-screen w-[220px] flex-col bg-[#0d0d14] border-r border-white/[0.05] lg:flex">
       {/* Logo Area */}
-      <div className="flex h-16 items-center px-6">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="h-5 w-5 rounded-[4px] bg-[var(--accent)]" />
-          <span className="text-[15px] font-semibold text-[var(--text-primary)]">
+      <div className="flex h-[56px] items-center px-4 border-b border-white/[0.05]">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="h-7 w-7 rounded-lg bg-accent flex items-center justify-center">
+            <div className="w-2.5 h-2.5 bg-white rounded-sm" />
+          </div>
+          <span className="text-[14px] font-semibold text-[#f8fafc] tracking-[-0.02em]">
             ExpenseTracker
           </span>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-4 py-4 no-scrollbar">
-        <div className="flex flex-col gap-6">
-          {navGroups.map((group) => (
-            <div key={group.label}>
-              <div className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--text-muted)]">
-                {group.label}
-              </div>
-              <ul className="space-y-1 relative">
-                {group.items.map((item) => {
-                  const isActive =
-                    item.route === "/"
-                      ? pathname === "/"
-                      : pathname.startsWith(item.route);
-                  const Icon = item.icon;
-
-                  return (
-                    <li key={item.route} className="relative">
-                      <Link
-                        href={item.route}
-                        className={cn(
-                          "flex h-10 items-center gap-2 rounded-r-lg px-3 text-[13px] font-medium transition-all duration-150 relative z-10",
-                          isActive
-                            ? "bg-[var(--accent-glow)] text-[var(--accent-light)] border-l-[3px] border-[var(--accent)]"
-                            : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] rounded-l-lg"
-                        )}
-                      >
-                        <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
-                        <span>{item.label}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+      <nav className="flex-1 overflow-y-auto no-scrollbar pt-2 pb-[70px]">
+        {navGroups.map((group) => (
+          <div key={group.label} className="mb-1">
+            <div className="px-4 pt-5 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#334155]">
+              {group.label}
             </div>
-          ))}
-        </div>
+            <ul className="space-y-0.5">
+              {group.items.map((item) => {
+                const isActive =
+                  item.route === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(item.route);
+                const Icon = item.icon;
+
+                return (
+                  <li key={item.route}>
+                    <Link
+                      href={item.route}
+                      className={cn(
+                        "flex h-9 items-center rounded-lg mx-2 px-3 text-[13px] font-medium transition-colors border-l-2",
+                        isActive
+                          ? "bg-[rgba(124,58,237,0.12)] text-[#a78bfa] border-accent"
+                          : "text-[#64748b] border-transparent hover:bg-white/[0.04] hover:text-[#94a3b8]"
+                      )}
+                    >
+                      <Icon className="h-[15px] w-[15px] mr-[10px]" strokeWidth={2} style={{ verticalAlign: "-2px" }} />
+                      <span>{item.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
       </nav>
 
-      {/* User Card */}
-      <div className="p-4">
-        <div className="flex items-center gap-3 rounded-[var(--radius-md)] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] p-3">
-          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent-glow)] text-[var(--accent-light)] text-xs font-bold">
-            {session?.user?.name ? session.user.name.substring(0, 2).toUpperCase() : "U"}
-          </div>
-          <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-[13px] font-medium text-[var(--text-primary)] truncate">
-              {session?.user?.name || "User"}
-            </span>
-            <span className="text-[11px] text-[var(--text-muted)] truncate">
-              {session?.user?.email || "user@example.com"}
-            </span>
-          </div>
-          {mounted && (
-            <div className="flex-shrink-0 bg-[var(--bg-surface)] rounded-full px-2 py-0.5 border border-[var(--border-subtle)]">
-              <span className="font-mono text-[10px] text-[var(--text-secondary)]">
-                {getCurrencySymbol(selectedCurrency)}
-              </span>
-            </div>
-          )}
+      {/* User Card (Bottom Absolute) */}
+      <div className="absolute bottom-0 left-0 right-0 h-[60px] px-3 border-t border-white/[0.05] bg-[#0d0d14] flex items-center gap-2.5">
+        <div className="flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center rounded-full bg-accent text-white text-[12px] font-bold">
+          {session?.user?.name ? session.user.name.substring(0, 2).toUpperCase() : "U"}
         </div>
+        <div className="flex flex-col min-w-0 flex-1">
+          <span className="text-[12px] font-medium text-[#f8fafc] truncate">
+            {session?.user?.name || "User"}
+          </span>
+          <span className="text-[10px] text-[#475569] truncate">
+            {session?.user?.email || "user@example.com"}
+          </span>
+        </div>
+        {mounted && (
+          <div className="flex-shrink-0 bg-white/[0.06] rounded-[20px] px-2 py-0.5">
+            <span className="font-mono text-[10px] text-[#64748b]">
+              {getCurrencySymbol(selectedCurrency)}
+            </span>
+          </div>
+        )}
       </div>
     </aside>
   );

@@ -1,14 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import * as LucideIcons from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
+import { getCategoryById } from "@/lib/categories";
 
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
-  return Icon || LucideIcons.Wallet;
+  return Icon || LucideIcons.CircleDot;
 }
 
 interface TransactionFeedProps {
@@ -19,83 +20,98 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
   const { selectedCurrency, openModal } = useUIStore();
   const symbol = getCurrencySymbol(selectedCurrency);
 
+  const visibleTransactions = transactions.slice(0, 8);
+
   return (
-    <div className="flex flex-col w-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] p-6">
+    <div className="flex flex-col w-full bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-[16px] py-5 px-6 hover:border-[rgba(139,92,246,0.25)] hover:shadow-[0_0_0_1px_rgba(139,92,246,0.1)] transition-all duration-200">
+      {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[14px] font-semibold text-[var(--text-primary)]">
-          Recent transactions
+        <h2 className="text-[11px] font-medium text-[#475569] uppercase tracking-[0.08em]">
+          Recent Transactions
         </h2>
         <Link 
           href="/transactions"
-          className="text-[13px] font-medium text-[var(--accent-light)] hover:underline transition-colors"
+          className="text-[12px] font-medium text-[#7c3aed] hover:text-[#a78bfa] transition-colors"
         >
           View all &rarr;
         </Link>
       </div>
 
       {transactions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-10 text-center">
-          <div className="w-12 h-12 rounded-full bg-[var(--bg-hover)] flex items-center justify-center mb-3">
-            <LucideIcons.Receipt className="w-5 h-5 text-[var(--text-muted)]" />
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <div className="h-[40px] w-[40px] flex items-center justify-center text-[#1e293b] mb-2">
+            <LucideIcons.Receipt className="w-6 h-6" />
           </div>
-          <p className="text-[13px] text-[var(--text-muted)] mb-4">No transactions yet</p>
+          <p className="text-[13px] text-[#334155] mb-4">No data yet</p>
           <button 
             onClick={() => openModal("addTransaction")}
-            className="h-8 px-4 text-[12px] font-medium rounded-md bg-[var(--accent)] text-white hover:bg-[#6D28D9] transition-colors"
+            className="h-8 px-4 text-[12px] font-medium rounded-[8px] bg-[rgba(124,58,237,0.1)] text-[#a78bfa] hover:bg-[rgba(124,58,237,0.2)] transition-colors"
           >
-            + Add your first
+            + Add Transaction
           </button>
         </div>
       ) : (
         <div className="flex flex-col">
-          {transactions.slice(0, 10).map((txn, index) => {
-            const TxnIcon = getIcon(txn.profile?.icon);
-            const isExpense = txn.type === "EXPENSE";
-            const isIncome = txn.type === "INCOME";
+          <AnimatePresence>
+            {visibleTransactions.map((txn, index) => {
+              const category = getCategoryById(txn.category);
+              const TxnIcon = category ? getIcon(category.icon) : LucideIcons.CircleDot;
+              const isExpense = txn.type === "EXPENSE";
+              const isIncome = txn.type === "INCOME";
 
-            return (
-              <motion.div
-                key={txn.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.04, duration: 0.2 }}
-                className="group flex items-center gap-3 py-3 border-b border-[var(--border-subtle)] last:border-b-0 hover:bg-[var(--bg-hover)] hover:rounded-[var(--radius-sm)] hover:-mx-3 hover:px-3 transition-all cursor-pointer"
-              >
-                {/* Left */}
-                <div className="flex items-center gap-3 w-[60%]">
-                  <div
-                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--bg-elevated)] border border-[var(--border-subtle)]"
-                  >
-                    <TxnIcon className="h-4 w-4 text-[var(--text-secondary)]" />
+              return (
+                <motion.div
+                  key={txn.id}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.04, duration: 0.2 }}
+                  className="group grid grid-cols-[36px_1fr_auto] gap-3 items-center h-[44px] border-b border-[rgba(255,255,255,0.03)] last:border-b-0 hover:bg-[rgba(255,255,255,0.015)] hover:rounded-[8px] px-2 -mx-2 transition-all cursor-pointer"
+                >
+                  {/* Column 1: Icon */}
+                  <div className="flex h-[32px] w-[32px] flex-shrink-0 items-center justify-center rounded-full bg-[rgba(255,255,255,0.05)]">
+                    <TxnIcon className="h-[14px] w-[14px] text-[#94a3b8]" />
                   </div>
+
+                  {/* Column 2: Details */}
                   <div className="flex flex-col min-w-0">
-                    <span className="text-[14px] font-medium text-[var(--text-primary)] truncate">
+                    <span className="text-[13px] font-medium text-[#f8fafc] truncate">
                       {txn.title}
                     </span>
-                    <span className="text-[12px] text-[var(--text-muted)] truncate">
-                      {txn.category} · {txn.profile?.name}
+                    <span className="text-[11px] text-[#475569] truncate">
+                      {category?.label || txn.category} · {txn.profile?.name || "Unknown"}
                     </span>
                   </div>
-                </div>
 
-                {/* Right */}
-                <div className="flex-1 flex justify-end">
-                  <span
-                    className={`font-mono text-[14px] ${
-                      isIncome
-                        ? "text-[var(--text-secondary)]"
-                        : isExpense
-                        ? "text-[var(--red)] font-semibold"
-                        : "text-[var(--text-secondary)]"
-                    }`}
-                  >
-                    {isIncome ? "+" : isExpense ? "-" : ""}
-                    {symbol}{Math.abs(txn.amount).toLocaleString()}
-                  </span>
-                </div>
-              </motion.div>
-            );
-          })}
+                  {/* Column 3: Amount + Date */}
+                  <div className="flex flex-col items-end flex-shrink-0">
+                    <span
+                      className={`text-[13px] font-semibold tracking-tight ${
+                        isIncome
+                          ? "text-[#10b981]"
+                          : isExpense
+                          ? "text-[#f43f5e]"
+                          : "text-[#3b82f6]"
+                      }`}
+                    >
+                      {isIncome ? "+" : isExpense ? "−" : "→"}
+                      {symbol}{Math.abs(txn.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </span>
+                    <span className="text-[11px] text-[#475569]">
+                      {new Date(txn.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+
+          {transactions.length > 8 && (
+            <Link href="/transactions" className="mt-4">
+              <button className="w-full h-[36px] bg-transparent border border-[rgba(255,255,255,0.06)] rounded-[10px] text-[12px] text-[#94a3b8] hover:border-[rgba(139,92,246,0.3)] hover:text-[#a78bfa] transition-colors">
+                Show more
+              </button>
+            </Link>
+          )}
         </div>
       )}
     </div>

@@ -13,6 +13,10 @@ const config: Config = {
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
       },
       colors: {
+        "dark-base": "#0a0a0f",
+        "dark-card": "#111118",
+        "dark-border": "rgba(255,255,255,0.06)",
+        accent: "#7c3aed",
         background: {
           DEFAULT: "#0A0A0F",
           primary: "#0A0A0F",
