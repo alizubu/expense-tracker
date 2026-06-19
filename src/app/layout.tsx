@@ -49,16 +49,33 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { PageTransitionProvider } from "@/components/providers/PageTransitionProvider";
 import { GlobalModals } from "@/components/providers/GlobalModals";
 
+import { headers } from "next/headers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const nonce = headers().get("X-Nonce") ?? "";
+
   return (
     <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body
-        className={`${GeistSans.className} antialiased min-h-screen flex flex-col`}
+        className={`${GeistSans.className} antialiased min-h-screen flex flex-col no-select`}
       >
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `
+              document.addEventListener('contextmenu', e => e.preventDefault());
+              document.addEventListener('keydown', e => {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                  e.preventDefault();
+                }
+              });
+            `,
+          }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

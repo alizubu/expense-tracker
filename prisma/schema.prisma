@@ -17,6 +17,7 @@ model User {
   updatedAt    DateTime      @updatedAt
   profiles     Profile[]
   transactions Transaction[]
+  auditLogs    AuditLog[]
 }
 
 model Profile {
@@ -56,3 +57,27 @@ model Transaction {
   toProfile     Profile? @relation("ToProfile", fields: [toProfileId], references: [id])
 }
 
+model FailedAttempt {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  ip        String
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  action    String
+  resource  String
+  ipAddress String
+  userAgent String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}

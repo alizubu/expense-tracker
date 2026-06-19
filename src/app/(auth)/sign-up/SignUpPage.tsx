@@ -121,7 +121,7 @@ export default function SignUpPage() {
     } catch {
       toast.error("An error occurred during sign up");
     } finally {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 300);
     }
   };
 
@@ -231,6 +231,7 @@ export default function SignUpPage() {
                   onFocus={() => setFocused("name")}
                   onBlur={() => setFocused(null)}
                   required
+                  autoComplete="name"
                   placeholder="John Doe"
                   className="
                     w-full rounded-xl border bg-white/[0.03] py-2.5 pl-9 pr-4
@@ -260,6 +261,7 @@ export default function SignUpPage() {
                   onBlur={() => setFocused(null)}
                   required
                   inputMode="email"
+                  autoComplete="email"
                   placeholder="you@example.com"
                   className="
                     w-full rounded-xl border bg-white/[0.03] py-2.5 pl-9 pr-4
@@ -288,6 +290,7 @@ export default function SignUpPage() {
                   onFocus={() => setFocused("password")}
                   onBlur={() => setFocused(null)}
                   required
+                  autoComplete="new-password"
                   placeholder="Min. 8 characters"
                   className="
                     w-full rounded-xl border bg-white/[0.03] py-2.5 pl-9 pr-11

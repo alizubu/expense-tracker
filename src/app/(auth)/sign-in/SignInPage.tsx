@@ -86,13 +86,22 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState<"email" | "password" | null>(null);
 
+  const [lockoutTimer, setLockoutTimer] = useState<number | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || lockoutTimer) return;
+    
     setLoading(true);
     try {
       const res = await signIn("credentials", { email, password, redirect: false });
       if (res?.error) {
-        toast.error("Invalid email or password");
+        if (res.error.includes("Account locked")) {
+          setLockoutTimer(15 * 60); // 15 mins
+          toast.error("Account locked due to multiple failed attempts. Try again later.");
+        } else {
+          toast.error("Invalid email or password"); // Sanitized error
+        }
       } else {
         toast.success("Signed in successfully!");
         router.push("/");
@@ -101,7 +110,8 @@ export default function SignInPage() {
     } catch {
       toast.error("An error occurred during sign in");
     } finally {
-      setLoading(false);
+      // Small throttle/debounce
+      setTimeout(() => setLoading(false), 300);
     }
   };
 
@@ -180,6 +190,12 @@ export default function SignInPage() {
 
           {/* ── Form ────────────────────────────────────────────── */}
           <form onSubmit={handleSubmit} className="space-y-4">
+            
+            {lockoutTimer && (
+              <motion.div {...fadeUp(0)} className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-center text-sm text-red-400">
+                Account locked. Try again later.
+              </motion.div>
+            )}
 
             {/* Email */}
             <motion.div {...fadeLeft(0.36)}>
@@ -195,6 +211,7 @@ export default function SignInPage() {
                   onBlur={() => setFocusedField(null)}
                   required
                   inputMode="email"
+                  autoComplete="email"
                   placeholder="you@example.com"
                   className="
                     w-full rounded-xl border bg-white/[0.03] px-4 py-2.5 text-[14px] text-white
@@ -241,6 +258,7 @@ export default function SignInPage() {
                   onFocus={() => setFocusedField("password")}
                   onBlur={() => setFocusedField(null)}
                   required
+                  autoComplete="current-password"
                   placeholder="••••••••"
                   className="
                     w-full rounded-xl border bg-white/[0.03] px-4 py-2.5 pr-11 text-[14px] text-white
