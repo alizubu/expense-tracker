@@ -95,6 +95,13 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
 
   const selectedCategory = availableCategories.find((c) => c.id === category);
 
+  const handleCategorySelect = (cat: { id: string; label: string }) => {
+    setCategory(cat.id);
+    if (!title || (selectedCategory && title === selectedCategory.label)) {
+      setTitle(cat.label);
+    }
+  };
+
   const tabs: { type: TransactionType; label: string }[] = [
     { type: "INCOME", label: "Income" },
     { type: "EXPENSE", label: "Expense" },
@@ -248,7 +255,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                     return (
                       <button
                         key={cat.id}
-                        onClick={() => setCategory(cat.id)}
+                        onClick={() => handleCategorySelect(cat)}
                         className={cn(
                           "flex items-center gap-1.5 px-3 py-1.5 rounded-[20px] border transition-all text-[12px]",
                           isSelected 
@@ -282,7 +289,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                         <button
                           key={cat.id}
                           onClick={() => {
-                            setCategory(cat.id);
+                            handleCategorySelect(cat);
                             setShowCategoryPicker(false);
                           }}
                           className={cn(
