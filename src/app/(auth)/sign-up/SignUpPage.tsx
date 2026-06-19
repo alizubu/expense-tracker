@@ -181,7 +181,7 @@ export default function SignUpPage() {
                 <Wallet className="h-7 w-7 text-white" />
               </div>
               <div className="pointer-events-none absolute -inset-3">
-                <Sparkles density={6} color="#f0abfc" size={1.2} speed={1.4} opacity={0.7} />
+                <Sparkles count={6} color="#f0abfc"><span /></Sparkles>
               </div>
             </motion.div>
 

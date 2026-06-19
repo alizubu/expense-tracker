@@ -152,12 +152,11 @@ export default function SignInPage() {
               {/* Sparkles around the logo */}
               <div className="pointer-events-none absolute -inset-3">
                 <Sparkles
-                  density={6}
+                  count={6}
                   color="#a78bfa"
-                  size={1.2}
-                  speed={1.4}
-                  opacity={0.7}
-                />
+                >
+                  <span />
+                </Sparkles>
               </div>
             </motion.div>
 
