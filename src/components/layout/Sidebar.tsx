@@ -10,8 +10,6 @@ import {
   ArrowLeftRight,
   Users,
   BarChart3,
-  Target,
-  RefreshCw,
   Settings2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -31,8 +29,6 @@ const navGroups = [
     label: "MANAGE",
     items: [
       { icon: BarChart3, label: "Analytics", route: "/analytics" },
-      { icon: Target, label: "Budgets", route: "/budgets" },
-      { icon: RefreshCw, label: "Recurring", route: "/recurring" },
     ],
   },
   {

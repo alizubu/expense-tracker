@@ -230,9 +230,6 @@ export default function TransactionsPage() {
                               </span>
                             </>
                           )}
-                          {transaction.isRecurring && (
-                            <LucideIcons.Repeat className="h-3 w-3 text-brand-purple-light" />
-                          )}
                         </div>
                       </div>
 

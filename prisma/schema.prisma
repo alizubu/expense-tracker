@@ -17,7 +17,6 @@ model User {
   updatedAt    DateTime      @updatedAt
   profiles     Profile[]
   transactions Transaction[]
-  budgets      Budget[]
 }
 
 model Profile {
@@ -48,7 +47,6 @@ model Transaction {
   title         String
   note          String?
   date          DateTime @default(now())
-  isRecurring   Boolean  @default(false)
   isDeleted     Boolean  @default(false)
   tags          String[] @default([])
   createdAt     DateTime @default(now())
@@ -58,16 +56,3 @@ model Transaction {
   toProfile     Profile? @relation("ToProfile", fields: [toProfileId], references: [id])
 }
 
-model Budget {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  category  String
-  limit     Float
-  period    String   @default("monthly")
-  month     Int
-  year      Int
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, category, month, year])
-}

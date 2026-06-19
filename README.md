@@ -116,8 +116,12 @@ expense-tracker/
 │   │   ├── providers/
 │   │   │   ├── AuthProvider.tsx
 │   │   │   └── ThemeProvider.tsx
-│   │   └── transactions/
-│   │       └── AddTransactionModal.tsx
+│   │   ├── transactions/
+│   │   │   ├── AccountSelector.tsx       # Animated custom dropdown for profile selection
+│   │   │   ├── AddTransactionModal.tsx   # Modal for adding new transactions
+│   │   │   ├── CategoryGrid.tsx          # Interactive 3-column category grid
+│   │   │   ├── ConfirmButton.tsx         # Glowing animated submit button
+│   │   │   └── EditTransactionModal.tsx  # Modal for editing existing transactions
 │   ├── lib/                      # Helper functions and configurations
 │   │   ├── auth.ts               # NextAuth setup and options
 │   │   ├── categories.ts         # Expense category definitions

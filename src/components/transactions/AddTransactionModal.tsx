@@ -12,6 +12,9 @@ import { useUIStore } from "@/store/useUIStore";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { EXPENSE_CATEGORIES, getIncomeCategories } from "@/lib/categories";
 import { TransactionType } from "@/lib/types";
+import { AccountSelector } from "./AccountSelector";
+import { CategoryGrid } from "./CategoryGrid";
+import { ConfirmButton } from "./ConfirmButton";
 import * as LucideIcons from "lucide-react";
 
 function getIcon(iconName: string) {
@@ -34,8 +37,6 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
   const [toProfileId, setToProfileId] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [tags, setTags] = useState("");
-  const [isRecurring, setIsRecurring] = useState(false);
-  const [frequency, setFrequency] = useState("monthly");
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   const { addTransaction } = useTransactionStore();
@@ -70,7 +71,6 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
       title,
       note: note || undefined,
       date: new Date(date).toISOString(),
-      isRecurring,
       tags: tags ? tags.split(",").map((t) => t.trim()) : [],
     });
 
@@ -189,41 +189,23 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
             <div className="grid grid-cols-2 gap-4">
               {/* Profile Selector */}
               <div className="col-span-2 sm:col-span-1">
-                <label className="mb-1.5 block text-[12px] font-medium text-[var(--text-secondary)]">
-                  {type === "TRANSFER" ? "From Account" : "Account"}
-                </label>
-                <select
-                  value={profileId}
-                  onChange={(e) => setProfileId(e.target.value)}
-                  className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] hover:border-[var(--accent-light)] hover:shadow-[0_0_12px_var(--accent-glow)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-glow)] transition-all cursor-pointer appearance-none"
-                >
-                  {profiles.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
+                <AccountSelector
+                  label={type === "TRANSFER" ? "From Account" : "Account"}
+                  profiles={profiles}
+                  selectedId={profileId}
+                  onChange={(id) => setProfileId(id)}
+                />
               </div>
 
               {/* To Profile (Transfer only) */}
               {type === "TRANSFER" && (
                 <div className="col-span-2 sm:col-span-1">
-                  <label className="mb-1.5 block text-[12px] font-medium text-[var(--text-secondary)]">
-                    To Account
-                  </label>
-                  <select
-                    value={toProfileId}
-                    onChange={(e) => setToProfileId(e.target.value)}
-                    className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] hover:border-[var(--accent-light)] hover:shadow-[0_0_12px_var(--accent-glow)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-glow)] transition-all cursor-pointer appearance-none"
-                  >
-                    {profiles
-                      .filter((p) => p.id !== profileId)
-                      .map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name}
-                        </option>
-                      ))}
-                  </select>
+                  <AccountSelector
+                    label="To Account"
+                    profiles={profiles.filter((p) => p.id !== profileId)}
+                    selectedId={toProfileId}
+                    onChange={(id) => setToProfileId(id)}
+                  />
                 </div>
               )}
               
@@ -247,63 +229,11 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                 <label className="mb-1.5 block text-[12px] font-medium text-[var(--text-secondary)]">
                   Category
                 </label>
-
-                <div className="flex flex-wrap gap-2">
-                  {availableCategories.slice(0, 7).map((cat) => {
-                    const Icon = getIcon(cat.icon);
-                    const isSelected = category === cat.id;
-                    return (
-                      <button
-                        key={cat.id}
-                        onClick={() => handleCategorySelect(cat)}
-                        className={cn(
-                          "flex items-center gap-1.5 px-3 py-1.5 rounded-[20px] border transition-all text-[12px]",
-                          isSelected 
-                            ? "border-[var(--accent)] bg-[rgba(124,58,237,0.12)] text-[var(--accent-light)]" 
-                            : "border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-muted)] hover:border-[var(--border-default)] hover:text-[var(--text-secondary)]"
-                        )}
-                      >
-                        <Icon className="h-3 w-3" />
-                        {cat.label}
-                      </button>
-                    );
-                  })}
-                  <button 
-                    onClick={() => setShowCategoryPicker(!showCategoryPicker)}
-                    className="flex items-center gap-1 px-3 py-1.5 rounded-[20px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[12px] text-[var(--text-muted)] hover:border-[var(--border-default)] transition-all"
-                  >
-                    More <ChevronDown className="h-3 w-3" />
-                  </button>
-                </div>
-
-                {showCategoryPicker && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 bg-[var(--bg-surface)] rounded-[var(--radius-md)] border border-[var(--border-subtle)] max-h-48 overflow-y-auto no-scrollbar"
-                  >
-                    {availableCategories.slice(7).map((cat) => {
-                      const Icon = getIcon(cat.icon);
-                      const isSelected = category === cat.id;
-                      return (
-                        <button
-                          key={cat.id}
-                          onClick={() => {
-                            handleCategorySelect(cat);
-                            setShowCategoryPicker(false);
-                          }}
-                          className={cn(
-                            "flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors text-[12px] text-left",
-                            isSelected ? "bg-[rgba(124,58,237,0.12)] text-[var(--accent-light)]" : "hover:bg-[var(--bg-hover)] text-[var(--text-secondary)]"
-                          )}
-                        >
-                          <Icon className="h-3.5 w-3.5" />
-                          <span className="truncate">{cat.label}</span>
-                        </button>
-                      );
-                    })}
-                  </motion.div>
-                )}
+                <CategoryGrid
+                  categories={availableCategories}
+                  selectedCategory={category}
+                  onSelect={handleCategorySelect}
+                />
               </div>
             )}
 
@@ -350,13 +280,12 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
             </div>
 
             {/* Submit Button */}
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="w-full h-12 mt-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-light)] hover:from-[var(--accent-light)] hover:to-[var(--accent)] text-white text-[14px] font-semibold rounded-[var(--radius-md)] transition-all flex items-center justify-center gap-2 shadow-[0_4px_16px_var(--accent-glow)] hover:shadow-[0_8px_24px_var(--accent-glow)] active:scale-[0.98]"
-            >
-              Confirm Transaction
-            </button>
+            <div className="pt-2">
+              <ConfirmButton
+                onClick={handleSubmit}
+                disabled={amount === 0 || (!category && type !== "TRANSFER") || !profileId}
+              />
+            </div>
           </div>
         </motion.div>
       </div>

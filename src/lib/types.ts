@@ -48,36 +48,12 @@ export interface Transaction {
   title: string;
   note?: string;
   date: string;
-  isRecurring: boolean;
-  recurringId?: string;
   attachmentUrl?: string;
   tags: string[];
   createdAt: string;
 }
 
-export interface RecurringRule {
-  id: string;
-  userId: string;
-  title: string;
-  amount: number;
-  type: TransactionType;
-  category: string;
-  profileId: string;
-  frequency: "daily" | "weekly" | "monthly" | "yearly";
-  nextDate: string;
-  isActive: boolean;
-}
 
-export interface Budget {
-  id: string;
-  userId: string;
-  category: string;
-  limit: number;
-  period: "monthly" | "weekly";
-  spent: number;
-  month: number;
-  year: number;
-}
 
 // ── Chart / Analytics Types ────────────────────────────────
 

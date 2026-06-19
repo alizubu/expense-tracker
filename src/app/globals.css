@@ -141,23 +141,6 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* ── Budget Progress Bar Colors ──────────────────────────── */
-
-@layer utilities {
-  .budget-progress-safe {
-    background: linear-gradient(90deg, #10B981, #34D399);
-  }
-
-  .budget-progress-warning {
-    background: linear-gradient(90deg, #F59E0B, #FBBF24);
-  }
-
-  .budget-progress-danger {
-    background: linear-gradient(90deg, #EF4444, #F87171);
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-}
-
 /* ── Transition utilities ────────────────────────────────── */
 
 .transition-sidebar {
