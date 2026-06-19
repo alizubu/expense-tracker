@@ -31,9 +31,10 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
         </h2>
         <button 
           onClick={onAdd}
-          className="text-[12px] font-medium text-[#7c3aed] bg-transparent border-none outline-none hover:text-[#a78bfa] transition-colors"
+          className="text-[12px] font-medium text-[#7c3aed] bg-transparent border-none outline-none hover:text-[#a78bfa] transition-colors flex items-center gap-1 active:scale-[0.97]"
         >
-          + Add New
+          <LucideIcons.Plus size={16} className="sm:hidden" />
+          <span className="hidden sm:inline">+ Add New</span>
         </button>
       </div>
 
@@ -53,26 +54,26 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
               <div 
                 key={profile.id}
                 onClick={() => router.push(`/profiles/${profile.id}`)}
-                className="group flex flex-col justify-center h-[52px] rounded-[8px] hover:bg-[rgba(255,255,255,0.02)] cursor-pointer px-2 transition-colors relative border-b border-[rgba(255,255,255,0.04)] last:border-0"
+                className="group flex flex-col justify-center h-[48px] md:h-[52px] rounded-[8px] hover:bg-[rgba(255,255,255,0.02)] cursor-pointer px-2 transition-colors relative border-b border-[rgba(255,255,255,0.04)] last:border-0 active:scale-[0.98]"
               >
                 <div className="flex items-center justify-between">
                   {/* Left: Icon + Name */}
                   <div className="flex items-center gap-3">
-                    <div className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[rgba(124,58,237,0.12)] text-[#a78bfa]">
-                      <Icon className="h-[14px] w-[14px]" />
+                    <div className="flex h-[28px] w-[28px] md:h-[32px] md:w-[32px] items-center justify-center rounded-full bg-[rgba(124,58,237,0.12)] text-[#a78bfa]">
+                      <Icon className="h-[12px] w-[12px] md:h-[14px] md:w-[14px]" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[13px] font-medium text-[#f8fafc]">{profile.name}</span>
-                      <span className="text-[11px] text-[#475569] capitalize">{profile.type.toLowerCase()}</span>
+                      <span className="text-[12px] md:text-[13px] font-medium text-[#f8fafc]">{profile.name}</span>
+                      <span className="text-[10px] md:text-[11px] text-[#475569] capitalize">{profile.type.toLowerCase()}</span>
                     </div>
                   </div>
 
                   {/* Right: Balance + Percentage */}
                   <div className="flex flex-col items-end">
-                    <span className="text-[14px] font-semibold text-[#f8fafc]">
+                    <span className="text-[13px] md:text-[14px] font-semibold text-[#f8fafc]">
                       {symbol}{profile.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </span>
-                    <span className="text-[11px] text-[#475569]">
+                    <span className="hidden sm:inline text-[11px] text-[#475569]">
                       {percentage.toFixed(1)}%
                     </span>
                   </div>

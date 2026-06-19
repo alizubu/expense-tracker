@@ -8,6 +8,14 @@ const config: Config = {
   ],
   darkMode: "class",
   theme: {
+    screens: {
+      xs: '320px',
+      sm: '480px',
+      md: '640px',
+      lg: '768px',
+      xl: '1024px',
+      '2xl': '1280px',
+    },
     extend: {
       fontFamily: {
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],

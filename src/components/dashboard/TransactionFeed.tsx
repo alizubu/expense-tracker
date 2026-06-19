@@ -6,6 +6,7 @@ import * as LucideIcons from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { getCategoryById } from "@/lib/categories";
+import { cn } from "@/lib/utils";
 
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
@@ -31,9 +32,10 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
         </h2>
         <Link 
           href="/transactions"
-          className="text-[12px] font-medium text-[#7c3aed] hover:text-[#a78bfa] transition-colors"
+          className="text-[12px] font-medium text-[#7c3aed] hover:text-[#a78bfa] transition-colors p-1 active:scale-[0.97]"
         >
-          View all &rarr;
+          <span className="hidden sm:inline">View all &rarr;</span>
+          <span className="sm:hidden">&rarr;</span>
         </Link>
       </div>
 
@@ -65,19 +67,22 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.04, duration: 0.2 }}
-                  className="group grid grid-cols-[36px_1fr_auto] gap-3 items-center h-[44px] border-b border-[rgba(255,255,255,0.03)] last:border-b-0 hover:bg-[rgba(255,255,255,0.015)] hover:rounded-[8px] px-2 -mx-2 transition-all cursor-pointer"
+                  className={cn(
+                    "group grid grid-cols-[auto_1fr_auto] gap-3 items-center h-[48px] md:h-[44px] border-b border-[rgba(255,255,255,0.03)] last:border-b-0 hover:bg-[rgba(255,255,255,0.015)] hover:rounded-[8px] px-2 -mx-2 transition-all cursor-pointer active:scale-[0.98]",
+                    index >= 5 && "hidden sm:grid"
+                  )}
                 >
                   {/* Column 1: Icon */}
-                  <div className="flex h-[32px] w-[32px] flex-shrink-0 items-center justify-center rounded-full bg-[rgba(255,255,255,0.05)]">
-                    <TxnIcon className="h-[14px] w-[14px] text-[#94a3b8]" />
+                  <div className="flex h-[28px] w-[28px] md:h-[32px] md:w-[32px] flex-shrink-0 items-center justify-center rounded-full bg-[rgba(255,255,255,0.05)]">
+                    <TxnIcon className="h-[12px] w-[12px] md:h-[14px] md:w-[14px] text-[#94a3b8]" />
                   </div>
 
                   {/* Column 2: Details */}
                   <div className="flex flex-col min-w-0">
-                    <span className="text-[13px] font-medium text-[#f8fafc] truncate">
+                    <span className="text-[12px] md:text-[13px] font-medium text-[#f8fafc] truncate">
                       {txn.title}
                     </span>
-                    <span className="text-[11px] text-[#475569] truncate">
+                    <span className="text-[10px] md:text-[11px] text-[#475569] truncate">
                       {category?.label || txn.category} · {txn.profile?.name || "Unknown"}
                     </span>
                   </div>
@@ -85,7 +90,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                   {/* Column 3: Amount + Date */}
                   <div className="flex flex-col items-end flex-shrink-0">
                     <span
-                      className={`text-[13px] font-semibold tracking-tight ${
+                      className={`text-[12px] md:text-[13px] font-semibold tracking-tight ${
                         isIncome
                           ? "text-[#10b981]"
                           : isExpense
@@ -96,7 +101,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                       {isIncome ? "+" : isExpense ? "−" : "→"}
                       {symbol}{Math.abs(txn.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </span>
-                    <span className="text-[11px] text-[#475569]">
+                    <span className="hidden sm:block text-[10px] md:text-[11px] text-[#475569]">
                       {new Date(txn.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                     </span>
                   </div>
@@ -107,7 +112,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
 
           {transactions.length > 8 && (
             <Link href="/transactions" className="mt-4">
-              <button className="w-full h-[36px] bg-transparent border border-[rgba(255,255,255,0.06)] rounded-[10px] text-[12px] text-[#94a3b8] hover:border-[rgba(139,92,246,0.3)] hover:text-[#a78bfa] transition-colors">
+              <button className="w-full h-[44px] md:h-[36px] bg-transparent border border-[rgba(255,255,255,0.06)] rounded-[10px] text-[12px] text-[#94a3b8] hover:border-[rgba(139,92,246,0.3)] hover:text-[#a78bfa] transition-colors active:scale-[0.98]">
                 Show more
               </button>
             </Link>

@@ -110,7 +110,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center">
+      <div className="fixed inset-0 z-[60] flex items-end justify-center md:items-center">
         {/* Backdrop */}
         <motion.div 
           initial={{ opacity: 0 }}
@@ -123,14 +123,19 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
 
         {/* Modal */}
         <motion.div 
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          className="relative z-10 w-full max-w-[480px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-t-[var(--radius-xl)] sm:rounded-[var(--radius-xl)] max-h-[90vh] flex flex-col shadow-2xl"
+          initial={{ opacity: 0, y: "100%", scale: 1 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: "100%", scale: 1 }}
+          transition={{ type: "spring", damping: 25, stiffness: 200 }}
+          className="relative z-10 w-full md:max-w-[480px] bg-[var(--bg-elevated)] border-t md:border border-[var(--border-subtle)] rounded-t-[24px] md:rounded-[var(--radius-xl)] max-h-[90vh] flex flex-col shadow-2xl"
         >
+          {/* Mobile Drag Handle */}
+          <div className="w-full flex justify-center pt-3 pb-1 md:hidden">
+            <div className="w-10 h-1.5 rounded-full bg-white/[0.15]" />
+          </div>
+
           {/* Header */}
-          <div className="flex-none sticky top-0 z-20 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-6 py-4">
+          <div className="flex-none sticky top-0 z-20 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-6 py-3 md:py-4">
             <h2 className="text-[15px] font-semibold text-[var(--text-primary)]">New Transaction</h2>
             <button
               onClick={onClose}

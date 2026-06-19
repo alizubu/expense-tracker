@@ -24,7 +24,7 @@ export function ClientLayoutWrapper({ children }: { children: React.ReactNode })
     <div
       className={cn(
         "flex min-h-screen flex-col transition-sidebar",
-        "lg:ml-[280px]",
+        "lg:ml-[220px]",
         sidebarCollapsed && "lg:ml-16"
       )}
     >

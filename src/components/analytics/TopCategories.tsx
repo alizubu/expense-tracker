@@ -6,6 +6,7 @@ import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { EXPENSE_CATEGORIES } from "@/lib/categories";
+import { cn } from "@/lib/utils";
 
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
@@ -79,7 +80,7 @@ export function TopCategories() {
         </div>
       ) : (
         <div className="flex flex-col space-y-1">
-          {data.map((item) => {
+          {data.map((item, index) => {
             const Icon = getIcon(item.iconName);
             const percentage = totalSpent > 0 ? (item.value / totalSpent) * 100 : 0;
             const barWidth = maxAmount > 0 ? (item.value / maxAmount) * 100 : 0;
@@ -87,11 +88,14 @@ export function TopCategories() {
             return (
               <div 
                 key={item.id}
-                className="group flex items-center h-[40px] hover:bg-[rgba(255,255,255,0.015)] rounded-[8px] px-2 -mx-2 transition-all cursor-pointer"
+                className={cn(
+                  "group flex items-center h-[44px] md:h-[40px] hover:bg-[rgba(255,255,255,0.015)] rounded-[8px] px-2 -mx-2 transition-all cursor-pointer active:scale-[0.98]",
+                  index >= 5 && "hidden sm:flex"
+                )}
               >
                 {/* Left: Icon */}
                 <div 
-                  className="flex h-[20px] w-[20px] flex-shrink-0 items-center justify-center rounded-full mr-3"
+                  className="hidden sm:flex h-[20px] w-[20px] flex-shrink-0 items-center justify-center rounded-full mr-3"
                   style={{ backgroundColor: `${item.color}1E` }} // 12% opacity roughly
                 >
                   <Icon className="h-[11px] w-[11px]" style={{ color: item.color }} />
@@ -99,7 +103,7 @@ export function TopCategories() {
 
                 {/* Center: Name + Bar */}
                 <div className="flex-1 min-w-0 mr-4">
-                  <span className="text-[12px] font-medium text-[#f8fafc] truncate block">{item.name}</span>
+                  <span className="text-[12px] md:text-[13px] font-medium text-[#f8fafc] truncate block">{item.name}</span>
                   <div className="h-[3px] w-full bg-[rgba(255,255,255,0.06)] rounded-[2px] mt-[4px] overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
@@ -113,10 +117,10 @@ export function TopCategories() {
 
                 {/* Right: Amount */}
                 <div className="flex flex-col items-end flex-shrink-0">
-                  <span className="text-[12px] font-semibold text-[#f8fafc]">
+                  <span className="text-[12px] md:text-[13px] font-semibold md:font-bold text-[#f8fafc]">
                     {symbol}{item.value.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </span>
-                  <span className="text-[10px] text-[#475569]">
+                  <span className="hidden sm:block text-[10px] md:text-[11px] text-[#475569]">
                     {percentage.toFixed(1)}%
                   </span>
                 </div>

@@ -22,67 +22,38 @@ export function QuickStats({
   const { selectedCurrency } = useUIStore();
   const symbol = getCurrencySymbol(selectedCurrency);
 
+  const stats = [
+    { id: 1, icon: Activity, color: "#7c3aed", label: "Transactions", value: transactionsCount.toString() },
+    { id: 2, icon: ArrowDownCircle, color: "#f43f5e", label: "Avg Daily Spend", value: `${symbol}${avgDailySpend.toLocaleString(undefined, { maximumFractionDigits: 0 })}` },
+    { id: 3, icon: AlertCircle, color: "#f59e0b", label: "Largest Expense", value: `${symbol}${largestExpense.toLocaleString(undefined, { maximumFractionDigits: 0 })}` },
+    { id: 4, icon: Tag, color: "#10b981", label: "Top Category", value: topCategory || "-" },
+    { id: 5, icon: Layers, color: "#3b82f6", label: "Active Profiles", value: profilesCount.toString() },
+  ];
+
   return (
-    <div className="flex flex-col w-full h-full bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-[16px] py-5 px-6 hover:border-[rgba(139,92,246,0.25)] hover:shadow-[0_0_0_1px_rgba(139,92,246,0.1)] transition-all duration-200">
-      <h2 className="text-[11px] font-medium text-[#475569] uppercase tracking-[0.08em] mb-2">
+    <div className="flex flex-col w-full h-full bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-[16px] py-4 px-4 md:py-5 md:px-6 hover:border-[rgba(139,92,246,0.25)] hover:shadow-[0_0_0_1px_rgba(139,92,246,0.1)] transition-all duration-200">
+      <h2 className="text-[11px] font-medium text-[#475569] uppercase tracking-[0.08em] mb-3 md:mb-2">
         Quick Stats
       </h2>
       
-      <div className="flex flex-col">
-        {/* Row 1 */}
-        <div className="flex justify-between items-center h-[40px] border-b border-white/[0.04] cursor-pointer hover:bg-white/[0.02] rounded-md px-2 -mx-2 transition-colors">
-          <div className="flex items-center gap-2">
-            <Activity size={14} color="#7c3aed" />
-            <span className="text-[12px] text-[#94a3b8]">Transactions</span>
-          </div>
-          <span className="text-[13px] font-semibold text-[#f8fafc]">
-            {transactionsCount}
-          </span>
-        </div>
-
-        {/* Row 2 */}
-        <div className="flex justify-between items-center h-[40px] border-b border-white/[0.04] cursor-pointer hover:bg-white/[0.02] rounded-md px-2 -mx-2 transition-colors">
-          <div className="flex items-center gap-2">
-            <ArrowDownCircle size={14} color="#f43f5e" />
-            <span className="text-[12px] text-[#94a3b8]">Avg Daily Spend</span>
-          </div>
-          <span className="text-[13px] font-semibold text-[#f8fafc]">
-            {symbol}{avgDailySpend.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-          </span>
-        </div>
-
-        {/* Row 3 */}
-        <div className="flex justify-between items-center h-[40px] border-b border-white/[0.04] cursor-pointer hover:bg-white/[0.02] rounded-md px-2 -mx-2 transition-colors">
-          <div className="flex items-center gap-2">
-            <AlertCircle size={14} color="#f59e0b" />
-            <span className="text-[12px] text-[#94a3b8]">Largest Expense</span>
-          </div>
-          <span className="text-[13px] font-semibold text-[#f8fafc]">
-            {symbol}{largestExpense.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-          </span>
-        </div>
-
-        {/* Row 4 */}
-        <div className="flex justify-between items-center h-[40px] border-b border-white/[0.04] cursor-pointer hover:bg-white/[0.02] rounded-md px-2 -mx-2 transition-colors">
-          <div className="flex items-center gap-2">
-            <Tag size={14} color="#10b981" />
-            <span className="text-[12px] text-[#94a3b8]">Top Category</span>
-          </div>
-          <span className="text-[13px] font-semibold text-[#f8fafc]">
-            {topCategory || "-"}
-          </span>
-        </div>
-
-        {/* Row 5 */}
-        <div className="flex justify-between items-center h-[40px] cursor-pointer hover:bg-white/[0.02] rounded-md px-2 -mx-2 transition-colors">
-          <div className="flex items-center gap-2">
-            <Layers size={14} color="#3b82f6" />
-            <span className="text-[12px] text-[#94a3b8]">Active Profiles</span>
-          </div>
-          <span className="text-[13px] font-semibold text-[#f8fafc]">
-            {profilesCount}
-          </span>
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-1 gap-y-4 gap-x-3 sm:gap-0 sm:flex sm:flex-col flex-1">
+        {stats.map((stat, index) => {
+          const Icon = stat.icon;
+          return (
+            <div 
+              key={stat.id}
+              className={`flex flex-col sm:flex-row sm:justify-between items-start sm:items-center sm:h-[40px] sm:border-b sm:border-white/[0.04] cursor-pointer sm:hover:bg-white/[0.02] sm:rounded-md sm:px-2 sm:-mx-2 transition-colors ${index === 4 ? "sm:border-b-0 col-span-2 sm:col-span-1" : ""}`}
+            >
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-0">
+                <Icon size={14} color={stat.color} className="sm:h-[14px] sm:w-[14px]" />
+                <span className="text-[10px] sm:text-[12px] text-[#94a3b8]">{stat.label}</span>
+              </div>
+              <span className="text-[16px] sm:text-[13px] font-semibold text-[#f8fafc]">
+                {stat.value}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

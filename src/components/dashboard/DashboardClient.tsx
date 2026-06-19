@@ -128,7 +128,7 @@ export function DashboardClient() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="grid grid-rows-[auto_auto_1fr] gap-4 w-full max-w-[1400px] mx-auto min-h-full"
+      className="grid grid-rows-[auto_auto_1fr] gap-4 w-full max-w-[1400px] mx-auto min-h-full px-3 py-3 pb-20 md:px-4 md:py-4 md:pb-20 lg:px-5 lg:py-5 lg:pb-6 xl:px-6 xl:py-5"
     >
       {/* ROW 1: Stats Strip */}
       <StatsStrip 
@@ -139,7 +139,7 @@ export function DashboardClient() {
       />
 
       {/* ROW 2: Middle Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[1fr_1fr_1.2fr] gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         <div className="min-w-0">
           <ProfileCard 
             profiles={profiles} 
@@ -162,7 +162,7 @@ export function DashboardClient() {
       </div>
 
       {/* ROW 3: Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-4">
         <div className="min-w-0">
           <TransactionFeed transactions={transactions} />
         </div>

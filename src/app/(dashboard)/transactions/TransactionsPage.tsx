@@ -64,7 +64,7 @@ export default function TransactionsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-5xl px-3 py-3 pb-20 md:px-5 md:py-5 md:pb-6 space-y-6">
       <BlurFade delay={0}>
         <div className="flex items-center justify-between">
           <div>

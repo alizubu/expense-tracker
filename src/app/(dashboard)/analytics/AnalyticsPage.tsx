@@ -14,7 +14,7 @@ export default function AnalyticsPage() {
   const { transactions } = useTransactionStore();
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="mx-auto max-w-[1400px] w-full px-3 py-3 pb-20 md:px-5 md:py-5 md:pb-6 space-y-4 md:space-y-6">
       <BlurFade delay={0}>
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-text-primary tracking-heading">Analytics & Insights</h1>

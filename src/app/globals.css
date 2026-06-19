@@ -146,3 +146,36 @@ h1, h2, h3, h4, h5, h6 {
 .transition-sidebar {
   transition: width 0.2s ease, padding 0.2s ease, margin 0.2s ease;
 }
+
+/* ── Mobile & Responsive Utilities ───────────────────────── */
+
+html, body {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+input, select, textarea {
+  font-size: max(16px, 1em);
+}
+
+@media (hover: none) {
+  .card-hover:hover {
+    border-color: rgba(255,255,255,0.06) !important;
+    box-shadow: none !important;
+  }
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}

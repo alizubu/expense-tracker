@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 interface UIState {
   sidebarCollapsed: boolean;
+  isSidebarOpen: boolean;
   activeModal: string | null;
   selectedCurrency: string;
   selectedProfileId: string | null;
@@ -11,6 +12,9 @@ interface UIState {
   // Actions
   toggleSidebar: () => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
+  openSidebar: () => void;
+  closeSidebar: () => void;
+  toggleSidebarOpen: () => void;
   openModal: (modal: string) => void;
   closeModal: () => void;
   setCurrency: (currency: string) => void;
@@ -24,6 +28,7 @@ const now = new Date();
 
 export const useUIStore = create<UIState>((set) => ({
   sidebarCollapsed: false,
+  isSidebarOpen: false,
   activeModal: null,
   selectedCurrency: "BDT",
   selectedProfileId: null,
@@ -33,6 +38,9 @@ export const useUIStore = create<UIState>((set) => ({
 
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
+  openSidebar: () => set({ isSidebarOpen: true }),
+  closeSidebar: () => set({ isSidebarOpen: false }),
+  toggleSidebarOpen: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   openModal: (modal) => set({ activeModal: modal }),
   closeModal: () => set({ activeModal: null }),
   setCurrency: (currency) => set({ selectedCurrency: currency }),

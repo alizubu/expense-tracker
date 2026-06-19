@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   ArrowLeftRight,
@@ -41,13 +42,41 @@ const navGroups = [
 export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const { selectedCurrency } = useUIStore();
+  const { selectedCurrency, isSidebarOpen, closeSidebar } = useUIStore();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => setMounted(true), []);
 
-  return (
-    <aside className="fixed left-0 top-0 z-40 hidden h-screen w-[220px] flex-col bg-[#0d0d14] border-r border-white/[0.05] lg:flex">
+  // Close sidebar on route change
+  React.useEffect(() => {
+    closeSidebar();
+  }, [pathname, closeSidebar]);
+
+  // Close sidebar on Escape key
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isSidebarOpen) {
+        closeSidebar();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isSidebarOpen, closeSidebar]);
+
+  // Prevent body scroll when drawer is open on mobile
+  React.useEffect(() => {
+    if (isSidebarOpen && window.innerWidth < 1024) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isSidebarOpen]);
+
+  const SidebarContent = (
+    <>
       {/* Logo Area */}
       <div className="flex h-[56px] items-center px-4 border-b border-white/[0.05]">
         <Link href="/" className="flex items-center gap-2.5">
@@ -80,10 +109,10 @@ export function Sidebar() {
                     <Link
                       href={item.route}
                       className={cn(
-                        "flex h-9 items-center rounded-lg mx-2 px-3 text-[13px] font-medium transition-colors border-l-2",
+                        "flex h-9 items-center rounded-lg mx-2 px-3 text-[13px] font-medium transition-colors border-l-2 active:scale-[0.97] active:opacity-80",
                         isActive
                           ? "bg-[rgba(124,58,237,0.12)] text-[#a78bfa] border-accent"
-                          : "text-[#64748b] border-transparent hover:bg-white/[0.04] hover:text-[#94a3b8]"
+                          : "text-[#64748b] border-transparent card-hover hover:bg-white/[0.04] hover:text-[#94a3b8]"
                       )}
                     >
                       <Icon className="h-[15px] w-[15px] mr-[10px]" strokeWidth={2} style={{ verticalAlign: "-2px" }} />
@@ -98,7 +127,7 @@ export function Sidebar() {
       </nav>
 
       {/* User Card (Bottom Absolute) */}
-      <div className="absolute bottom-0 left-0 right-0 h-[60px] px-3 border-t border-white/[0.05] bg-[#0d0d14] flex items-center gap-2.5">
+      <div className="absolute bottom-0 left-0 right-0 h-[60px] pb-safe px-3 border-t border-white/[0.05] bg-[#0d0d14] flex items-center gap-2.5">
         <div className="flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center rounded-full bg-accent text-white text-[12px] font-bold">
           {session?.user?.name ? session.user.name.substring(0, 2).toUpperCase() : "U"}
         </div>
@@ -118,6 +147,39 @@ export function Sidebar() {
           </div>
         )}
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* MOBILE DRAWER BACKDROP (xs -> lg) */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={closeSidebar}
+            className="fixed inset-0 z-[49] bg-black/60 backdrop-blur-[2px] lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* MOBILE DRAWER (xs -> lg) */}
+      <aside
+        className={cn(
+          "fixed left-0 top-0 bottom-0 z-50 flex w-[260px] flex-col bg-[#0d0d14] border-r border-white/[0.05] transition-transform duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] lg:hidden",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {SidebarContent}
+      </aside>
+
+      {/* DESKTOP SIDEBAR (lg+) */}
+      <aside className="fixed left-0 top-0 bottom-0 z-40 hidden w-[220px] flex-col bg-[#0d0d14] border-r border-white/[0.05] lg:flex">
+        {SidebarContent}
+      </aside>
+    </>
   );
 }

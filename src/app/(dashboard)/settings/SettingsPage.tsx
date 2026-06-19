@@ -91,7 +91,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 pb-20">
+    <div className="mx-auto max-w-3xl px-3 py-3 pb-20 md:px-5 md:py-5 md:pb-6 space-y-6">
       <BlurFade delay={0}>
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-text-primary tracking-heading">Settings</h1>
