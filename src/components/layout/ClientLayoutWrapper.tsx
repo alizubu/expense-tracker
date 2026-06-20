@@ -21,14 +21,8 @@ export function ClientLayoutWrapper({ children }: { children: React.ReactNode })
   }, [status, session, fetchProfiles, fetchTransactions]);
 
   return (
-    <div
-      className={cn(
-        "flex min-h-screen flex-col transition-sidebar",
-        "lg:ml-[220px]",
-        sidebarCollapsed && "lg:ml-16"
-      )}
-    >
+    <>
       {children}
-    </div>
+    </>
   );
 }

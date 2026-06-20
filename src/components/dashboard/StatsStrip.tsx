@@ -21,57 +21,63 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
   const savingsRate = income > 0 ? Math.max(0, ((income - expenses) / income) * 100) : 0;
 
   const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 8 },
+    hidden: { opacity: 0, y: 6 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
       transition: {
-        delay: i * 0.08,
-        duration: 0.3,
-        ease: "easeOut"
+        delay: i * 0.07,
+        duration: 0.35,
+        ease: [0.22, 1, 0.36, 1]
       }
     })
   };
 
   return (
-    <div className="grid grid-cols-2 gap-2 md:gap-3 xl:grid-cols-4 xl:gap-3 w-full">
-      {/* Card 1: Net Balance (HERO) */}
+    <>
+      {/* Card 1: Net Balance */}
       <motion.div
         custom={0}
         initial="hidden"
         animate="visible"
         variants={cardVariants}
-        className="col-span-2 xl:col-span-1 h-[80px] xl:h-[96px] rounded-[14px] py-3 px-3.5 md:py-4 md:px-5 flex flex-col justify-between border-l-[3px] border-l-[#7c3aed] relative overflow-hidden cursor-pointer hover:border-[rgba(139,92,246,0.4)] transition-all duration-200"
+        className="col-span-2 xl:col-span-1 h-[88px] rounded-[14px] px-[18px] py-[14px] flex items-center justify-between border-l-[3px] border-l-[#7c3aed] premium-card group"
         style={{
-          background: "linear-gradient(135deg, #13111e 0%, #0f0d1a 100%)",
-          borderTop: "1px solid rgba(139, 92, 246, 0.2)",
-          borderRight: "1px solid rgba(139, 92, 246, 0.2)",
-          borderBottom: "1px solid rgba(139, 92, 246, 0.2)",
-          boxShadow: "0 0 40px rgba(124, 58, 237, 0.08)"
+          background: "linear-gradient(135deg, #131028, #0e0d1c)",
+          boxShadow: "0 0 20px rgba(124,58,237,0.08), 0 1px 0 rgba(255,255,255,0.04) inset, 0 -1px 0 rgba(0,0,0,0.3) inset",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          borderRight: "1px solid rgba(255,255,255,0.06)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)"
         }}
       >
-        <div className="flex justify-between items-center z-10">
-          <span className="text-[10px] md:text-[11px] font-medium tracking-[0.08em] uppercase text-[#475569]">Net Balance</span>
-          <div className="flex items-center gap-1.5">
-            <div className="h-[6px] w-[6px] rounded-full bg-[#10b981]" />
-            <span className="text-[10px] text-[#10b981]">Live</span>
-          </div>
-        </div>
-        <div className="flex justify-between items-end z-10">
-          <div className="flex items-baseline">
-            <span className="text-[20px] md:text-[24px] xl:text-[28px] font-bold tracking-[-0.03em] text-[#f8fafc] mr-1">{symbol}</span>
-            <NumberTicker value={netBalance} decimalPlaces={0} className="text-[20px] md:text-[24px] xl:text-[28px] font-bold tracking-[-0.03em] text-[#f8fafc]" />
-          </div>
-          {sparklineData && sparklineData.length > 0 && (
-            <div className="hidden md:block h-[32px] w-[80px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={sparklineData}>
-                  <Line type="monotone" dataKey="value" stroke="#7c3aed" strokeWidth={2} dot={false} isAnimationActive={false} />
-                </LineChart>
-              </ResponsiveContainer>
+        <div className="flex flex-col h-full justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-medium tracking-[0.08em] uppercase text-[#475569]">Net Balance</span>
+            <div className="flex items-center gap-[4px]">
+              <div className="h-[6px] w-[6px] rounded-full bg-[#10b981] animate-pulse" />
+              <span className="text-[10px] text-[#10b981]">Live</span>
             </div>
-          )}
+          </div>
+          <div className="flex items-baseline">
+            <span className="text-[26px] font-bold tracking-[-0.04em] text-[#f1f5f9] mr-[2px]">{symbol}</span>
+            <NumberTicker value={netBalance} decimalPlaces={0} className="text-[26px] font-bold tracking-[-0.04em] text-[#f1f5f9] font-mono" />
+          </div>
         </div>
+        {sparklineData && sparklineData.length > 0 && (
+          <div className="h-[36px] w-[80px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={sparklineData}>
+                <defs>
+                  <linearGradient id="sparklineGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="rgba(124,58,237,0.2)" stopOpacity={1}/>
+                    <stop offset="95%" stopColor="rgba(124,58,237,0)" stopOpacity={1}/>
+                  </linearGradient>
+                </defs>
+                <Line type="monotone" dataKey="value" stroke="#7c3aed" strokeWidth={1.5} dot={false} isAnimationActive={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </motion.div>
 
       {/* Card 2: Income */}
@@ -80,19 +86,19 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
         initial="hidden"
         animate="visible"
         variants={cardVariants}
-        className="col-span-1 h-[80px] xl:h-[96px] rounded-[14px] py-3 px-3.5 md:py-4 md:px-5 flex flex-col justify-between bg-[#111118] border border-[rgba(255,255,255,0.06)] border-l-[3px] border-l-[#10b981] hover:border-[rgba(139,92,246,0.25)] hover:shadow-[0_0_0_1px_rgba(139,92,246,0.1)] transition-all duration-200 cursor-pointer"
+        className="col-span-1 h-[88px] rounded-[14px] px-[18px] py-[14px] flex items-center justify-between border-l-[3px] border-l-[#10b981] bg-[linear-gradient(145deg,#111120_0%,#0d0d18_100%)] border border-white/[0.06] border-l-[#10b981] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_-1px_0_rgba(0,0,0,0.3)_inset] hover:border-[rgba(124,58,237,0.25)] hover:shadow-[0_0_0_1px_rgba(124,58,237,0.08)_inset,0_1px_0_rgba(255,255,255,0.04)_inset,0_-1px_0_rgba(0,0,0,0.3)_inset] transition-all duration-200"
       >
-        <div className="text-[10px] md:text-[11px] font-medium tracking-[0.08em] uppercase text-[#475569]">Income</div>
-        <div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-[20px] md:text-[24px] xl:text-[28px] font-bold tracking-[-0.03em] text-[#10b981] flex items-baseline">
-              <span className="mr-1">{symbol}</span>
-              <NumberTicker value={income} decimalPlaces={0} />
-            </span>
-            <TrendingUp className="h-[12px] w-[12px] md:h-[14px] md:w-[14px] text-[#10b981] mb-1" />
+        <div className="flex flex-col h-full justify-between">
+          <div className="text-[10px] font-medium tracking-[0.08em] uppercase text-[#475569]">Income</div>
+          <div>
+            <div className="flex items-baseline text-[#10b981]">
+              <span className="text-[26px] font-bold tracking-[-0.04em] mr-[2px]">{symbol}</span>
+              <NumberTicker value={income} decimalPlaces={0} className="text-[26px] font-bold tracking-[-0.04em] text-[#10b981] font-mono" />
+            </div>
+            <div className="text-[10px] text-[#475569]">This month</div>
           </div>
-          <div className="hidden sm:block text-[10px] md:text-[11px] text-[#475569]">This month</div>
         </div>
+        <TrendingUp className="h-[14px] w-[14px] text-[#10b981]" />
       </motion.div>
 
       {/* Card 3: Expenses */}
@@ -101,19 +107,19 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
         initial="hidden"
         animate="visible"
         variants={cardVariants}
-        className="col-span-1 h-[80px] xl:h-[96px] rounded-[14px] py-3 px-3.5 md:py-4 md:px-5 flex flex-col justify-between bg-[#111118] border border-[rgba(255,255,255,0.06)] border-l-[3px] border-l-[#f43f5e] hover:border-[rgba(139,92,246,0.25)] hover:shadow-[0_0_0_1px_rgba(139,92,246,0.1)] transition-all duration-200 cursor-pointer"
+        className="col-span-1 h-[88px] rounded-[14px] px-[18px] py-[14px] flex items-center justify-between border-l-[3px] border-l-[#f43f5e] bg-[linear-gradient(145deg,#111120_0%,#0d0d18_100%)] border border-white/[0.06] border-l-[#f43f5e] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_-1px_0_rgba(0,0,0,0.3)_inset] hover:border-[rgba(124,58,237,0.25)] hover:shadow-[0_0_0_1px_rgba(124,58,237,0.08)_inset,0_1px_0_rgba(255,255,255,0.04)_inset,0_-1px_0_rgba(0,0,0,0.3)_inset] transition-all duration-200"
       >
-        <div className="text-[10px] md:text-[11px] font-medium tracking-[0.08em] uppercase text-[#475569]">Expenses</div>
-        <div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-[20px] md:text-[24px] xl:text-[28px] font-bold tracking-[-0.03em] text-[#f43f5e] flex items-baseline">
-              <span className="mr-1">{symbol}</span>
-              <NumberTicker value={expenses} decimalPlaces={0} />
-            </span>
-            <TrendingDown className="h-[12px] w-[12px] md:h-[14px] md:w-[14px] text-[#f43f5e] mb-1" />
+        <div className="flex flex-col h-full justify-between">
+          <div className="text-[10px] font-medium tracking-[0.08em] uppercase text-[#475569]">Expenses</div>
+          <div>
+            <div className="flex items-baseline text-[#f43f5e]">
+              <span className="text-[26px] font-bold tracking-[-0.04em] mr-[2px]">{symbol}</span>
+              <NumberTicker value={expenses} decimalPlaces={0} className="text-[26px] font-bold tracking-[-0.04em] text-[#f43f5e] font-mono" />
+            </div>
+            <div className="text-[10px] text-[#475569]">This month</div>
           </div>
-          <div className="hidden sm:block text-[10px] md:text-[11px] text-[#475569]">This month</div>
         </div>
+        <TrendingDown className="h-[14px] w-[14px] text-[#f43f5e]" />
       </motion.div>
 
       {/* Card 4: Savings Rate */}
@@ -122,19 +128,19 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
         initial="hidden"
         animate="visible"
         variants={cardVariants}
-        className="col-span-2 xl:col-span-1 h-[80px] xl:h-[96px] rounded-[14px] py-3 px-3.5 md:py-4 md:px-5 flex flex-col justify-between bg-[#111118] border border-[rgba(255,255,255,0.06)] border-l-[3px] border-l-[#3b82f6] hover:border-[rgba(139,92,246,0.25)] hover:shadow-[0_0_0_1px_rgba(139,92,246,0.1)] transition-all duration-200 cursor-pointer relative"
+        className="col-span-2 xl:col-span-1 h-[88px] rounded-[14px] px-[18px] py-[14px] flex flex-col justify-between border-l-[3px] border-l-[#3b82f6] bg-[linear-gradient(145deg,#111120_0%,#0d0d18_100%)] border border-white/[0.06] border-l-[#3b82f6] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_-1px_0_rgba(0,0,0,0.3)_inset] hover:border-[rgba(124,58,237,0.25)] hover:shadow-[0_0_0_1px_rgba(124,58,237,0.08)_inset,0_1px_0_rgba(255,255,255,0.04)_inset,0_-1px_0_rgba(0,0,0,0.3)_inset] transition-all duration-200 relative"
       >
-        <div className="text-[10px] md:text-[11px] font-medium tracking-[0.08em] uppercase text-[#475569]">Savings Rate</div>
-        <div className="mb-[6px] md:mb-[6px]">
-          <div className="flex items-baseline gap-1">
-            <span className="text-[20px] md:text-[24px] xl:text-[28px] font-bold tracking-[-0.03em] text-[#f8fafc]">
-              <NumberTicker value={savingsRate} decimalPlaces={1} />
-            </span>
-            <span className="text-[14px] md:text-[16px] xl:text-[20px] font-bold text-[#f8fafc]">%</span>
-          </div>
-          <div className="hidden sm:block text-[10px] md:text-[11px] text-[#475569]">of income saved</div>
+        <div className="flex justify-between w-full">
+          <div className="text-[10px] font-medium tracking-[0.08em] uppercase text-[#475569]">Savings Rate</div>
         </div>
-        <div className="absolute bottom-[10px] md:bottom-[16px] left-[14px] right-[14px] md:left-[20px] md:right-[20px] h-[3px] bg-[#1e293b] rounded-[1px] overflow-hidden">
+        <div className="flex flex-col">
+          <div className="flex items-baseline text-[#f1f5f9]">
+            <NumberTicker value={savingsRate} decimalPlaces={1} className="text-[26px] font-bold tracking-[-0.04em] text-[#f1f5f9] font-mono" />
+            <span className="text-[26px] font-bold tracking-[-0.04em]">%</span>
+          </div>
+          <div className="text-[10px] text-[#475569]">of income saved</div>
+        </div>
+        <div className="absolute bottom-[14px] left-[18px] right-[18px] h-[2px] bg-[#1e293b] rounded-[1px] overflow-hidden">
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${Math.min(100, savingsRate)}%` }}
@@ -143,6 +149,6 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
           />
         </div>
       </motion.div>
-    </div>
+    </>
   );
 }

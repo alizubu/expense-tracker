@@ -9,7 +9,7 @@ import { useTransactionStore } from "@/store/useTransactionStore";
 import { StatsStrip } from "@/components/dashboard/StatsStrip";
 import { QuickStats } from "@/components/dashboard/QuickStats";
 import { ProfileCard } from "@/components/dashboard/ProfileCard";
-import { CategoryDonutChart } from "@/components/analytics/CategoryDonutChart";
+import { SpendingChart } from "@/components/dashboard/SpendingChart";
 import { TransactionFeed } from "@/components/dashboard/TransactionFeed";
 import { TopCategories } from "@/components/analytics/TopCategories";
 
@@ -128,26 +128,35 @@ export function DashboardClient() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="grid grid-rows-[auto_auto_1fr] gap-4 w-full max-w-[1400px] mx-auto min-h-full px-3 py-3 pb-20 md:px-4 md:py-4 md:pb-20 lg:px-5 lg:py-5 lg:pb-6 xl:px-6 xl:py-5"
+      className="
+        h-full
+        grid
+        gap-3
+        grid-rows-[88px_1fr_1fr]
+        grid-cols-1
+        xl:grid-rows-[88px_minmax(0,220px)_minmax(0,1fr)]
+      "
     >
-      {/* ROW 1: Stats Strip */}
-      <StatsStrip 
-        netBalance={netBalance}
-        income={income}
-        expenses={expenses}
-        sparklineData={sparklineData.length > 0 ? sparklineData : [{ value: netBalance }, { value: netBalance }]}
-      />
+      {/* ROW 1 — Stats Strip */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <StatsStrip 
+          netBalance={netBalance}
+          income={income}
+          expenses={expenses}
+          sparklineData={sparklineData.length > 0 ? sparklineData : [{ value: netBalance }, { value: netBalance }]}
+        />
+      </div>
 
-      {/* ROW 2: Middle Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-        <div className="min-w-0">
+      {/* ROW 2 — Middle panels */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 min-h-0">
+        <div className="min-h-0 h-full">
           <ProfileCard 
             profiles={profiles} 
             netBalance={netBalance} 
             onAdd={() => setProfileModalOpen(true)} 
           />
         </div>
-        <div className="min-w-0">
+        <div className="min-h-0 h-full">
           <QuickStats 
             transactionsCount={transactionsCount}
             avgDailySpend={avgDailySpend}
@@ -156,17 +165,17 @@ export function DashboardClient() {
             profilesCount={profiles.length}
           />
         </div>
-        <div className="min-w-0 lg:col-span-2 xl:col-span-1">
-          <CategoryDonutChart />
+        <div className="min-h-0 h-full">
+          <SpendingChart />
         </div>
       </div>
 
-      {/* ROW 3: Bottom Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-4">
-        <div className="min-w-0">
+      {/* ROW 3 — Bottom panels */}
+      <div className="grid grid-cols-1 xl:grid-cols-[1.65fr_1fr] gap-3 min-h-0">
+        <div className="min-h-0 h-full">
           <TransactionFeed transactions={transactions} />
         </div>
-        <div className="min-w-0">
+        <div className="min-h-0 h-full">
           <TopCategories />
         </div>
       </div>

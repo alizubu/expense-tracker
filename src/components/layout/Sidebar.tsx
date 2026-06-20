@@ -78,25 +78,25 @@ export function Sidebar() {
   const SidebarContent = (
     <>
       {/* Logo Area */}
-      <div className="flex h-[56px] items-center px-4 border-b border-white/[0.05]">
+      <div className="flex h-[52px] items-center px-[14px] border-b border-white/[0.05] flex-shrink-0">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="h-7 w-7 rounded-lg bg-accent flex items-center justify-center">
-            <div className="w-2.5 h-2.5 bg-white rounded-sm" />
+          <div className="h-[26px] w-[26px] rounded-[7px] bg-[#7c3aed] flex items-center justify-center">
+            <div className="w-2 h-2 bg-white rounded-sm" />
           </div>
-          <span className="text-[14px] font-semibold text-[#f8fafc] tracking-[-0.02em]">
+          <span className="text-[13px] font-semibold text-[#f1f5f9]">
             ExpenseTracker
           </span>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto no-scrollbar pt-2 pb-[70px]">
+      <nav className="flex-1 overflow-y-auto hide-scrollbar p-2">
         {navGroups.map((group) => (
-          <div key={group.label} className="mb-1">
-            <div className="px-4 pt-5 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#334155]">
+          <div key={group.label}>
+            <div className="px-2 pt-4 pb-1 text-[10px] font-medium uppercase tracking-[0.1em] text-[#1e293b]">
               {group.label}
             </div>
-            <ul className="space-y-0.5">
+            <ul className="space-y-[1px]">
               {group.items.map((item) => {
                 const isActive =
                   item.route === "/"
@@ -109,14 +109,14 @@ export function Sidebar() {
                     <Link
                       href={item.route}
                       className={cn(
-                        "flex h-9 items-center rounded-lg mx-2 px-3 text-[13px] font-medium transition-colors border-l-2 active:scale-[0.97] active:opacity-80",
+                        "flex h-[34px] items-center rounded-lg px-[10px] text-[13px] font-normal transition-colors",
                         isActive
-                          ? "bg-[rgba(124,58,237,0.12)] text-[#a78bfa] border-accent"
-                          : "text-[#64748b] border-transparent card-hover hover:bg-white/[0.04] hover:text-[#94a3b8]"
+                          ? "bg-[rgba(124,58,237,0.10)] text-[#a78bfa] font-medium border-l-[2px] border-[#7c3aed] pl-[8px] shadow-[inset_1px_0_0_rgba(124,58,237,0.2)]"
+                          : "bg-transparent text-[#475569] hover:bg-white/[0.04] hover:text-[#94a3b8]"
                       )}
                     >
-                      <Icon className="h-[15px] w-[15px] mr-[10px]" strokeWidth={2} style={{ verticalAlign: "-2px" }} />
-                      <span>{item.label}</span>
+                      <Icon className="h-[15px] w-[15px] mr-2 flex-shrink-0" strokeWidth={2} />
+                      <span className="truncate">{item.label}</span>
                     </Link>
                   </li>
                 );
@@ -126,22 +126,22 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* User Card (Bottom Absolute) */}
-      <div className="absolute bottom-0 left-0 right-0 h-[60px] pb-safe px-3 border-t border-white/[0.05] bg-[#0d0d14] flex items-center gap-2.5">
-        <div className="flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center rounded-full bg-accent text-white text-[12px] font-bold">
+      {/* User Card */}
+      <div className="sticky bottom-0 bg-[#0a0a12] border-t border-white/[0.05] px-[10px] h-[52px] flex items-center gap-[10px] flex-shrink-0">
+        <div className="flex h-[28px] w-[28px] flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#7c3aed] to-[#4f46e5] text-white text-[11px] font-semibold">
           {session?.user?.name ? session.user.name.substring(0, 2).toUpperCase() : "U"}
         </div>
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-[12px] font-medium text-[#f8fafc] truncate">
+          <span className="text-[12px] font-medium text-[#f1f5f9] truncate max-w-[110px]">
             {session?.user?.name || "User"}
           </span>
-          <span className="text-[10px] text-[#475569] truncate">
+          <span className="text-[10px] text-[#334155] truncate max-w-[110px]">
             {session?.user?.email || "user@example.com"}
           </span>
         </div>
         {mounted && (
-          <div className="flex-shrink-0 bg-white/[0.06] rounded-[20px] px-2 py-0.5">
-            <span className="font-mono text-[10px] text-[#64748b]">
+          <div className="flex-shrink-0 bg-white/[0.05] rounded-full px-2 py-0.5 h-[18px] flex items-center">
+            <span className="text-[10px] text-[#475569]">
               {getCurrencySymbol(selectedCurrency)}
             </span>
           </div>
@@ -169,7 +169,7 @@ export function Sidebar() {
       {/* MOBILE DRAWER (xs -> lg) */}
       <aside
         className={cn(
-          "fixed left-0 top-0 bottom-0 z-50 flex w-[260px] flex-col bg-[#0d0d14] border-r border-white/[0.05] transition-transform duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] lg:hidden",
+          "fixed left-0 top-0 bottom-0 z-50 flex w-[260px] flex-col bg-[#0a0a12] border-r border-white/[0.05] transition-transform duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] lg:hidden",
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -177,7 +177,7 @@ export function Sidebar() {
       </aside>
 
       {/* DESKTOP SIDEBAR (lg+) */}
-      <aside className="fixed left-0 top-0 bottom-0 z-40 hidden w-[220px] flex-col bg-[#0d0d14] border-r border-white/[0.05] lg:flex">
+      <aside className="hidden lg:flex w-[200px] h-screen flex-shrink-0 flex-col bg-[#0a0a12] border-r border-white/[0.05]">
         {SidebarContent}
       </aside>
     </>

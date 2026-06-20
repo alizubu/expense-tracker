@@ -17,40 +17,101 @@ export function QuickStats({
   avgDailySpend,
   largestExpense,
   topCategory,
-  profilesCount
+  profilesCount,
 }: QuickStatsProps) {
   const { selectedCurrency } = useUIStore();
   const symbol = getCurrencySymbol(selectedCurrency);
 
   const stats = [
-    { id: 1, icon: Activity, color: "#7c3aed", label: "Transactions", value: transactionsCount.toString() },
-    { id: 2, icon: ArrowDownCircle, color: "#f43f5e", label: "Avg Daily Spend", value: `${symbol}${avgDailySpend.toLocaleString(undefined, { maximumFractionDigits: 0 })}` },
-    { id: 3, icon: AlertCircle, color: "#f59e0b", label: "Largest Expense", value: `${symbol}${largestExpense.toLocaleString(undefined, { maximumFractionDigits: 0 })}` },
-    { id: 4, icon: Tag, color: "#10b981", label: "Top Category", value: topCategory || "-" },
-    { id: 5, icon: Layers, color: "#3b82f6", label: "Active Profiles", value: profilesCount.toString() },
+    {
+      id: "transactions",
+      label: "Transactions",
+      value: transactionsCount.toString(),
+      icon: Activity,
+      iconColor: "#a78bfa",
+      iconBg: "rgba(124,58,237,0.12)",
+      isCurrency: false,
+    },
+    {
+      id: "avgDailySpend",
+      label: "Avg Daily Spend",
+      value: `${symbol}${avgDailySpend.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
+      icon: ArrowDownCircle,
+      iconColor: "#f43f5e",
+      iconBg: "rgba(243,67,94,0.12)",
+      isCurrency: true,
+    },
+    {
+      id: "largestExpense",
+      label: "Largest Expense",
+      value: `${symbol}${largestExpense.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
+      icon: AlertCircle,
+      iconColor: "#f59e0b",
+      iconBg: "rgba(245,158,11,0.12)",
+      isCurrency: true,
+    },
+    {
+      id: "topCategory",
+      label: "Top Category",
+      value: topCategory,
+      icon: Tag,
+      iconColor: "#10b981",
+      iconBg: "rgba(16,185,129,0.12)",
+      isCurrency: false,
+      isCapitalize: true,
+      textColor: "#a78bfa",
+    },
+    {
+      id: "activeProfiles",
+      label: "Active Profiles",
+      value: profilesCount.toString(),
+      icon: Layers,
+      iconColor: "#3b82f6",
+      iconBg: "rgba(59,130,246,0.12)",
+      isCurrency: false,
+    },
   ];
 
   return (
-    <div className="flex flex-col w-full h-full bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-[16px] py-4 px-4 md:py-5 md:px-6 hover:border-[rgba(139,92,246,0.25)] hover:shadow-[0_0_0_1px_rgba(139,92,246,0.1)] transition-all duration-200">
-      <h2 className="text-[11px] font-medium text-[#475569] uppercase tracking-[0.08em] mb-3 md:mb-2">
+    <div className="flex flex-col w-full h-full premium-card p-[16px] overflow-hidden">
+      {/* Header */}
+      <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em] mb-2 flex-shrink-0 h-[32px] flex items-center">
         Quick Stats
       </h2>
-      
-      <div className="grid grid-cols-2 sm:grid-cols-1 gap-y-4 gap-x-3 sm:gap-0 sm:flex sm:flex-col flex-1">
-        {stats.map((stat, index) => {
+
+      {/* List */}
+      <div className="flex-1 flex flex-col min-h-0">
+        {stats.map((stat, i) => {
           const Icon = stat.icon;
           return (
             <div 
               key={stat.id}
-              className={`flex flex-col sm:flex-row sm:justify-between items-start sm:items-center sm:h-[40px] sm:border-b sm:border-white/[0.04] cursor-pointer sm:hover:bg-white/[0.02] sm:rounded-md sm:px-2 sm:-mx-2 transition-colors ${index === 4 ? "sm:border-b-0 col-span-2 sm:col-span-1" : ""}`}
+              className="flex items-center h-[40px] border-b border-[rgba(255,255,255,0.04)] last:border-0"
             >
-              <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-0">
-                <Icon size={14} color={stat.color} className="sm:h-[14px] sm:w-[14px]" />
-                <span className="text-[10px] sm:text-[12px] text-[#94a3b8]">{stat.label}</span>
+              {/* Left: Icon Dot */}
+              <div 
+                className="flex items-center justify-center w-[28px] h-[28px] rounded-[8px] flex-shrink-0"
+                style={{ backgroundColor: stat.iconBg }}
+              >
+                <Icon size={13} color={stat.iconColor} />
               </div>
-              <span className="text-[16px] sm:text-[13px] font-semibold text-[#f8fafc]">
-                {stat.value}
-              </span>
+              
+              {/* Center: Label */}
+              <div className="flex-1 ml-[10px]">
+                <span className="text-[12px] text-[#64748b]">
+                  {stat.label}
+                </span>
+              </div>
+              
+              {/* Right: Value */}
+              <div className="flex-shrink-0 w-[80px] text-right">
+                <span 
+                  className={`text-[13px] font-semibold ${stat.isCurrency ? 'font-mono' : ''} ${stat.isCapitalize ? 'capitalize' : ''}`}
+                  style={{ color: stat.textColor || '#f1f5f9' }}
+                >
+                  {stat.value}
+                </span>
+              </div>
             </div>
           );
         })}

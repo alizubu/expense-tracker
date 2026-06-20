@@ -19,8 +19,13 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        mono: ["GeistMono", "monospace"],
       },
       colors: {
+        page: "#08080f",
+        card: "#0f0f1a",
+        "card-2": "#111120",
+        "accent-dim": "rgba(124,58,237,0.12)",
         "dark-base": "#0a0a0f",
         "dark-card": "#111118",
         "dark-border": "rgba(255,255,255,0.06)",
@@ -58,6 +63,10 @@ const config: Config = {
       borderRadius: {
         xl: "0.75rem",
         "2xl": "1rem",
+      },
+      boxShadow: {
+        card: "0 1px 0 rgba(255,255,255,0.04) inset, 0 -1px 0 rgba(0,0,0,0.3) inset",
+        "card-hover": "0 0 0 1px rgba(124,58,237,0.10) inset",
       },
       keyframes: {
         gradient: {
