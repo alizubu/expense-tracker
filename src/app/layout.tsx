@@ -67,12 +67,38 @@ export default function RootLayout({
           nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
-              document.addEventListener('contextmenu', e => e.preventDefault());
-              document.addEventListener('keydown', e => {
-                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+              (function() {
+                // Disable right-click context menu
+                document.addEventListener('contextmenu', function(e) {
                   e.preventDefault();
-                }
-              });
+                });
+
+                // Disable common devtools keyboard shortcuts
+                document.addEventListener('keydown', function(e) {
+                  if (e.key === 'F12') { e.preventDefault(); return false; }
+                  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
+                  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
+                  if ((e.ctrlKey || e.metaKey) && e.key === 'u') { e.preventDefault(); return false; }
+                  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); return false; }
+                  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') { e.preventDefault(); return false; }
+                });
+
+                // Detect DevTools open via window size difference
+                var devtools = { open: false };
+                var threshold = 160;
+                setInterval(function() {
+                  if (window.outerWidth - window.innerWidth > threshold ||
+                      window.outerHeight - window.innerHeight > threshold) {
+                    if (!devtools.open) {
+                      devtools.open = true;
+                      document.body.innerHTML = '';
+                      window.location.href = '/sign-in';
+                    }
+                  } else {
+                    devtools.open = false;
+                  }
+                }, 1000);
+              })();
             `,
           }}
         />

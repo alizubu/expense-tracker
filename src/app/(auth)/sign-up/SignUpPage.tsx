@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -93,11 +93,33 @@ export default function SignUpPage() {
   const [showPw, setShowPw] = useState(false);
   const [focused, setFocused] = useState<"name" | "email" | "password" | null>(null);
 
+  const [attempts, setAttempts] = useState(0);
+  const [blocked, setBlocked] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const lastSubmit = useRef(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (blocked && cooldown > 0) {
+      timer = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    } else if (blocked && cooldown === 0) {
+      setBlocked(false);
+      setAttempts(0);
+    }
+    return () => clearTimeout(timer);
+  }, [blocked, cooldown]);
+
   const strength = strengthScore(password);
   const meta = strengthMeta[strength];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || blocked) return;
+
+    const now = Date.now();
+    if (now - lastSubmit.current < 300) return;
+    lastSubmit.current = now;
+
     setLoading(true);
     try {
       const registerRes = await fetch("/api/register", {
@@ -108,6 +130,13 @@ export default function SignUpPage() {
       const data = await registerRes.json();
       if (!registerRes.ok) {
         toast.error(data.error || "Failed to register");
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+        if (newAttempts >= 5) {
+          setBlocked(true);
+          setCooldown(60);
+          toast.error("Too many failed attempts. Please wait 60 seconds.");
+        }
         return;
       }
       const res = await signIn("credentials", { email, password, redirect: false });
@@ -231,6 +260,7 @@ export default function SignUpPage() {
                   onFocus={() => setFocused("name")}
                   onBlur={() => setFocused(null)}
                   required
+                  disabled={loading || blocked}
                   autoComplete="name"
                   placeholder="John Doe"
                   className="
@@ -260,6 +290,7 @@ export default function SignUpPage() {
                   onFocus={() => setFocused("email")}
                   onBlur={() => setFocused(null)}
                   required
+                  disabled={loading || blocked}
                   inputMode="email"
                   autoComplete="email"
                   placeholder="you@example.com"
@@ -290,6 +321,7 @@ export default function SignUpPage() {
                   onFocus={() => setFocused("password")}
                   onBlur={() => setFocused(null)}
                   required
+                  disabled={loading || blocked}
                   autoComplete="new-password"
                   placeholder="Min. 8 characters"
                   className="
@@ -379,6 +411,8 @@ export default function SignUpPage() {
                 <span className="relative flex items-center justify-center gap-2">
                   {loading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : blocked ? (
+                    `Try again in ${cooldown}s`
                   ) : (
                     <>
                       Create Account

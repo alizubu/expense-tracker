@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -86,11 +86,30 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState<"email" | "password" | null>(null);
 
+  const [attempts, setAttempts] = useState(0);
+  const [blocked, setBlocked] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const lastSubmit = useRef(0);
   const [lockoutTimer, setLockoutTimer] = useState<number | null>(null);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (blocked && cooldown > 0) {
+      timer = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    } else if (blocked && cooldown === 0) {
+      setBlocked(false);
+      setAttempts(0);
+    }
+    return () => clearTimeout(timer);
+  }, [blocked, cooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loading || lockoutTimer) return;
+    if (loading || lockoutTimer || blocked) return;
+
+    const now = Date.now();
+    if (now - lastSubmit.current < 300) return;
+    lastSubmit.current = now;
     
     setLoading(true);
     try {
@@ -101,6 +120,13 @@ export default function SignInPage() {
           toast.error("Account locked due to multiple failed attempts. Try again later.");
         } else {
           toast.error("Invalid email or password"); // Sanitized error
+          const newAttempts = attempts + 1;
+          setAttempts(newAttempts);
+          if (newAttempts >= 5) {
+            setBlocked(true);
+            setCooldown(60);
+            toast.error("Too many failed attempts. Please wait 60 seconds.");
+          }
         }
       } else {
         toast.success("Signed in successfully!");
@@ -210,6 +236,7 @@ export default function SignInPage() {
                   onFocus={() => setFocusedField("email")}
                   onBlur={() => setFocusedField(null)}
                   required
+                  disabled={loading || blocked}
                   inputMode="email"
                   autoComplete="email"
                   placeholder="you@example.com"
@@ -258,6 +285,7 @@ export default function SignInPage() {
                   onFocus={() => setFocusedField("password")}
                   onBlur={() => setFocusedField(null)}
                   required
+                  disabled={loading || blocked}
                   autoComplete="current-password"
                   placeholder="••••••••"
                   className="
@@ -315,6 +343,8 @@ export default function SignInPage() {
                 <span className="relative flex items-center justify-center gap-2">
                   {loading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : blocked ? (
+                    `Try again in ${cooldown}s`
                   ) : (
                     <>
                       Sign In

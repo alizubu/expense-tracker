@@ -181,8 +181,21 @@ input, select, textarea {
 }
 
 .no-select {
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* IE10+/Edge */
-  user-select: none;         /* Standard */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Apply to nav, cards, buttons — NOT to input fields */
+nav, aside, header, .card, button, label {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Prevent drag of images and icons */
+img, svg, i {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
 }

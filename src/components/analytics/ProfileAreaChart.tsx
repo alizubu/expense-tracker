@@ -36,19 +36,21 @@ export default function ProfileAreaChart() {
   return (
     <MagicCard className="p-4 md:p-6 w-full h-[350px]">
       <h3 className="text-sm font-semibold text-text-primary mb-4">Profile Balances</h3>
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-          <XAxis dataKey="name" stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} />
-          <YAxis stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${symbol}${val}`} />
-          <Tooltip
-            contentStyle={{ backgroundColor: "rgba(22, 22, 30, 0.8)", backdropFilter: "blur(8px)", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px", color: "#F8FAFC" }}
-          />
-          {profiles.map((p, idx) => (
-            <Area key={p.id} type="monotone" dataKey={p.name} stackId="1" stroke={p.color} fill={p.color} fillOpacity={0.3} />
-          ))}
-        </AreaChart>
-      </ResponsiveContainer>
+      <div className="flex-1 min-h-0 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+            <XAxis dataKey="name" stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} />
+            <YAxis stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${symbol}${val}`} />
+            <Tooltip
+              contentStyle={{ backgroundColor: "rgba(22, 22, 30, 0.8)", backdropFilter: "blur(8px)", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px", color: "#F8FAFC" }}
+            />
+            {profiles.map((p, idx) => (
+              <Area key={p.id} type="monotone" dataKey={p.name} stackId="1" stroke={p.color} fill={p.color} fillOpacity={0.3} />
+            ))}
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
     </MagicCard>
   );
 }
