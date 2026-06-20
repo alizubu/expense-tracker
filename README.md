@@ -1,6 +1,6 @@
 # Personal Expense Tracker
 
-A modern, full-stack Personal Expense Tracker built with Next.js 14 (App Router), Prisma, NextAuth, and Tailwind CSS. The application allows users to effortlessly manage their finances, track transactions, set budgets, and visualize their spending habits with beautiful interactive charts.
+A modern, full-stack Personal Expense Tracker built with Next.js 14 (App Router), Prisma, NextAuth, and Tailwind CSS. The application allows users to effortlessly manage their finances, track transactions, and visualize their spending habits with beautiful interactive charts.
 
 ## 🚀 Features
 
@@ -9,10 +9,9 @@ A modern, full-stack Personal Expense Tracker built with Next.js 14 (App Router)
 - **Multiple Profiles**: Create and manage multiple financial profiles to organize personal vs. business expenses.
 - **Transaction Management**: Add, edit, and organize individual transactions seamlessly.
 - **Interactive Analytics**: Visualize your spending habits through category donuts, daily line charts, and monthly bar charts (powered by Recharts).
-- **Budgeting**: Set and monitor your budgets to keep your expenses in check.
-- **Recurring Expenses**: Keep track of subscriptions and recurring monthly bills.
 - **Modern UI/UX**: Fully responsive, accessible, and beautifully animated using Tailwind CSS, Framer Motion, and MagicUI components.
 - **Dark/Light Mode**: Full theme customization depending on your preferences.
+- **Enterprise Security**: Comprehensive security hardening including API rate limiting, robust input validation and sanitization, audit logging, and advanced security headers.
 
 ## 🛠 Tech Stack
 
@@ -134,14 +133,12 @@ expense-tracker/
 ├── .env.local                    # Local environment overrides
 ├── .eslintrc.json                # ESLint configuration
 ├── .gitignore                    # Git ignored files
-├── check-db.js                   # Script to check database status
 ├── next-env.d.ts                 # Next.js TypeScript definitions
 ├── next.config.mjs               # Next.js configuration
 ├── package-lock.json             # NPM dependency tree lock
 ├── package.json                  # NPM dependencies and scripts
 ├── postcss.config.mjs            # PostCSS configuration
 ├── tailwind.config.ts            # Tailwind CSS configuration
-├── test-api.js                   # Script for testing API endpoints
 └── tsconfig.json                 # TypeScript configuration
 ```
 

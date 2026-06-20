@@ -85,13 +85,10 @@ export async function middleware(request: NextRequest) {
   // 5. Nonce Generation
   const nonce = Buffer.from(uuidv4()).toString("base64");
 
-  const response = NextResponse.next();
-  response.headers.set("X-Nonce", nonce);
-
   // 6. Content Security Policy with Nonce
   const csp = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${process.env.NODE_ENV !== "production" ? "'unsafe-eval'" : ""};
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: blob:;
     font-src 'self';
@@ -104,6 +101,16 @@ export async function middleware(request: NextRequest) {
   `
     .replace(/\s{2,}/g, " ")
     .trim();
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", csp);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 
   response.headers.set("Content-Security-Policy", csp);
   response.headers.set("X-RateLimit-Limit", limitResult.limit.toString());
