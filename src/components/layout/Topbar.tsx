@@ -30,7 +30,10 @@ export function Topbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-[48px] lg:h-[50px] items-center justify-between border-b border-white/[0.05] px-3 lg:px-6 bg-[rgba(8,8,15,0.92)] backdrop-blur-[16px]">
+    <header className={cn(
+      "sticky top-0 z-40 flex h-[48px] lg:h-[50px] items-center justify-between border-b border-white/[0.05] px-3 lg:px-6 bg-[rgba(8,8,15,0.92)] backdrop-blur-[16px]",
+      pathname === "/transactions" ? "hidden lg:flex" : ""
+    )}>
       
       {/* Search Overlay (Mobile) */}
       <div 
@@ -113,7 +116,7 @@ export function Topbar() {
         
         <button
           onClick={() => {
-            import("next-auth/react").then(({ signOut }) => signOut());
+            import("next-auth/react").then(({ signOut }) => signOut({ callbackUrl: "/sign-in" }));
           }}
           className="hidden lg:flex h-[30px] w-[30px] items-center justify-center rounded-full bg-white/[0.04] border border-white/[0.07] text-[#475569] hover:text-[#f43f5e] hover:border-[rgba(243,67,94,0.3)] transition-all"
           title="Sign out"

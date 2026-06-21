@@ -12,6 +12,7 @@ import {
   BarChart2,
   Settings,
   X,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/useUIStore";
@@ -141,10 +142,21 @@ export function Sidebar() {
           </span>
         </div>
         {mounted && (
-          <div className="flex-shrink-0 bg-white/[0.05] rounded-full px-2 py-0.5 h-[18px] flex items-center">
-            <span className="text-[10px] text-[#475569]">
-              {getCurrencySymbol(selectedCurrency)}
-            </span>
+          <div className="flex-shrink-0 flex items-center gap-2">
+            <div className="bg-white/[0.05] rounded-full px-2 py-0.5 h-[18px] flex items-center">
+              <span className="text-[10px] text-[#475569]">
+                {getCurrencySymbol(selectedCurrency)}
+              </span>
+            </div>
+            <button
+              onClick={() => {
+                import("next-auth/react").then(({ signOut }) => signOut({ callbackUrl: "/sign-in" }));
+              }}
+              className="flex h-[24px] w-[24px] items-center justify-center rounded-md bg-white/[0.04] border border-white/[0.07] text-[#475569] hover:text-[#f43f5e] hover:border-[rgba(243,67,94,0.3)] transition-all lg:hidden"
+              title="Sign out"
+            >
+              <LogOut size={12} className="lucide-log-out" />
+            </button>
           </div>
         )}
       </div>

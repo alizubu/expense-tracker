@@ -64,8 +64,7 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute =
     pathname === "/sign-in" ||
     pathname === "/sign-up" ||
-    isAuthRoute ||
-    pathname === "/"; // allow landing page if any
+    isAuthRoute;
 
   if (
     !token &&
