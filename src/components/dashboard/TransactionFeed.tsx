@@ -4,40 +4,30 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { 
-  Utensils, 
-  ShoppingCart, 
-  Gamepad2, 
-  Cpu, 
-  Car, 
-  AlertCircle, 
-  ArrowLeftRight, 
-  Shirt, 
-  Circle 
+  Utensils, ShoppingCart, Gamepad2, Cpu, Car, 
+  AlertCircle, ArrowLeftRight, Shirt, Beef, Pill, Plane, Circle 
 } from "lucide-react";
 import { useUIStore } from "@/store/useUIStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { getCategoryById } from "@/lib/categories";
 
-function getCategoryIcon(categoryId: string, type: string) {
-  if (type === "TRANSFER") {
-    return { Icon: ArrowLeftRight, bg: "rgba(100,116,139,0.12)", color: "#64748b" };
-  }
-  
-  const mapping: Record<string, any> = {
-    "food": { Icon: Utensils, bg: "rgba(245,158,11,0.12)", color: "#f59e0b" },
-    "fastfood": { Icon: Utensils, bg: "rgba(245,158,11,0.12)", color: "#f59e0b" },
-    "groceries": { Icon: ShoppingCart, bg: "rgba(16,185,129,0.12)", color: "#10b981" },
-    "gaming": { Icon: Gamepad2, bg: "rgba(124,58,237,0.12)", color: "#a78bfa" },
-    "electronics": { Icon: Cpu, bg: "rgba(59,130,246,0.12)", color: "#3b82f6" },
-    "ride": { Icon: Car, bg: "rgba(6,182,212,0.12)", color: "#06b6d4" },
-    "tax": { Icon: AlertCircle, bg: "rgba(243,67,94,0.12)", color: "#f43f5e" },
-    "clothing": { Icon: Shirt, bg: "rgba(236,72,153,0.12)", color: "#ec4899" },
-  };
+const CATEGORY_MAP: Record<string, { icon: any, color: string, bg: string }> = {
+  "Food / Restaurant": { icon: Utensils,       color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
+  "Groceries":         { icon: ShoppingCart,   color: "#10b981", bg: "rgba(16,185,129,0.12)" },
+  "Gaming":            { icon: Gamepad2,       color: "#a78bfa", bg: "rgba(124,58,237,0.12)" },
+  "Electronics":       { icon: Cpu,            color: "#3b82f6", bg: "rgba(59,130,246,0.12)" },
+  "Ride Share":        { icon: Car,            color: "#06b6d4", bg: "rgba(6,182,212,0.12)" },
+  "Tax / Fines":       { icon: AlertCircle,    color: "#f43f5e", bg: "rgba(243,67,94,0.12)" },
+  "Transfer":          { icon: ArrowLeftRight, color: "#64748b", bg: "rgba(100,116,139,0.12)" },
+  "Clothing":          { icon: Shirt,          color: "#ec4899", bg: "rgba(236,72,153,0.12)" },
+  "Fastfood":          { icon: Beef,           color: "#f97316", bg: "rgba(249,115,22,0.12)" },
+  "Medicine":          { icon: Pill,           color: "#14b8a6", bg: "rgba(20,184,166,0.12)" },
+  "Travel":            { icon: Plane,          color: "#8b5cf6", bg: "rgba(139,92,246,0.12)" },
+};
 
-  const matched = mapping[categoryId.toLowerCase()];
-  if (matched) return matched;
-  return { Icon: Circle, bg: "rgba(100,116,139,0.12)", color: "#64748b" };
+function getCatStyle(label: string) {
+  return CATEGORY_MAP[label] || { icon: Circle, color: "#64748b", bg: "rgba(100,116,139,0.12)" };
 }
 
 interface TransactionFeedProps {
@@ -127,19 +117,21 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
               {/* Transactions */}
               {txns.map((t, index) => {
                 const categoryDef = getCategoryById(t.category);
-                const { Icon, bg, color } = getCategoryIcon(t.category, t.type);
+                const categoryLabel = categoryDef?.label || t.category;
+                const catStyle = getCatStyle(t.type === "TRANSFER" ? "Transfer" : categoryLabel);
+                const Icon = catStyle.icon;
                 const profileName = profiles.find(p => p.id === t.profileId)?.name || "Unknown";
                 
-                let amountColor = "#f1f5f9";
+                let amountColor = "text-[#f1f5f9]";
                 let prefix = "";
                 if (t.type === "INCOME") {
-                  amountColor = "#10b981";
+                  amountColor = "text-[#10b981]";
                   prefix = "+";
                 } else if (t.type === "EXPENSE") {
-                  amountColor = "#f43f5e";
+                  amountColor = "text-[#f43f5e]";
                   prefix = "−";
                 } else if (t.type === "TRANSFER") {
-                  amountColor = "#3b82f6";
+                  amountColor = "text-[#3b82f6]";
                   prefix = "→";
                 }
 
@@ -147,36 +139,33 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                   <div 
                     key={t.id}
                     onClick={() => openModal("addTransaction")}
-                    className="grid grid-cols-[28px_1fr_auto] gap-[10px] items-center h-[40px] px-[2px] rounded-[6px] hover:bg-[rgba(255,255,255,0.02)] cursor-pointer transition-colors group border-b border-[rgba(255,255,255,0.04)] last:border-b-0"
+                    className="grid grid-cols-[32px_1fr_auto] gap-[12px] items-center py-[10px] px-[4px] rounded-[8px] hover:bg-[rgba(255,255,255,0.02)] cursor-pointer transition-colors group border-b border-[rgba(255,255,255,0.04)] last:border-b-0"
                   >
-                    {/* Column 1 - Icon */}
+                    {/* Icon */}
                     <div 
-                      className="w-[28px] h-[28px] rounded-[8px] flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: bg }}
+                      className="w-[32px] h-[32px] rounded-[10px] flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: catStyle.bg }}
                     >
-                      <Icon size={13} color={color} />
+                      <Icon size={14} color={catStyle.color} />
                     </div>
 
-                    {/* Column 2 - Title + Sub */}
+                    {/* Title + Sub */}
                     <div className="flex flex-col min-w-0">
                       <span className="text-[13px] font-medium text-[#f1f5f9] truncate">
                         {t.title}
                       </span>
-                      <span className="text-[10px] text-[#475569] truncate">
-                        {t.type === "TRANSFER" ? "Transfer" : categoryDef?.label || t.category} · {profileName}
+                      <span className="text-[11px] text-[#475569] truncate mt-[1px]">
+                        {t.type === "TRANSFER" ? "Transfer" : categoryLabel} · {profileName}
                       </span>
                     </div>
 
-                    {/* Column 3 - Amount + Date */}
-                    <div className="flex flex-col items-end flex-shrink-0">
-                      <span 
-                        className="text-[13px] font-semibold font-mono"
-                        style={{ color: amountColor }}
-                      >
-                        {prefix}{symbol}{t.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    {/* Amount + Date */}
+                    <div className="flex flex-col items-end justify-center flex-shrink-0">
+                      <span className={`text-[13px] font-[600] font-mono-amount ${amountColor}`}>
+                        {prefix}{symbol}{Math.abs(t.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                       </span>
-                      <span className="text-[10px] text-[#334155]">
-                        {format(new Date(t.date), "MMM d")}
+                      <span className="text-[10px] text-[#334155] mt-[2px]">
+                        {format(new Date(t.date), "h:mm a")}
                       </span>
                     </div>
                   </div>
