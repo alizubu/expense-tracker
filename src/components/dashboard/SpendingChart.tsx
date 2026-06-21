@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   PieChart,
   Pie,
@@ -48,6 +48,14 @@ export function SpendingChart() {
   const { selectedMonth, selectedYear, selectedCurrency } = useUIStore();
   const symbol = getCurrencySymbol(selectedCurrency);
   const [showAllLegend, setShowAllLegend] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const chartData = useMemo(() => {
     const monthExpenses = transactions.filter((t) => {
@@ -84,7 +92,7 @@ export function SpendingChart() {
   const totalSpent = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="flex flex-col w-full h-full premium-card p-[16px] overflow-hidden">
+    <div className="flex flex-col w-full h-auto sm:h-full premium-card p-[16px] overflow-visible sm:overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 flex-shrink-0 h-[32px]">
         <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em]">
@@ -103,7 +111,7 @@ export function SpendingChart() {
           <span className="text-[12px] text-[#1e293b]">No data yet</span>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex flex-col sm:flex-1 min-h-0">
           {/* Chart Area */}
           <div className="relative h-[140px] flex-shrink-0">
             <ResponsiveContainer width="100%" height="100%">
@@ -112,8 +120,8 @@ export function SpendingChart() {
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={48}
-                  outerRadius={66}
+                  innerRadius={isMobile ? 54 : 48}
+                  outerRadius={isMobile ? 72 : 66}
                   strokeWidth={2}
                   stroke="#0f0f1a"
                   dataKey="value"
@@ -138,8 +146,8 @@ export function SpendingChart() {
           </div>
 
           {/* Legend Area */}
-          <div className="flex-1 overflow-y-auto hide-scrollbar mt-4">
-            <div className="grid grid-cols-2 gap-x-[16px] gap-y-[4px]">
+          <div className="overflow-visible sm:flex-1 sm:overflow-y-auto hide-scrollbar mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[16px] gap-y-[4px]">
               {chartData.slice(0, showAllLegend ? undefined : 6).map((item) => (
                 <div key={item.name} className="flex items-center h-[22px]">
                   <span className="w-[8px] h-[8px] rounded-full flex-shrink-0" style={{ background: item.color }} />

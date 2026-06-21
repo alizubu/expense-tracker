@@ -11,6 +11,7 @@ import {
   Users,
   BarChart2,
   Settings,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/useUIStore";
@@ -152,29 +153,38 @@ export function Sidebar() {
 
   return (
     <>
-      {/* MOBILE DRAWER BACKDROP (xs -> lg) */}
+      {/* MOBILE DRAWER (xs -> lg) */}
       <AnimatePresence>
         {isSidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={closeSidebar}
-            className="fixed inset-0 z-[49] bg-black/60 backdrop-blur-[2px] lg:hidden"
-          />
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={closeSidebar}
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+            />
+            <motion.aside
+              key="drawer"
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="fixed top-0 left-0 h-full w-[240px] z-50 bg-[#0a0a12] border-r border-white/5 flex flex-col lg:hidden"
+            >
+              <button
+                onClick={closeSidebar}
+                className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-lg bg-white/5 text-slate-400 hover:text-white"
+              >
+                <X size={14} />
+              </button>
+              {SidebarContent}
+            </motion.aside>
+          </>
         )}
       </AnimatePresence>
-
-      {/* MOBILE DRAWER (xs -> lg) */}
-      <aside
-        className={cn(
-          "fixed left-0 top-0 bottom-0 z-50 flex w-[260px] flex-col bg-[#0a0a12] border-r border-white/[0.05] transition-transform duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] lg:hidden",
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
-        {SidebarContent}
-      </aside>
 
       {/* DESKTOP SIDEBAR (lg+) */}
       <aside className="hidden lg:flex w-[200px] h-screen flex-shrink-0 flex-col bg-[#0a0a12] border-r border-white/[0.05]">

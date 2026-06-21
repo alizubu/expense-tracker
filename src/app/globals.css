@@ -167,36 +167,51 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Mobile & Responsive Utilities ───────────────────────── */
 
-html, body {
-  overflow: hidden;
-  height: 100%;
-  -webkit-text-size-adjust: 100%;
+@media (min-width: 1024px) {
+  html, body { overflow: hidden; height: 100%; }
+}
+@media (max-width: 1023px) {
+  html, body { overflow: auto; height: auto; }
 }
 
+body { max-width: 100vw; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+
 .hide-scrollbar {
-  -ms-overflow-style: none;
   scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-input, select, textarea {
-  font-size: max(16px, 1em);
+@media (max-width: 1023px) {
+  input, select, textarea { font-size: max(16px, 1em) !important; }
 }
 
 @media (hover: none) {
-  .card-hover:hover {
-    border-color: rgba(255,255,255,0.06) !important;
-    box-shadow: none !important;
+  .touch-active:active {
+    transform: scale(0.97);
+    opacity: 0.8;
   }
 }
 
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom);
+@media (hover: hover) {
+  .hover-card:hover {
+    border-color: rgba(124,58,237,0.25);
+  }
 }
-.pt-safe {
-  padding-top: env(safe-area-inset-top);
+
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+.pt-safe { padding-top: env(safe-area-inset-top); }
+.mb-nav { margin-bottom: calc(60px + env(safe-area-inset-bottom)); }
+
+button, a { touch-action: manipulation; }
+
+img, svg, i {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
 }
 
 .no-select {
@@ -206,15 +221,7 @@ input, select, textarea {
   user-select: none;
 }
 
-/* Apply to nav, cards, buttons — NOT to input fields */
 nav, aside, header, .card, button, label {
   -webkit-user-select: none;
   user-select: none;
-}
-
-/* Prevent drag of images and icons */
-img, svg, i {
-  -webkit-user-drag: none;
-  user-drag: none;
-  pointer-events: none;
 }

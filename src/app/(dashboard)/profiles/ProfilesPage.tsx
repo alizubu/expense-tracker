@@ -52,7 +52,7 @@ export default function ProfilesPage() {
             <h1 className="text-2xl font-bold text-text-primary tracking-heading">Profiles</h1>
             <p className="text-sm text-text-secondary mt-1">Manage your wallets and accounts</p>
           </div>
-          <button onClick={() => setShowCreateModal(true)} className="flex items-center gap-2 rounded-lg bg-[var(--accent-glow)] px-4 py-2.5 text-sm font-medium text-[var(--accent)] dark:text-[var(--accent-light)] hover:bg-[var(--accent)] hover:text-white transition-colors">
+          <button onClick={() => setShowCreateModal(true)} className="hidden md:flex items-center gap-2 rounded-lg bg-[var(--accent-glow)] px-4 py-2.5 text-sm font-medium text-[var(--accent)] dark:text-[var(--accent-light)] hover:bg-[var(--accent)] hover:text-white transition-colors">
             <Plus className="h-4 w-4" /> New Profile
           </button>
         </div>

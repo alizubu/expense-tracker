@@ -30,7 +30,7 @@ export function Topbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-[50px] items-center justify-between border-b border-white/[0.05] px-3 lg:px-6 bg-[rgba(8,8,15,0.92)] backdrop-blur-[16px]">
+    <header className="sticky top-0 z-40 flex h-[48px] lg:h-[50px] items-center justify-between border-b border-white/[0.05] px-3 lg:px-6 bg-[rgba(8,8,15,0.92)] backdrop-blur-[16px]">
       
       {/* Search Overlay (Mobile) */}
       <div 
@@ -105,10 +105,10 @@ export function Topbar() {
         
         <button
           onClick={() => openModal("addTransaction")}
-          className="flex h-[32px] items-center justify-center rounded-[8px] bg-[#7c3aed] px-[14px] text-[12px] font-medium text-white transition-all hover:bg-[#6d28d9] active:scale-[0.97] shadow-[0_0_14px_rgba(124,58,237,0.3)] hover:shadow-[0_0_20px_rgba(124,58,237,0.45)]"
+          className="flex h-[32px] w-[32px] lg:w-auto items-center justify-center rounded-full lg:rounded-[8px] bg-[#7c3aed] lg:px-[14px] text-[12px] font-medium text-white transition-all hover:bg-[#6d28d9] active:scale-[0.97] shadow-[0_0_14px_rgba(124,58,237,0.3)] hover:shadow-[0_0_20px_rgba(124,58,237,0.45)]"
         >
-          <Plus className="mr-1.5 h-[13px] w-[13px]" />
-          <span>Add</span>
+          <Plus className="lg:mr-1.5 h-[16px] w-[16px] lg:h-[13px] lg:w-[13px]" />
+          <span className="hidden lg:inline">Add</span>
         </button>
         
         <button

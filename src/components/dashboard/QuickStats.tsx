@@ -73,38 +73,41 @@ export function QuickStats({
   ];
 
   return (
-    <div className="flex flex-col w-full h-full premium-card p-[16px] overflow-hidden">
+    <div className="flex flex-col w-full h-auto md:h-full md:premium-card md:p-[16px] md:overflow-hidden">
       {/* Header */}
-      <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em] mb-2 flex-shrink-0 h-[32px] flex items-center">
+      <h2 className="hidden md:flex text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em] mb-2 flex-shrink-0 h-[32px] items-center">
         Quick Stats
       </h2>
 
       {/* List */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex flex-row overflow-x-auto hide-scrollbar gap-[8px] py-[4px] md:flex-col md:overflow-visible md:gap-0 md:py-0 md:flex-1 md:min-h-0 touch-pan-x">
         {stats.map((stat, i) => {
           const Icon = stat.icon;
           return (
             <div 
               key={stat.id}
-              className="flex items-center h-[40px] border-b border-[rgba(255,255,255,0.04)] last:border-0"
+              className="flex-shrink-0 w-[130px] h-[62px] rounded-[12px] p-[10px] flex flex-col justify-between border border-white/[0.06] md:border-x-0 md:border-t-0 md:border-b md:border-[rgba(255,255,255,0.04)] md:last:border-0 md:w-auto md:h-[40px] md:rounded-none md:p-0 md:flex-row md:items-center"
+              style={{
+                background: typeof window !== 'undefined' && window.innerWidth < 768 ? "linear-gradient(145deg, #111120, #0d0d18)" : "transparent"
+              }}
             >
-              {/* Left: Icon Dot */}
-              <div 
-                className="flex items-center justify-center w-[28px] h-[28px] rounded-[8px] flex-shrink-0"
-                style={{ backgroundColor: stat.iconBg }}
-              >
-                <Icon size={13} color={stat.iconColor} />
-              </div>
+              <div className="md:hidden absolute inset-0 bg-[linear-gradient(145deg,#111120_0%,#0d0d18_100%)] rounded-[12px] -z-10" />
               
-              {/* Center: Label */}
-              <div className="flex-1 ml-[10px]">
-                <span className="text-[12px] text-[#64748b]">
+              {/* Top / Left */}
+              <div className="flex items-center gap-[6px] md:gap-[10px] md:flex-1">
+                <div 
+                  className="flex items-center justify-center w-[16px] h-[16px] rounded-[4px] md:w-[28px] md:h-[28px] md:rounded-[8px] flex-shrink-0"
+                  style={{ backgroundColor: stat.iconBg }}
+                >
+                  <Icon className="w-[10px] h-[10px] md:w-[13px] md:h-[13px]" color={stat.iconColor} />
+                </div>
+                <span className="text-[10px] md:text-[12px] text-[#64748b] truncate">
                   {stat.label}
                 </span>
               </div>
               
-              {/* Right: Value */}
-              <div className="flex-shrink-0 w-[80px] text-right">
+              {/* Bottom / Right */}
+              <div className="flex-shrink-0 text-left md:text-right md:w-[80px]">
                 <span 
                   className={`text-[13px] font-semibold ${stat.isCurrency ? 'font-mono' : ''} ${stat.isCapitalize ? 'capitalize' : ''}`}
                   style={{ color: stat.textColor || '#f1f5f9' }}

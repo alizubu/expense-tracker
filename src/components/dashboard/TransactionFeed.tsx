@@ -90,7 +90,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
   });
 
   return (
-    <div className="flex flex-col w-full h-full premium-card p-[16px] pb-2 overflow-hidden">
+    <div className="flex flex-col w-full h-auto md:h-full premium-card p-[16px] pb-2 overflow-visible md:overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between flex-shrink-0 h-[32px] mb-2">
         <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em]">
@@ -105,7 +105,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 relative -mx-2 px-2 pb-2">
+      <div className="flex flex-col md:flex-1 md:overflow-y-auto hide-scrollbar md:min-h-0 relative -mx-2 px-2 pb-2">
         {transactions.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="w-[32px] h-[32px] rounded-full bg-[rgba(255,255,255,0.02)] flex items-center justify-center mb-2">
@@ -186,16 +186,28 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
           ))
         )}
         
-        {/* Infinite Scroll Target */}
+        {/* Infinite Scroll Target & Load More Button */}
         {hasMore && (
-          <div ref={observerTarget} className="h-[40px] flex items-center justify-center">
-            {isLoadingMore && (
-              <div className="flex gap-1">
-                <div className="w-[4px] h-[4px] bg-[#334155] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <div className="w-[4px] h-[4px] bg-[#334155] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <div className="w-[4px] h-[4px] bg-[#334155] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-              </div>
-            )}
+          <div className="mt-2 pb-2">
+            {/* Desktop Auto-load Target */}
+            <div ref={observerTarget} className="hidden md:flex h-[40px] items-center justify-center">
+              {isLoadingMore && (
+                <div className="flex gap-1">
+                  <div className="w-[4px] h-[4px] bg-[#334155] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <div className="w-[4px] h-[4px] bg-[#334155] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <div className="w-[4px] h-[4px] bg-[#334155] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Load More Button */}
+            <button 
+              onClick={loadMore}
+              disabled={isLoadingMore}
+              className="md:hidden w-full h-[40px] rounded-[8px] bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] text-[12px] font-medium text-[#94a3b8] hover:bg-[rgba(255,255,255,0.04)] hover:text-[#f1f5f9] transition-all"
+            >
+              {isLoadingMore ? "Loading..." : "Load More"}
+            </button>
           </div>
         )}
       </div>

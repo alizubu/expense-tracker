@@ -34,7 +34,7 @@ export default function AnalyticsPage() {
         <>
           <AnalyticsStatsRow />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
         <BlurFade delay={0.2} className="lg:col-span-2">
           <MonthlyBarChart />
         </BlurFade>
@@ -43,7 +43,7 @@ export default function AnalyticsPage() {
         </BlurFade>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
         <BlurFade delay={0.4}>
           <DailyLineChart />
         </BlurFade>
@@ -52,7 +52,7 @@ export default function AnalyticsPage() {
         </BlurFade>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
         <BlurFade delay={0.6} className="lg:col-span-1">
           <TopCategories />
         </BlurFade>

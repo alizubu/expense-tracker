@@ -73,7 +73,7 @@ export default function TransactionsPage() {
           </div>
           <button
             onClick={() => openModal("addTransaction")}
-            className="flex items-center gap-2 rounded-lg bg-brand-purple/15 px-4 py-2.5 text-sm font-medium text-brand-purple-light hover:bg-brand-purple/25 transition-colors"
+            className="hidden md:flex items-center gap-2 rounded-lg bg-brand-purple/15 px-4 py-2.5 text-sm font-medium text-brand-purple-light hover:bg-brand-purple/25 transition-colors"
           >
             <LucideIcons.Plus className="h-4 w-4" />
             Add Transaction
@@ -83,7 +83,7 @@ export default function TransactionsPage() {
 
       {/* Filters Bar */}
       <BlurFade delay={0.05}>
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-white/[0.08] bg-background-card p-3">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 rounded-xl border border-white/[0.08] bg-background-card p-3">
           {/* Search */}
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
@@ -97,13 +97,13 @@ export default function TransactionsPage() {
           </div>
 
           {/* Type Filter */}
-          <div className="flex rounded-lg bg-white/[0.04] p-0.5">
+          <div className="flex rounded-lg bg-white/[0.04] p-0.5 overflow-x-auto hide-scrollbar">
             {(["ALL", "INCOME", "EXPENSE", "TRANSFER"] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setFilters({ type: t })}
                 className={cn(
-                  "rounded-md px-3 py-1.5 text-xs font-medium transition-all",
+                  "rounded-md px-3 py-1.5 text-xs font-medium transition-all whitespace-nowrap flex-shrink-0",
                   filters.type === t
                     ? "bg-white/[0.08] text-text-primary"
                     : "text-text-muted hover:text-text-secondary"
@@ -192,7 +192,7 @@ export default function TransactionsPage() {
                     <div
                       key={transaction.id}
                       className={cn(
-                        "group relative flex items-center gap-3 rounded-lg px-3 py-3 transition-colors hover:bg-white/[0.03]",
+                        "group relative flex items-center gap-3 rounded-lg px-2 py-2 sm:px-3 sm:py-3 transition-colors hover:bg-white/[0.03]",
                         isSelected && "bg-brand-purple/5 ring-1 ring-brand-purple/20"
                       )}
                     >
@@ -244,7 +244,7 @@ export default function TransactionsPage() {
                       <div className="relative">
                         <button
                           onClick={() => setOpenMenuId(openMenuId === transaction.id ? null : transaction.id)}
-                          className="rounded-lg p-1.5 text-text-muted opacity-0 group-hover:opacity-100 hover:bg-white/[0.05] transition-all"
+                          className="rounded-lg p-1.5 text-text-muted opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-white/[0.05] transition-all"
                         >
                           <MoreVertical className="h-4 w-4" />
                         </button>

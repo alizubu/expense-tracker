@@ -129,16 +129,15 @@ export function DashboardClient() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="
-        h-full
-        grid
-        gap-3
-        grid-rows-[88px_1fr_1fr]
-        grid-cols-1
-        xl:grid-rows-[88px_minmax(0,220px)_minmax(0,1fr)]
+        space-y-3 lg:space-y-0
+        lg:h-full
+        lg:grid
+        lg:gap-3
+        lg:grid-rows-[88px_minmax(0,220px)_minmax(0,1fr)]
       "
     >
       {/* ROW 1 — Stats Strip */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-3">
         <StatsStrip 
           netBalance={netBalance}
           income={income}
@@ -148,15 +147,15 @@ export function DashboardClient() {
       </div>
 
       {/* ROW 2 — Middle panels */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 min-h-0">
-        <div className="min-h-0 h-full">
+      <div className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 lg:min-h-0">
+        <div className="lg:min-h-0 lg:h-full">
           <ProfileCard 
             profiles={profiles} 
             netBalance={netBalance} 
             onAdd={() => setProfileModalOpen(true)} 
           />
         </div>
-        <div className="min-h-0 h-full">
+        <div className="lg:min-h-0 lg:h-full">
           <QuickStats 
             transactionsCount={transactionsCount}
             avgDailySpend={avgDailySpend}
@@ -165,17 +164,17 @@ export function DashboardClient() {
             profilesCount={profiles.length}
           />
         </div>
-        <div className="min-h-0 h-full">
+        <div className="lg:min-h-0 lg:h-full md:col-span-2 xl:col-span-1">
           <SpendingChart />
         </div>
       </div>
 
       {/* ROW 3 — Bottom panels */}
-      <div className="grid grid-cols-1 xl:grid-cols-[1.65fr_1fr] gap-3 min-h-0">
-        <div className="min-h-0 h-full">
+      <div className="flex flex-col xl:grid xl:grid-cols-[1.65fr_1fr] gap-3 lg:min-h-0">
+        <div className="lg:min-h-0 lg:h-full">
           <TransactionFeed transactions={transactions} />
         </div>
-        <div className="min-h-0 h-full">
+        <div className="lg:min-h-0 lg:h-full">
           <TopCategories />
         </div>
       </div>
