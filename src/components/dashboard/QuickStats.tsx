@@ -79,12 +79,12 @@ export function QuickStats({
   ];
 
   return (
-    <Card className="flex flex-col w-full h-auto md:h-full p-6 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
-      <h2 className="hidden md:flex text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4 flex-shrink-0 h-[32px] items-center">
+    <Card className="flex flex-col w-full h-auto md:h-full p-5 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+      <h2 className="hidden md:flex text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3 flex-shrink-0 h-[32px] items-center">
         Quick Stats
       </h2>
 
-      <div className="flex flex-row overflow-x-auto hide-scrollbar gap-4 py-1 md:flex-col md:overflow-visible md:gap-3 md:py-0 md:flex-1 md:min-h-0 touch-pan-x">
+      <div className="flex flex-row overflow-x-auto hide-scrollbar gap-3 py-1 md:flex-col md:overflow-visible md:gap-2.5 md:py-0 md:flex-1 md:min-h-0 touch-pan-x">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (

@@ -44,8 +44,8 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
   const router = useRouter();
 
   return (
-    <Card className="flex flex-col w-full h-auto lg:h-full p-6 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
-      <div className="flex items-center justify-between h-[32px] mb-4 flex-shrink-0">
+    <Card className="flex flex-col w-full h-auto lg:h-full p-5 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+      <div className="flex items-center justify-between h-[32px] mb-3 flex-shrink-0">
         <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Your Profiles
         </h2>
@@ -60,7 +60,7 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
         </Button>
       </div>
 
-      <div className="flex flex-col lg:flex-1 lg:overflow-y-auto hide-scrollbar lg:min-h-0 space-y-3">
+      <div className="flex flex-col lg:flex-1 lg:overflow-y-auto custom-scrollbar lg:min-h-0 space-y-2 pr-2 pb-2">
         {profiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-6">
             <LucideIcons.Wallet className="h-8 w-8 text-muted-foreground/50 mb-3 animate-pulse" />
@@ -79,23 +79,23 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
                 onClick={() => router.push(`/profiles/${profile.id}`)}
-                className="group flex flex-col justify-center p-4 rounded-xl hover:bg-surface-2 cursor-pointer transition-colors relative border border-white/[0.02] bg-surface-1/50 flex-shrink-0"
+                className="group flex flex-col justify-center p-3 rounded-xl hover:bg-surface-2 cursor-pointer transition-colors relative border border-white/[0.02] bg-surface-1/50 flex-shrink-0"
               >
-                <div className="flex items-center gap-4">
-                  <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl shadow-sm ${colors.bg}`}>
-                    <Icon size={20} className={colors.icon} />
+                <div className="flex items-center gap-3.5">
+                  <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl shadow-sm ${colors.bg}`}>
+                    <Icon size={18} className={colors.icon} />
                   </div>
 
                   <div className="flex flex-col flex-1 min-w-0">
-                    <span className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{profile.name}</span>
-                    <span className="text-xs text-muted-foreground truncate capitalize">{profile.type.toLowerCase()}</span>
+                    <span className="text-[13px] font-semibold text-foreground truncate group-hover:text-primary transition-colors">{profile.name}</span>
+                    <span className="text-[11px] text-muted-foreground truncate capitalize">{profile.type.toLowerCase()}</span>
                   </div>
 
                   <div className="flex flex-col items-end flex-shrink-0 text-right">
-                    <span className="text-sm font-semibold text-foreground tabular-money tracking-tight">
+                    <span className="text-[13px] font-semibold text-foreground tabular-money tracking-tight">
                       {symbol}{profile.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </span>
-                    <span className={`hidden sm:flex items-center justify-center text-[10px] font-semibold mt-1 px-2 py-0.5 rounded-full ${colors.bg} ${colors.icon}`}>
+                    <span className={`hidden sm:flex items-center justify-center text-[9px] font-semibold mt-0.5 px-2 py-0.5 rounded-full ${colors.bg} ${colors.icon} uppercase tracking-wider`}>
                       {percentage.toFixed(1)}% share
                     </span>
                   </div>

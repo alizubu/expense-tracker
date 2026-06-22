@@ -104,11 +104,12 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
 
   return (
     <Dialog open={true} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="sm:max-w-[460px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[460px] max-h-[85vh] flex flex-col p-0 overflow-hidden gap-0">
+        <DialogHeader className="px-5 pt-5 pb-3 flex-shrink-0 border-b border-border/50">
           <DialogTitle>New Transaction</DialogTitle>
         </DialogHeader>
-        <div className="space-y-6 pb-2">
+
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-6">
           {/* Type Switcher */}
           <div className="flex p-1 rounded-xl bg-muted border border-border">
             {tabs.map((tab) => {
@@ -236,15 +237,15 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
               />
             </div>
           </div>
+        </div>
 
-          {/* Submit Button */}
-          <div className="pt-2">
-            <ConfirmButton
-              onClick={handleSubmit}
-              disabled={amount === 0 || (!category && type !== "TRANSFER") || !profileId}
-              label="Save Transaction"
-            />
-          </div>
+        {/* Submit Button */}
+        <div className="p-5 flex-shrink-0 border-t border-border/50 bg-background/50 backdrop-blur-md">
+          <ConfirmButton
+            onClick={handleSubmit}
+            disabled={amount === 0 || (!category && type !== "TRANSFER") || !profileId}
+            label="Save Transaction"
+          />
         </div>
       </DialogContent>
     </Dialog>

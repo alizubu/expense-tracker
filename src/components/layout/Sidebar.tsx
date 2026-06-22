@@ -15,11 +15,16 @@ import {
   Wallet,
   LogOut,
   MoreVertical,
-  TrendingUp
+  TrendingUp,
+  Moon,
+  Sun,
+  Monitor
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useSession, signOut } from "next-auth/react";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,6 +44,8 @@ const routes = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const { sidebarCollapsed, toggleSidebar } = useUIStore();
   const { data: session } = useSession();
 
@@ -130,14 +137,51 @@ export function Sidebar() {
                 <MoreVertical className="w-4 h-4 text-muted-foreground flex-shrink-0 mr-1" />
               )}
             </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" side="right" sideOffset={12} className="w-56 mb-2 rounded-xl">
-            <DropdownMenuLabel className="font-semibold">My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer rounded-lg">
+          <DropdownMenuContent align="start" side="right" sideOffset={12} className="w-56 mb-2 rounded-xl border border-white/[0.04] bg-surface-1/90 backdrop-blur-xl shadow-xl p-1.5">
+            <DropdownMenuLabel className="font-semibold px-2 py-1.5">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">{session?.user?.name || "User"}</p>
+                <p className="text-[11px] leading-none text-muted-foreground">{session?.user?.email || "Pro Plan"}</p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-white/[0.04]" />
+            <DropdownMenuItem onClick={() => router.push("/profiles")} className="cursor-pointer rounded-lg px-2 py-1.5 focus:bg-surface-2">
+              <Users className="w-4 h-4 mr-2 text-muted-foreground" />
+              Profiles
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings")} className="cursor-pointer rounded-lg px-2 py-1.5 focus:bg-surface-2">
               <Settings className="w-4 h-4 mr-2 text-muted-foreground" />
               Settings
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer rounded-lg text-destructive focus:text-destructive focus:bg-destructive/10">
+            
+            <DropdownMenuSeparator className="bg-white/[0.04]" />
+            <DropdownMenuLabel className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest px-2 pt-1.5 pb-1">Theme</DropdownMenuLabel>
+            <div className="flex px-1.5 pb-1.5 gap-1">
+              <button 
+                onClick={(e) => { e.preventDefault(); setTheme('light'); }} 
+                className={cn("flex-1 flex justify-center py-1.5 rounded-lg hover:bg-surface-2 transition-colors", theme === 'light' ? 'bg-primary/10 text-primary border border-primary/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]' : 'text-muted-foreground')}
+                title="Light"
+              >
+                <Sun className="w-[14px] h-[14px]" />
+              </button>
+              <button 
+                onClick={(e) => { e.preventDefault(); setTheme('dark'); }} 
+                className={cn("flex-1 flex justify-center py-1.5 rounded-lg hover:bg-surface-2 transition-colors", theme === 'dark' ? 'bg-primary/10 text-primary border border-primary/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]' : 'text-muted-foreground')}
+                title="Dark"
+              >
+                <Moon className="w-[14px] h-[14px]" />
+              </button>
+              <button 
+                onClick={(e) => { e.preventDefault(); setTheme('system'); }} 
+                className={cn("flex-1 flex justify-center py-1.5 rounded-lg hover:bg-surface-2 transition-colors", theme === 'system' ? 'bg-primary/10 text-primary border border-primary/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]' : 'text-muted-foreground')}
+                title="System"
+              >
+                <Monitor className="w-[14px] h-[14px]" />
+              </button>
+            </div>
+            
+            <DropdownMenuSeparator className="bg-white/[0.04]" />
+            <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer rounded-lg px-2 py-1.5 text-destructive focus:text-destructive focus:bg-destructive/10">
               <LogOut className="w-4 h-4 mr-2" />
               Log out
             </DropdownMenuItem>

@@ -22,7 +22,7 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
 
   return (
     <>
-      <Card className="col-span-2 md:col-span-2 xl:col-span-2 min-h-[160px] rounded-2xl p-6 flex flex-col justify-between border-white/[0.04] bg-surface-1 relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow duration-300">
+      <Card className="col-span-2 md:col-span-2 xl:col-span-2 min-h-[160px] rounded-2xl p-5 flex flex-col justify-between border-white/[0.04] bg-surface-1 relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow duration-300">
         <div className="absolute right-0 top-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10 translate-x-1/2 -translate-y-1/2 group-hover:bg-primary/10 transition-all duration-500 pointer-events-none" />
         
         <div className="flex justify-between items-start relative z-10 mb-4">
@@ -85,7 +85,7 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
         )}
       </Card>
 
-      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-6 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
+      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-5 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
         <div className="space-y-2">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Income</h3>
           <div className="flex items-baseline gap-1 text-emerald-500">
@@ -103,7 +103,7 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
         </div>
       </Card>
 
-      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-6 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
+      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-5 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
         <div className="space-y-2">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Expenses</h3>
           <div className="flex items-baseline gap-1 text-destructive">

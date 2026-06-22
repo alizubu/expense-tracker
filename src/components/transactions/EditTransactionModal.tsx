@@ -123,11 +123,12 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
   return (
     <>
       <Dialog open={true} onOpenChange={(isOpen) => !isOpen && onClose()}>
-        <DialogContent className="sm:max-w-[460px]">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[460px] max-h-[85vh] flex flex-col p-0 overflow-hidden gap-0">
+          <DialogHeader className="px-5 pt-5 pb-3 flex-shrink-0 border-b border-border/50">
             <DialogTitle>Edit Transaction</DialogTitle>
           </DialogHeader>
-          <div className="space-y-6 pb-2">
+
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-6">
             {/* Type Switcher */}
             <div className="flex p-1 rounded-xl bg-muted border border-border">
               {tabs.map((tab) => {
@@ -255,24 +256,24 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                 />
               </div>
             </div>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowDeleteConfirm(true)}
-                className="flex items-center justify-center w-12 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all cursor-pointer shadow-sm select-none"
-                title="Delete Transaction"
-              >
-                <Trash2 className="h-[18px] w-[18px]" />
-              </button>
-              <div className="flex-1">
-                <ConfirmButton
-                  onClick={handleSubmit}
-                  disabled={amount === 0 || (!category && type !== "TRANSFER") || !profileId}
-                  label="Save Changes"
-                />
-              </div>
+          {/* Action Buttons */}
+          <div className="p-5 flex gap-3 flex-shrink-0 border-t border-border/50 bg-background/50 backdrop-blur-md">
+            <button
+              type="button"
+              onClick={() => setShowDeleteConfirm(true)}
+              className="flex items-center justify-center w-12 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all cursor-pointer shadow-sm select-none"
+              title="Delete Transaction"
+            >
+              <Trash2 className="h-[18px] w-[18px]" />
+            </button>
+            <div className="flex-1">
+              <ConfirmButton
+                onClick={handleSubmit}
+                disabled={amount === 0 || (!category && type !== "TRANSFER") || !profileId}
+                label="Save Changes"
+              />
             </div>
           </div>
         </DialogContent>

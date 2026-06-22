@@ -35,8 +35,8 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
   });
 
   return (
-    <Card className="flex flex-col w-full h-auto md:h-full p-6 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 overflow-hidden transition-shadow hover:shadow-md">
-      <div className="flex items-center justify-between flex-shrink-0 h-[32px] mb-4">
+    <Card className="flex flex-col w-full h-full p-5 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 overflow-hidden transition-shadow hover:shadow-md">
+      <div className="flex items-center justify-between flex-shrink-0 h-[32px] mb-3">
         <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Recent Transactions
         </h2>
@@ -48,7 +48,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
         </Link>
       </div>
 
-      <div className="flex flex-col flex-1 space-y-4 overflow-y-auto hide-scrollbar pb-2">
+      <div className="flex flex-col flex-1 space-y-3 overflow-y-auto custom-scrollbar pr-2 pb-2">
         {transactions.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-6">
             <div className="w-10 h-10 rounded-xl bg-surface-2 border border-white/[0.04] flex items-center justify-center mb-3">
@@ -59,14 +59,14 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
         ) : (
           Object.entries(groupedByDate).map(([dateStr, txns]) => (
             <div key={dateStr}>
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center gap-3 mb-2">
                 <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest flex-shrink-0">
                   {dateStr}
                 </span>
                 <div className="h-px bg-white/[0.04] flex-1" />
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {txns.map((t) => {
                   const categoryDef = getCategoryById(t.category);
                   const categoryLabel = categoryDef?.label || t.category;
@@ -99,29 +99,29 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                     <div 
                       key={t.id}
                       onClick={() => openModal("addTransaction")} // Ideally open an edit modal
-                      className="flex items-center gap-4 p-3 rounded-xl hover:bg-surface-2 cursor-pointer transition-colors group border border-transparent hover:border-white/[0.04]"
+                      className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-surface-2 cursor-pointer transition-colors group border border-transparent hover:border-white/[0.04]"
                     >
                       <div 
-                        className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm transition-transform group-hover:scale-105"
                         style={{ backgroundColor: `${catColor}1a`, color: catColor }}
                       >
-                        <Icon size={18} />
+                        <Icon size={16} />
                       </div>
 
                       <div className="flex flex-col min-w-0 flex-1">
-                        <span className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                        <span className="text-[13px] font-semibold text-foreground truncate group-hover:text-primary transition-colors">
                           {t.title}
                         </span>
-                        <span className="text-xs text-muted-foreground truncate mt-0.5">
+                        <span className="text-[11px] text-muted-foreground truncate mt-0.5">
                           {t.type === "TRANSFER" ? "Transfer" : categoryLabel} <span className="opacity-50 mx-1">·</span> {profileName}
                         </span>
                       </div>
 
                       <div className="flex flex-col items-end flex-shrink-0 text-right">
-                        <span className={`text-sm font-semibold tabular-money ${amountColor}`}>
+                        <span className={`text-[13px] font-semibold tabular-money ${amountColor}`}>
                           {prefix}{symbol}{Math.abs(t.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </span>
-                        <span className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-wider">
+                        <span className="text-[10px] text-muted-foreground font-medium mt-0.5 uppercase tracking-wider">
                           {format(new Date(t.date), "h:mm a")}
                         </span>
                       </div>

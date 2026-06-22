@@ -50,8 +50,8 @@ export function TopCategories() {
   }, [transactions, selectedMonth, selectedYear]);
 
   return (
-    <Card className="flex flex-col w-full h-auto min-h-[350px] p-6 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
-      <div className="flex items-center justify-between mb-4 flex-shrink-0 h-[32px]">
+    <Card className="flex flex-col w-full h-full p-5 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+      <div className="flex items-center justify-between mb-3 flex-shrink-0 h-[32px]">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Top Spending
         </h3>
@@ -60,7 +60,7 @@ export function TopCategories() {
         </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 flex flex-col justify-start pb-2 space-y-2">
+      <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0 flex flex-col justify-start pr-2 pb-2 space-y-1">
         {categoryData.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-8">
             <div className="w-10 h-10 rounded-xl bg-surface-2 border border-white/[0.04] flex items-center justify-center mb-3">
@@ -79,24 +79,24 @@ export function TopCategories() {
             return (
               <div 
                 key={cat.id} 
-                className="flex flex-col justify-center py-3 px-3 rounded-xl hover:bg-surface-2 transition-colors border border-transparent hover:border-white/[0.04] group"
+                className="flex flex-col justify-center py-2.5 px-3 rounded-xl hover:bg-surface-2 transition-colors border border-transparent hover:border-white/[0.04] group"
               >
-                <div className="flex items-center gap-4 mb-3">
+                <div className="flex items-center gap-3 mb-1.5">
                   <div 
-                    className="flex h-10 w-10 rounded-xl items-center justify-center flex-shrink-0 shadow-sm"
+                    className="flex h-8 w-8 rounded-lg items-center justify-center flex-shrink-0 shadow-sm transition-transform group-hover:scale-105"
                     style={{ backgroundColor: `${cat.color}1a`, color: cat.color }} // 1a is ~10% opacity
                   >
-                    <Icon size={18} />
+                    <Icon size={14} />
                   </div>
-                  <span className="text-sm font-semibold text-foreground flex-1 truncate group-hover:text-primary transition-colors">
+                  <span className="text-[13px] font-semibold text-foreground flex-1 truncate group-hover:text-primary transition-colors">
                     {name}
                   </span>
-                  <span className="text-sm font-bold text-foreground font-mono flex-shrink-0">
+                  <span className="text-[13px] font-bold text-foreground font-mono flex-shrink-0 tabular-money">
                     {symbol}{cat.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </span>
                 </div>
                 
-                <div className="flex items-center gap-3 pl-[56px]">
+                <div className="flex items-center gap-3 pl-[44px]">
                   <div className="flex-1 h-1.5 bg-surface-3 border border-white/[0.02] rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
@@ -106,7 +106,7 @@ export function TopCategories() {
                       style={{ backgroundColor: cat.color }}
                     />
                   </div>
-                  <span className="text-xs text-muted-foreground w-10 text-right font-medium font-mono">
+                  <span className="text-[10px] text-muted-foreground w-10 text-right font-medium font-mono tabular-money">
                     {cat.percentage.toFixed(1)}%
                   </span>
                 </div>

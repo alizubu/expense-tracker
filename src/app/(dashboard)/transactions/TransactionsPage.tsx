@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { AnimatedSearch } from "@/components/ui/animated-search";
 import {
   Table,
   TableBody,
@@ -124,21 +125,11 @@ export default function TransactionsPage() {
         </div>
         
         <div className="flex items-center gap-3">
-          <div className="relative w-64">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search..."
-              value={filters.search}
-              onChange={(e) => setFilters({ search: e.target.value })}
-              className="pl-9 h-10 bg-surface-1 border-white/[0.04]"
-            />
-            {filters.search.length > 0 && (
-              <button onClick={() => setFilters({ search: "" })} className="absolute right-3 top-1/2 -translate-y-1/2">
-                <X size={14} className="text-muted-foreground hover:text-foreground" />
-              </button>
-            )}
-          </div>
+          <AnimatedSearch
+            value={filters.search}
+            onChange={(val) => setFilters({ search: val })}
+            placeholder="Search transactions..."
+          />
           <Button onClick={() => openModal("addTransaction")}>
             <Plus size={16} className="mr-2" />
             Add Transaction
