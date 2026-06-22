@@ -37,10 +37,10 @@ export default function DailyLineChart() {
   const hasData = currentMonthTxns.length > 0;
 
   return (
-    <Card className="p-6 w-full h-[350px] flex flex-col justify-between rounded-2xl shadow-sm border border-white/[0.06] bg-card hover:shadow-md transition-all duration-200">
+    <Card className="p-6 w-full h-[350px] flex flex-col justify-between rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 hover:shadow-md transition-shadow duration-300">
       <div className="flex items-center justify-between mb-4 flex-shrink-0">
-        <h3 className="text-sm font-semibold text-text-primary">Daily Spending</h3>
-        <span className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Daily Spending</h3>
+        <span className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground bg-surface-2 px-2.5 py-1 rounded-full border border-white/[0.04]">
           Cumulative Trend
         </span>
       </div>
@@ -48,31 +48,39 @@ export default function DailyLineChart() {
         {hasData ? (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
-              <XAxis dataKey="day" stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
-              <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(val) => `${symbol}${val}`} />
+              <defs>
+                <linearGradient id="colorLine" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} vertical={false} />
+              <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+              <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(val) => `${symbol}${val}`} />
               <Tooltip
                 contentStyle={{ 
-                  backgroundColor: "var(--bg-surface)", 
-                  borderColor: "var(--border-default)", 
+                  backgroundColor: "hsl(var(--surface-3))", 
+                  borderColor: "hsl(var(--border))", 
                   borderRadius: "12px", 
-                  color: "var(--text-primary)",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  color: "hsl(var(--foreground))",
+                  fontSize: "12px",
+                  fontWeight: 500
                 }}
-                itemStyle={{ color: "var(--text-primary)", fontSize: "12px" }}
+                itemStyle={{ color: "hsl(var(--foreground))", fontSize: "12px" }}
                 labelFormatter={(label) => `Day ${label}`}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 formatter={(value: any) => [`${symbol}${value.toLocaleString()}`, "Cumulative"]}
               />
-              <Line type="monotone" dataKey="cumulative" stroke="var(--brand-purple)" strokeWidth={3} dot={false} activeDot={{ r: 6, fill: "var(--brand-purple)" }} connectNulls />
+              <Line type="monotone" dataKey="cumulative" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} activeDot={{ r: 6, fill: "hsl(var(--primary))", stroke: "hsl(var(--surface-1))", strokeWidth: 2 }} connectNulls />
             </LineChart>
           </ResponsiveContainer>
         ) : (
           <div className="flex flex-col items-center justify-center py-8">
-            <div className="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center text-accent mb-3 border border-accent/10">
+            <div className="w-10 h-10 rounded-xl bg-surface-2 flex items-center justify-center text-muted-foreground mb-3 border border-white/[0.04]">
               <TrendingDown size={18} />
             </div>
-            <span className="text-xs font-semibold text-text-primary">No data yet</span>
-            <span className="text-[10px] text-text-muted mt-0.5">Cumulative spending chart will show here</span>
+            <span className="text-xs font-semibold text-foreground">No data yet</span>
+            <span className="text-[10px] text-muted-foreground mt-0.5">Cumulative spending chart will show here</span>
           </div>
         )}
       </div>

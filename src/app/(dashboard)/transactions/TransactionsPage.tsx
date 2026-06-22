@@ -5,15 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useUIStore } from "@/store/useUIStore";
-import { getCategoryById } from "@/lib/categories";
+import { getCategoryById, getCategoryColor, getCategoryIconName } from "@/lib/categories";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { formatGroupDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { 
   Search, Trash2, X, ChevronDown, 
-  ArrowDownUp, ReceiptText, Utensils, ShoppingCart, Gamepad2, 
-  Cpu, Car, AlertCircle, ArrowLeftRight, Shirt, Beef, Pill, Plane, Circle, Menu, Plus
+  ArrowDownUp, ReceiptText, CircleDashed, Menu, Plus
 } from "lucide-react";
+import * as Icons from "lucide-react";
 import { EditTransactionModal } from "@/components/transactions/EditTransactionModal";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
@@ -34,24 +34,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-const CATEGORY_MAP: Record<string, { icon: any, color: string, bg: string }> = {
-  "Food / Restaurant": { icon: Utensils,       color: "text-amber-500", bg: "bg-amber-500/10" },
-  "Groceries":         { icon: ShoppingCart,   color: "text-emerald-500", bg: "bg-emerald-500/10" },
-  "Gaming":            { icon: Gamepad2,       color: "text-violet-500", bg: "bg-violet-500/10" },
-  "Electronics":       { icon: Cpu,            color: "text-blue-500", bg: "bg-blue-500/10" },
-  "Ride Share":        { icon: Car,            color: "text-cyan-500", bg: "bg-cyan-500/10" },
-  "Tax / Fines":       { icon: AlertCircle,    color: "text-rose-500", bg: "bg-rose-500/10" },
-  "Transfer":          { icon: ArrowLeftRight, color: "text-slate-500", bg: "bg-slate-500/10" },
-  "Clothing":          { icon: Shirt,          color: "text-pink-500", bg: "bg-pink-500/10" },
-  "Fastfood":          { icon: Beef,           color: "text-orange-500", bg: "bg-orange-500/10" },
-  "Medicine":          { icon: Pill,           color: "text-teal-500", bg: "bg-teal-500/10" },
-  "Travel":            { icon: Plane,          color: "text-purple-500", bg: "bg-purple-500/10" },
-};
-
-function getCatStyle(label: string) {
-  return CATEGORY_MAP[label] || { icon: Circle, color: "text-slate-500", bg: "bg-slate-500/10" };
-}
 
 export default function TransactionsPage() {
   const { transactions, setFilters, filters, getFilteredTransactions } = useTransactionStore();
@@ -91,12 +73,12 @@ export default function TransactionsPage() {
     <div className="flex flex-col min-h-screen p-4 lg:p-8 max-w-7xl mx-auto w-full">
       {/* Mobile Topbar */}
       <div className="sticky top-0 z-40 lg:hidden flex items-center justify-between h-14 -mx-4 px-4 bg-background/95 backdrop-blur-md border-b border-border/50 mb-4">
-        <button onClick={openSidebar} className="flex items-center justify-center w-8 h-8 rounded-md bg-muted border border-border">
+        <button onClick={openSidebar} className="flex items-center justify-center w-8 h-8 rounded-md bg-surface-2 border border-border">
           <Menu size={16} className="text-muted-foreground" />
         </button>
         <span className="text-sm font-semibold text-foreground flex-1 text-center">Transactions</span>
         <div className="flex items-center gap-2">
-          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="flex items-center justify-center w-8 h-8 rounded-md bg-muted border border-border">
+          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="flex items-center justify-center w-8 h-8 rounded-md bg-surface-2 border border-border">
             <Search size={15} className="text-muted-foreground" />
           </button>
           <button onClick={() => openModal("addTransaction")} className="flex items-center justify-center w-8 h-8 rounded-md bg-primary shadow-sm">
@@ -114,7 +96,7 @@ export default function TransactionsPage() {
             transition={{ duration: 0.2 }}
             className="sticky top-14 z-30 lg:hidden w-full bg-background border-b border-border/50 -mx-4 px-4 py-2 mb-4"
           >
-            <div className="relative flex items-center w-full h-10 rounded-md bg-muted border border-border px-3 focus-within:ring-2 focus-within:ring-primary/20">
+            <div className="relative flex items-center w-full h-10 rounded-md bg-surface-2 border border-border px-3 focus-within:ring-2 focus-within:ring-primary/20">
               <Search size={14} className="text-muted-foreground" />
               <input
                 autoFocus
@@ -149,7 +131,7 @@ export default function TransactionsPage() {
               placeholder="Search..."
               value={filters.search}
               onChange={(e) => setFilters({ search: e.target.value })}
-              className="pl-9 h-10 bg-background"
+              className="pl-9 h-10 bg-surface-1 border-white/[0.04]"
             />
             {filters.search.length > 0 && (
               <button onClick={() => setFilters({ search: "" })} className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -180,7 +162,7 @@ export default function TransactionsPage() {
                 variant={isActive ? "default" : "secondary"}
                 className={cn(
                   "cursor-pointer text-xs px-3 py-1 font-medium whitespace-nowrap transition-colors",
-                  isActive ? activeStyles : "hover:bg-muted"
+                  isActive ? activeStyles : "hover:bg-surface-2 bg-surface-1 border-white/[0.04]"
                 )}
                 onClick={() => setFilters({ type: t })}
               >
@@ -192,7 +174,7 @@ export default function TransactionsPage() {
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           <DropdownMenu>
-            <DropdownMenuTrigger render={<Button variant="outline" size="sm" className="h-8" />}>
+            <DropdownMenuTrigger render={<Button variant="outline" size="sm" className="h-8 bg-surface-1 border-white/[0.04]" />}>
               <ArrowDownUp size={14} className="mr-2 text-muted-foreground" />
               {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort by Date"}
               <ChevronDown size={14} className="ml-2 text-muted-foreground" />
@@ -201,8 +183,9 @@ export default function TransactionsPage() {
               {sortOptions.map(opt => (
                 <DropdownMenuItem 
                   key={opt.value}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onClick={() => setFilters({ sortBy: opt.value as any })}
-                  className={cn(filters.sortBy === opt.value && "bg-muted font-medium")}
+                  className={cn(filters.sortBy === opt.value && "bg-surface-2 font-medium")}
                 >
                   {opt.label}
                 </DropdownMenuItem>
@@ -214,7 +197,7 @@ export default function TransactionsPage() {
             variant="outline"
             size="sm"
             onClick={toggleTrashView}
-            className={cn("h-8", filters.showDeleted && "border-destructive text-destructive hover:bg-destructive/10")}
+            className={cn("h-8 bg-surface-1 border-white/[0.04]", filters.showDeleted && "border-destructive text-destructive hover:bg-destructive/10")}
           >
             <Trash2 size={14} className="mr-2" />
             {filters.showDeleted ? "Exit Trash" : "View Trash"}
@@ -224,26 +207,26 @@ export default function TransactionsPage() {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <Card className="p-6 rounded-2xl border-white/[0.06] bg-card flex flex-col justify-center shadow-sm">
-          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wider mb-1">Total</span>
-          <span className="text-xl font-bold font-mono tracking-tight text-foreground truncate">
+        <Card className="p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm">
+          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-widest mb-1">Total</span>
+          <span className="text-xl font-bold tabular-money tracking-tight text-foreground truncate">
             {symbol}{filtered.reduce((sum, t) => sum + (t.type === "EXPENSE" ? -t.amount : t.amount), 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}
           </span>
         </Card>
-        <Card className="p-6 rounded-2xl border-white/[0.06] bg-card flex flex-col justify-center shadow-sm">
-          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wider mb-1">Count</span>
-          <span className="text-xl font-bold font-mono tracking-tight text-foreground truncate">{filtered.length}</span>
+        <Card className="p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm">
+          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-widest mb-1">Count</span>
+          <span className="text-xl font-bold tabular-money tracking-tight text-foreground truncate">{filtered.length}</span>
         </Card>
-        <Card className="p-6 rounded-2xl border-white/[0.06] bg-card flex flex-col justify-center shadow-sm">
-          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wider mb-1">Largest</span>
-          <span className="text-xl font-bold font-mono tracking-tight text-destructive truncate">
+        <Card className="p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm">
+          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-widest mb-1">Largest</span>
+          <span className="text-xl font-bold tabular-money tracking-tight text-destructive truncate">
             {symbol}{filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)).toLocaleString(undefined, { maximumFractionDigits: 0 }) : 0}
           </span>
         </Card>
       </div>
 
       {/* Transactions List */}
-      <Card className="flex-1 overflow-hidden flex flex-col rounded-2xl border border-white/[0.06] bg-card shadow-sm">
+      <Card className="flex-1 overflow-hidden flex flex-col rounded-2xl border-white/[0.04] bg-surface-1 shadow-sm">
         {filtered.length === 0 ? (
           <div className="py-16">
             <EmptyState
@@ -258,7 +241,7 @@ export default function TransactionsPage() {
           <div className="overflow-x-auto hide-scrollbar">
             <Table>
               <TableHeader>
-                <TableRow className="hover:bg-transparent border-b border-white/[0.06]">
+                <TableRow className="hover:bg-transparent border-b border-white/[0.04]">
                   <TableHead className="w-[88px] pl-6"></TableHead>
                   <TableHead className="text-left font-semibold">Transaction</TableHead>
                   <TableHead className="hidden md:table-cell text-left font-semibold">Category</TableHead>
@@ -270,37 +253,49 @@ export default function TransactionsPage() {
               <TableBody>
                 {Array.from(grouped.entries()).map(([dateLabel, txns]) => (
                   <React.Fragment key={dateLabel}>
-                    <TableRow className="bg-transparent hover:bg-transparent border-b border-white/[0.04]">
-                      <TableCell colSpan={6} className="py-3 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-widest bg-background/30">
+                    <TableRow className="bg-transparent hover:bg-transparent border-b border-white/[0.02]">
+                      <TableCell colSpan={6} className="py-3 px-6 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest bg-surface-1/30">
                         {dateLabel}
                       </TableCell>
                     </TableRow>
                     {txns.map((transaction) => {
                       const profile = getProfile(transaction.profileId);
                       const categoryLabel = getCategoryById(transaction.category)?.label || transaction.category;
-                      const catStyle = getCatStyle(transaction.type === "TRANSFER" ? "Transfer" : categoryLabel);
-                      const Icon = catStyle.icon;
+                      
+                      let catColor = getCategoryColor(transaction.category);
+                      let iconName = getCategoryIconName(transaction.category);
+                      
+                      if (transaction.type === "TRANSFER") {
+                        catColor = "hsl(var(--muted-foreground))";
+                        iconName = "ArrowLeftRight";
+                      }
+
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      const Icon = (Icons as any)[iconName] || CircleDashed;
 
                       const amountColor =
                         transaction.type === "INCOME" ? "text-emerald-500"
-                        : transaction.type === "EXPENSE" ? "text-destructive"
-                        : "text-slate-500";
+                        : transaction.type === "EXPENSE" ? "text-foreground"
+                        : "text-muted-foreground";
 
-                      const sign = transaction.type === "INCOME" ? "+" : transaction.type === "EXPENSE" ? "−" : "→";
+                      const sign = transaction.type === "INCOME" ? "+" : transaction.type === "EXPENSE" ? "" : "→";
 
                       return (
                         <TableRow 
                           key={transaction.id}
                           onClick={() => setEditTxnId(transaction.id)}
-                          className="cursor-pointer transition-colors hover:bg-muted/40 border-b border-white/[0.04]"
+                          className="cursor-pointer transition-colors hover:bg-surface-2 border-b border-white/[0.02] group"
                         >
                           <TableCell className="pl-6">
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${catStyle.bg}`}>
-                              <Icon size={18} className={catStyle.color} />
+                            <div 
+                              className="w-10 h-10 rounded-lg flex items-center justify-center shadow-sm transition-transform group-hover:scale-105"
+                              style={{ backgroundColor: `${catColor}1a`, color: catColor }}
+                            >
+                              <Icon size={18} />
                             </div>
                           </TableCell>
                           <TableCell className="text-left">
-                            <div className="font-semibold text-foreground text-sm">{transaction.title}</div>
+                            <div className="font-semibold text-foreground text-sm group-hover:text-primary transition-colors">{transaction.title}</div>
                             <div className="text-xs text-muted-foreground sm:hidden mt-0.5">
                               {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel} • {profile?.name}
                             </div>
@@ -315,7 +310,7 @@ export default function TransactionsPage() {
                             {new Date(transaction.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </TableCell>
                           <TableCell className="text-right pr-6">
-                            <span className={`font-mono font-bold tracking-tight ${amountColor}`}>
+                            <span className={`tabular-money font-semibold tracking-tight ${amountColor}`}>
                               {sign}{symbol}{Math.abs(transaction.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                             </span>
                           </TableCell>

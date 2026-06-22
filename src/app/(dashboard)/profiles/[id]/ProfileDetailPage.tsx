@@ -8,16 +8,17 @@ import { useProfileStore } from "@/store/useProfileStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useUIStore } from "@/store/useUIStore";
 import { getCurrencySymbol } from "@/lib/currencies";
-import { getCategoryById } from "@/lib/categories";
+import { getCategoryById, getCategoryColor, getCategoryIconName } from "@/lib/categories";
 import { getProfileType } from "@/lib/profiles";
 import { formatRelativeDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, TrendingUp, TrendingDown, Edit2 } from "lucide-react";
+import { ArrowLeft, TrendingUp, TrendingDown, Edit2, CircleDashed } from "lucide-react";
 import Link from "next/link";
 import * as LucideIcons from "lucide-react";
 import { EditProfileModal } from "@/components/profiles/EditProfileModal";
 
 function getIcon(iconName: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Icon = (LucideIcons as Record<string, any>)[iconName];
   return Icon || LucideIcons.Wallet;
 }
@@ -58,18 +59,18 @@ export default function ProfileDetailPage() {
           </Link>
         </div>
 
-        <Card className={`relative p-6 lg:p-8 border ${profile.isDefault ? 'border-primary/50 bg-primary/[0.02]' : 'border-border bg-card'} hover:shadow-sm transition-all duration-200 mt-4`}>
+        <Card className={`relative p-6 lg:p-8 border ${profile.isDefault ? 'border-primary/50 bg-primary/[0.02]' : 'border-white/[0.04] bg-surface-1'} shadow-sm transition-all duration-300 hover:shadow-md mt-4 rounded-2xl`}>
           <div className="flex items-start justify-between mb-8">
             <div className="flex items-center gap-5">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl flex-shrink-0" style={{ backgroundColor: profile.color + "15" }}>
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl flex-shrink-0 shadow-sm" style={{ backgroundColor: profile.color + "15" }}>
                 <Icon className="h-8 w-8" style={{ color: profile.color }} />
               </div>
               <div className="min-w-0 flex-1">
                 <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight truncate">{profile.name}</h1>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="inline-flex items-center rounded-md bg-muted px-2.5 py-0.5 text-xs text-muted-foreground font-medium">{profileType?.emoji} {profileType?.label}</span>
+                  <span className="inline-flex items-center rounded-md bg-surface-2 px-2.5 py-0.5 text-xs text-muted-foreground font-semibold tracking-wide border border-white/[0.04]">{profileType?.emoji} {profileType?.label}</span>
                   {profile.isDefault && (
-                    <span className="inline-flex items-center rounded-md bg-primary/10 border border-primary/20 px-2 py-0.5 text-xs font-bold text-primary">Default</span>
+                    <span className="inline-flex items-center rounded-md bg-primary/10 border border-primary/20 px-2 py-0.5 text-xs font-bold text-primary tracking-wide">Default</span>
                   )}
                 </div>
                 {profile.description && <p className="text-sm text-muted-foreground mt-3">{profile.description}</p>}
@@ -77,31 +78,33 @@ export default function ProfileDetailPage() {
             </div>
             <button 
               onClick={() => setShowEditModal(true)}
-              className="rounded-xl border border-border bg-muted p-2.5 text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-all"
+              className="rounded-xl border border-white/[0.04] bg-surface-2 p-2.5 text-muted-foreground hover:text-primary hover:bg-surface-3 hover:border-primary/20 transition-all shadow-sm"
             >
               <Edit2 className="h-4 w-4" />
             </button>
           </div>
 
-          <div className="text-3xl md:text-4xl font-bold text-foreground tracking-tight font-mono mb-8 flex items-baseline gap-1">
-            <span className="text-xl md:text-2xl font-semibold">{symbol}</span>
-            <span>{profile.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          <div className="text-3xl md:text-4xl font-bold text-foreground tracking-tight tabular-money mb-8 flex items-baseline gap-1">
+            <span className="text-xl md:text-2xl font-semibold opacity-80">{symbol}</span>
+            <span className="leading-none">{profile.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-border/50 pt-6">
-            <div className="rounded-2xl bg-emerald-500/5 border border-emerald-500/10 p-5">
-              <div className="flex items-center gap-2 mb-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/[0.04] pt-6">
+            <div className="rounded-2xl bg-emerald-500/5 border border-emerald-500/10 p-5 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="flex items-center gap-2 mb-3 relative z-10">
                 <TrendingUp className="h-4 w-4 text-emerald-500" />
-                <span className="text-xs text-emerald-500/80 font-bold uppercase tracking-wider">Income This Month</span>
+                <span className="text-xs text-emerald-500/80 font-bold uppercase tracking-widest">Income This Month</span>
               </div>
-              <p className="text-xl md:text-2xl font-bold text-emerald-500 font-mono">{symbol} {monthIncome.toLocaleString()}</p>
+              <p className="text-xl md:text-2xl font-semibold text-emerald-500 tabular-money relative z-10 leading-none">{symbol} {monthIncome.toLocaleString()}</p>
             </div>
-            <div className="rounded-2xl bg-destructive/5 border border-destructive/10 p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingDown className="h-4 w-4 text-destructive" />
-                <span className="text-xs text-destructive/80 font-bold uppercase tracking-wider">Expense This Month</span>
+            <div className="rounded-2xl bg-surface-2 border border-white/[0.04] p-5 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-foreground/0 to-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="flex items-center gap-2 mb-3 relative z-10">
+                <TrendingDown className="h-4 w-4 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Expense This Month</span>
               </div>
-              <p className="text-xl md:text-2xl font-bold text-destructive font-mono">{symbol} {monthExpense.toLocaleString()}</p>
+              <p className="text-xl md:text-2xl font-semibold text-foreground tabular-money relative z-10 leading-none">{symbol} {monthExpense.toLocaleString()}</p>
             </div>
           </div>
         </Card>
@@ -109,24 +112,34 @@ export default function ProfileDetailPage() {
 
       {/* Transaction History */}
       <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.3 }}>
-        <Card className="p-6 border-border shadow-sm">
-          <h2 className="text-base font-bold text-foreground mb-6">Transaction History</h2>
-          <div className="divide-y divide-border/50">
+        <Card className="p-6 border-white/[0.04] shadow-sm bg-surface-1 rounded-2xl">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-6">Transaction History</h2>
+          <div className="divide-y divide-white/[0.04]">
             {profileTxns.slice(0, 20).map(txn => {
-              const cat = getCategoryById(txn.category);
-              const CatIcon = cat ? getIcon(cat.icon) : LucideIcons.CircleDot;
-              const color = txn.type === "INCOME" ? "text-emerald-500" : txn.type === "EXPENSE" ? "text-destructive" : "text-slate-500";
-              const sign = txn.type === "INCOME" ? "+" : txn.type === "EXPENSE" ? "-" : "";
+              const categoryLabel = getCategoryById(txn.category)?.label || txn.category;
+              let catColor = getCategoryColor(txn.category);
+              let iconName = getCategoryIconName(txn.category);
+              
+              if (txn.type === "TRANSFER") {
+                catColor = "hsl(var(--muted-foreground))";
+                iconName = "ArrowLeftRight";
+              }
+
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const CatIcon = (LucideIcons as any)[iconName] || CircleDashed;
+              const color = txn.type === "INCOME" ? "text-emerald-500" : txn.type === "EXPENSE" ? "text-foreground" : "text-muted-foreground";
+              const sign = txn.type === "INCOME" ? "+" : txn.type === "EXPENSE" ? "" : "";
+              
               return (
-                <div key={txn.id} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0 hover:bg-muted/50 transition-colors rounded-xl px-2 -mx-2">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: (cat?.color || "#64748B") + "15" }}>
-                    <CatIcon className="h-4 w-4" style={{ color: cat?.color || "#64748B" }} />
+                <div key={txn.id} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0 hover:bg-surface-2 transition-colors rounded-xl px-2 -mx-2 group">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl shadow-sm transition-transform group-hover:scale-105" style={{ backgroundColor: `${catColor}1a`, color: catColor }}>
+                    <CatIcon className="h-4 w-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-foreground truncate">{txn.title}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{cat?.label || txn.category} • {formatRelativeDate(txn.date)}</p>
+                    <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{txn.title}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{categoryLabel} • {formatRelativeDate(txn.date)}</p>
                   </div>
-                  <p className={cn("text-sm font-bold font-mono flex-shrink-0", color)}>{sign}{symbol}{txn.amount.toLocaleString()}</p>
+                  <p className={cn("text-sm font-semibold tabular-money flex-shrink-0", color)}>{sign}{symbol}{txn.amount.toLocaleString()}</p>
                 </div>
               );
             })}

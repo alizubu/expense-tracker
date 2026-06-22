@@ -114,9 +114,9 @@ export default function SettingsPage() {
       <div className="space-y-6">
         {/* Profile Information */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05, duration: 0.3 }}>
-          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
-              <User className="h-5 w-5 text-primary" />
+          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
+              <User className="h-4 w-4 text-primary" />
               Profile Information
             </h2>
             <div className="space-y-6">
@@ -128,7 +128,7 @@ export default function SettingsPage() {
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full md:w-64 focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:shadow-[0_0_15px_hsl(var(--primary)/0.1)] transition-shadow"
+                  className="w-full md:w-64 bg-surface-2 focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:shadow-[0_0_15px_hsl(var(--primary)/0.1)] transition-shadow"
                   disabled={isSaving}
                 />
               </div>
@@ -142,7 +142,7 @@ export default function SettingsPage() {
                   type="email"
                   value={session?.user?.email || ""}
                   disabled
-                  className="w-full md:w-64 bg-muted/50 focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:shadow-[0_0_15px_hsl(var(--primary)/0.1)] transition-shadow"
+                  className="w-full md:w-64 bg-surface-1 focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:shadow-[0_0_15px_hsl(var(--primary)/0.1)] transition-shadow"
                 />
               </div>
 
@@ -162,9 +162,9 @@ export default function SettingsPage() {
 
         {/* Preferences */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.3 }}>
-          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
-              <Globe className="h-5 w-5 text-primary" />
+          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
+              <Globe className="h-4 w-4 text-primary" />
               Preferences
             </h2>
             <div className="space-y-6">
@@ -201,9 +201,9 @@ export default function SettingsPage() {
 
         {/* Appearance */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15, duration: 0.3 }}>
-          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
-              <Palette className="h-5 w-5 text-primary" />
+          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
+              <Palette className="h-4 w-4 text-primary" />
               Appearance
             </h2>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -211,16 +211,16 @@ export default function SettingsPage() {
                 <p className="text-sm font-semibold text-foreground">Theme</p>
                 <p className="text-xs text-muted-foreground mt-1">Choose between light and dark mode styling.</p>
               </div>
-              <div className="flex bg-muted rounded-lg p-1 w-full md:w-auto">
+              <div className="flex bg-surface-2 rounded-lg p-1 w-full md:w-auto border border-white/[0.04]">
                 <button 
                   onClick={() => setTheme("light")}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${theme === "light" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${theme === "light" ? "bg-surface-1 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   <Sun className="h-4 w-4" /> Light
                 </button>
                 <button 
                   onClick={() => setTheme("dark")}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${theme === "dark" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${theme === "dark" ? "bg-surface-1 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   <Moon className="h-4 w-4" /> Dark
                 </button>
@@ -231,9 +231,9 @@ export default function SettingsPage() {
 
         {/* Data Export */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.3 }}>
-          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
-              <Download className="h-5 w-5 text-primary" />
+          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
+              <Download className="h-4 w-4 text-primary" />
               Data Export
             </h2>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -244,7 +244,7 @@ export default function SettingsPage() {
               <Button 
                 onClick={handleExportCSV}
                 variant="outline"
-                className="gap-2 w-full md:w-auto"
+                className="gap-2 w-full md:w-auto bg-surface-2 hover:bg-surface-3 border-white/[0.04]"
               >
                 <Download className="h-4 w-4" /> Export CSV
               </Button>
@@ -254,9 +254,9 @@ export default function SettingsPage() {
 
         {/* Account */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.25, duration: 0.3 }}>
-          <Card className="p-6 rounded-2xl shadow-sm border border-destructive/20 bg-card">
-            <h2 className="text-lg font-bold text-destructive flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
-              <Shield className="h-5 w-5" />
+          <Card className="p-6 rounded-2xl shadow-sm border border-destructive/20 bg-surface-1 transition-shadow hover:shadow-md">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-destructive flex items-center gap-2 mb-6 border-b border-destructive/10 pb-4">
+              <Shield className="h-4 w-4" />
               Account Security
             </h2>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

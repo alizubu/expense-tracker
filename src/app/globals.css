@@ -4,56 +4,88 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* App Background (Surface 0) */
+    --background: 0 0% 98%;
     --foreground: 240 10% 3.9%;
+    
+    /* Surfaces */
+    --surface-0: 0 0% 98%;
+    --surface-1: 0 0% 100%;
+    --surface-2: 240 4.8% 96%;
+    --surface-3: 0 0% 100%;
+
+    /* Standard Card / Popover map to surface-1 and surface-3 */
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+
+    /* Single Confident Accent (Electric Indigo) */
+    --primary: 238 81% 67%;
+    --primary-foreground: 0 0% 100%;
+
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
+
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+
+    --accent: 238 81% 67%;
+    --accent-foreground: 0 0% 100%;
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
+
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.75rem;
+    --ring: 238 81% 67%;
+    --radius: 1rem;
 
     /* Expense Tracker Specific */
-    --income: 142.1 76.2% 36.3%;
-    --expense: 346.8 77.2% 49.8%;
+    --income: 142 71% 45%;
+    --expense: 0 84% 68%;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    /* App Background (Surface 0) */
+    --background: 240 10% 3%;
     --foreground: 0 0% 98%;
+
+    /* Surfaces */
+    --surface-0: 240 10% 3%;
+    --surface-1: 240 10% 6%;
+    --surface-2: 240 10% 9%;
+    --surface-3: 240 10% 13%;
+
     --card: 240 10% 6%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 6%;
+    --popover: 240 10% 13%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
+
+    /* Single Confident Accent (Electric Indigo) */
+    --primary: 238 81% 67%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 5% 12%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
+
+    --muted: 240 5% 12%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+
+    --accent: 238 81% 67%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 68%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+
+    --border: 240 5% 15%;
+    --input: 240 5% 15%;
+    --ring: 238 81% 67%;
+    --radius: 1rem;
 
     /* Expense Tracker Specific */
-    --income: 142.1 70.6% 45.3%;
-    --expense: 346.8 77.2% 49.8%;
+    --income: 142 71% 45%;
+    --expense: 0 84% 68%;
   }
 }
 
@@ -69,6 +101,11 @@
   
   /* Glassmorphism Utilities */
   .glass {
-    @apply bg-background/60 backdrop-blur-xl border border-white/10 shadow-sm;
+    @apply bg-background/60 backdrop-blur-xl border border-white/[0.04] shadow-[0_8px_30px_rgb(0,0,0,0.12)];
+  }
+
+  /* Consistent Tabular Numbers for Money */
+  .tabular-money {
+    @apply font-mono tabular-nums tracking-tight;
   }
 }

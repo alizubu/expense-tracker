@@ -30,7 +30,7 @@ export default function AnalyticsStatsRow() {
     {
       label: "Spent This Month",
       value: totalSpent,
-      colorClass: "text-destructive",
+      colorClass: "text-foreground",
       borderColorClass: "border-l-destructive",
       icon: TrendingDown,
       iconClass: "text-destructive bg-destructive/10",
@@ -39,7 +39,7 @@ export default function AnalyticsStatsRow() {
     {
       label: "Income This Month",
       value: totalIncome,
-      colorClass: "text-emerald-500",
+      colorClass: "text-foreground",
       borderColorClass: "border-l-emerald-500",
       icon: TrendingUp,
       iconClass: "text-emerald-500 bg-emerald-500/10",
@@ -57,7 +57,7 @@ export default function AnalyticsStatsRow() {
     {
       label: "Savings Rate",
       value: Math.max(0, savingsRate),
-      colorClass: "text-primary",
+      colorClass: "text-foreground",
       borderColorClass: "border-l-slate-500",
       icon: Scale,
       iconClass: "text-slate-500 bg-slate-500/10",
@@ -72,19 +72,19 @@ export default function AnalyticsStatsRow() {
         const Icon = stat.icon;
         return (
           <motion.div key={stat.label} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05 * (idx + 1) }}>
-            <Card className={`p-5 flex flex-col justify-between border-l-4 ${stat.borderColorClass} bg-card hover:shadow-sm transition-all duration-200 h-full`}>
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted-foreground">
+            <Card className={`p-5 flex flex-col justify-between border-l-4 ${stat.borderColorClass} bg-surface-1 border-white/[0.04] shadow-sm hover:shadow-md transition-shadow duration-300 h-full rounded-2xl relative overflow-hidden`}>
+              <div className="flex items-center justify-between gap-2 mb-4 relative z-10">
+                <span className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground">
                   {stat.label}
                 </span>
                 <div className={`p-1.5 rounded-lg ${stat.iconClass}`}>
                   <Icon size={14} />
                 </div>
               </div>
-              <div className={`text-2xl md:text-3xl font-bold tracking-tight ${stat.colorClass} flex items-baseline gap-1 font-mono`}>
-                {!stat.isPercentage && <span className="text-base font-semibold">{symbol}</span>}
-                <span>{stat.value.toLocaleString(undefined, { minimumFractionDigits: stat.decimalPlaces, maximumFractionDigits: stat.decimalPlaces })}</span>
-                {stat.isPercentage && <span className="text-base font-semibold">%</span>}
+              <div className={`text-2xl md:text-3xl font-semibold tracking-tight ${stat.colorClass} flex items-baseline gap-1 tabular-money relative z-10`}>
+                {!stat.isPercentage && <span className="text-base font-medium opacity-80">{symbol}</span>}
+                <span className="leading-none">{stat.value.toLocaleString(undefined, { minimumFractionDigits: stat.decimalPlaces, maximumFractionDigits: stat.decimalPlaces })}</span>
+                {stat.isPercentage && <span className="text-base font-medium opacity-80">%</span>}
               </div>
             </Card>
           </motion.div>

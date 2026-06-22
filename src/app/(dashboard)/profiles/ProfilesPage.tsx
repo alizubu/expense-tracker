@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
@@ -20,6 +19,7 @@ import { ConfirmDialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 function getIcon(iconName: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Icon = (LucideIcons as Record<string, any>)[iconName];
   return Icon || Wallet;
 }
@@ -74,52 +74,52 @@ export default function ProfilesPage() {
               className="h-full"
             >
               <CardContainer className="inter-var w-full h-full" containerClassName="py-0 h-full">
-                <CardBody className={`relative group/card p-6 flex flex-col justify-between hover:shadow-2xl hover:shadow-primary/[0.1] transition-all duration-200 h-full min-h-[260px] border rounded-2xl ${profile.isDefault ? 'border-primary/50 bg-primary/[0.02]' : 'border-white/[0.06] bg-card shadow-[inset_0_0_20px_rgba(255,255,255,0.02)]'}`}>
+                <CardBody className={`relative group/card p-6 flex flex-col justify-between hover:shadow-xl hover:shadow-primary/5 transition-shadow duration-300 h-full min-h-[260px] border rounded-2xl ${profile.isDefault ? 'border-primary/30 bg-primary/[0.02]' : 'border-white/[0.04] bg-surface-1 shadow-sm'}`}>
                   {profile.isDefault && (
-                    <CardItem translateZ={20} className="absolute top-4 right-4 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+                    <CardItem translateZ={20} className="absolute top-4 right-4 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary tracking-wide">
                       Default
                     </CardItem>
                   )}
                   
                   <div>
                     <CardItem translateZ={30} className="flex items-start gap-4 mb-5">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0" style={{ backgroundColor: profile.color + "15" }}>
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0 shadow-sm" style={{ backgroundColor: profile.color + "15" }}>
                         <Icon className="h-6 w-6" style={{ color: profile.color }} />
                       </div>
                       <div className="min-w-0 flex-1 mt-1">
-                        <h3 className="text-base font-bold text-foreground truncate">{profile.name}</h3>
-                        <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground mt-1">
+                        <h3 className="text-base font-semibold text-foreground truncate">{profile.name}</h3>
+                        <span className="inline-flex items-center rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground mt-1 tracking-wide">
                           {profileType?.label || "General"}
                         </span>
                       </div>
                     </CardItem>
 
-                    <CardItem translateZ={40} className="text-3xl font-bold text-foreground tracking-tight font-mono mb-6">
+                    <CardItem translateZ={40} className="text-3xl font-bold text-foreground tracking-tight tabular-money mb-6">
                       {symbol}{profile.balance.toLocaleString("en-US", { minimumFractionDigits: 0 })}
                     </CardItem>
 
-                    <CardItem translateZ={20} className="flex items-center gap-6 mb-6 border-t border-border/50 pt-4">
+                    <CardItem translateZ={20} className="flex items-center gap-6 mb-6 border-t border-white/[0.04] pt-4">
                       <div className="flex items-center gap-2 min-w-0">
                         <TrendingUp className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                        <span className="text-xs text-muted-foreground font-semibold font-mono truncate">{symbol}{monthIncome.toLocaleString()}</span>
+                        <span className="text-xs text-muted-foreground font-semibold tabular-money truncate">{symbol}{monthIncome.toLocaleString()}</span>
                       </div>
                       <div className="flex items-center gap-2 min-w-0">
-                        <TrendingDown className="h-4 w-4 text-destructive flex-shrink-0" />
-                        <span className="text-xs text-muted-foreground font-semibold font-mono truncate">{symbol}{monthExpense.toLocaleString()}</span>
+                        <TrendingDown className="h-4 w-4 text-foreground flex-shrink-0" />
+                        <span className="text-xs text-muted-foreground font-semibold tabular-money truncate">{symbol}{monthExpense.toLocaleString()}</span>
                       </div>
                     </CardItem>
                   </div>
 
-                  <CardItem translateZ={20} className="grid grid-cols-[1fr_auto_auto] gap-2 pt-4 border-t border-border/50 mt-auto w-full">
+                  <CardItem translateZ={20} className="grid grid-cols-[1fr_auto_auto] gap-2 pt-4 border-t border-white/[0.04] mt-auto w-full">
                     <Link href={`/profiles/${profile.id}`} className="w-full">
-                      <Button variant="outline" className="w-full h-9 border-white/[0.06] bg-background/50 hover:bg-muted/80">
+                      <Button variant="outline" className="w-full h-9 border-white/[0.04] bg-surface-2 hover:bg-surface-3 transition-colors">
                         <Eye className="h-4 w-4 mr-2" /> Details
                       </Button>
                     </Link>
-                    <Button variant="outline" size="icon" className="h-9 w-9 border-white/[0.06] bg-background/50 hover:bg-muted/80" onClick={() => setEditProfileId(profile.id)}>
+                    <Button variant="outline" size="icon" className="h-9 w-9 border-white/[0.04] bg-surface-2 hover:bg-surface-3 transition-colors" onClick={() => setEditProfileId(profile.id)}>
                       <Edit2 className="h-4 w-4 text-muted-foreground" />
                     </Button>
-                    <Button variant="outline" size="icon" className="h-9 w-9 border-white/[0.06] bg-background/50 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30" onClick={() => triggerDeleteConfirm(profile.id, profile.name)}>
+                    <Button variant="outline" size="icon" className="h-9 w-9 border-white/[0.04] bg-surface-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors" onClick={() => triggerDeleteConfirm(profile.id, profile.name)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </CardItem>
@@ -138,7 +138,7 @@ export default function ProfilesPage() {
         >
           <CardContainer className="inter-var w-full h-full" containerClassName="py-0 h-full">
             <CardBody 
-              className="relative group/card p-6 flex flex-col items-center justify-center hover:shadow-2xl hover:shadow-primary/[0.1] transition-all duration-200 h-full min-h-[260px] border-2 border-dashed border-border/60 bg-muted/30 hover:border-primary/50 hover:bg-primary/5 rounded-2xl"
+              className="relative group/card p-6 flex flex-col items-center justify-center hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 h-full min-h-[260px] border border-dashed border-white/[0.1] bg-surface-1/30 hover:border-primary/30 hover:bg-primary/5 rounded-2xl"
             >
               <CardItem 
                 as="button" 
@@ -147,7 +147,7 @@ export default function ProfilesPage() {
                 className="flex flex-col items-center justify-center gap-3 text-muted-foreground group-hover/card:text-primary w-full h-full cursor-pointer"
               >
                 <Plus className="h-8 w-8 transition-transform group-hover/card:scale-110" />
-                <span className="text-sm font-semibold">Add New Profile</span>
+                <span className="text-sm font-semibold tracking-wide">Add New Profile</span>
               </CardItem>
             </CardBody>
           </CardContainer>

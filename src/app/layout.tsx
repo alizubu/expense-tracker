@@ -112,10 +112,10 @@ export default function RootLayout({
               {children}
             </PageTransitionProvider>
             <GlobalModals />
-              <Toaster
+            <Toaster
               position="bottom-right"
               toastOptions={{
-                className: "bg-card text-foreground border-border",
+                className: "bg-surface-3 text-foreground border-white/[0.06] shadow-xl rounded-xl font-medium",
               }}
             />
           </AuthProvider>

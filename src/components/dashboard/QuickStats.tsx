@@ -4,6 +4,7 @@ import { Activity, ArrowDownCircle, AlertCircle, Tag, Layers } from "lucide-reac
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { Card } from "@/components/ui/card";
+import { getCategoryColor } from "@/lib/categories";
 
 interface QuickStatsProps {
   transactionsCount: number;
@@ -22,6 +23,8 @@ export function QuickStats({
 }: QuickStatsProps) {
   const { selectedCurrency } = useUIStore();
   const symbol = getCurrencySymbol(selectedCurrency);
+  
+  const topCategoryColor = topCategory && topCategory !== "-" ? getCategoryColor(topCategory) : "hsl(var(--primary))";
 
   const stats = [
     {
@@ -29,8 +32,8 @@ export function QuickStats({
       label: "Transactions",
       value: transactionsCount.toString(),
       icon: Activity,
-      iconColor: "text-violet-500",
-      iconBg: "bg-violet-500/10",
+      iconColor: "text-primary",
+      iconBg: "bg-primary/10",
       isCurrency: false,
     },
     {
@@ -56,11 +59,13 @@ export function QuickStats({
       label: "Top Category",
       value: topCategory,
       icon: Tag,
-      iconColor: "text-emerald-500",
-      iconBg: "bg-emerald-500/10",
+      iconColor: "",
+      iconBg: "",
       isCurrency: false,
       isCapitalize: true,
-      textColor: "text-emerald-500",
+      textColor: "",
+      customStyle: { color: topCategoryColor },
+      customBgStyle: { backgroundColor: `${topCategoryColor}1a` }, // 10% opacity hex
     },
     {
       id: "activeProfiles",
@@ -74,33 +79,35 @@ export function QuickStats({
   ];
 
   return (
-    <Card className="flex flex-col w-full h-auto md:h-full p-4 rounded-xl shadow-sm border-border">
-      <h2 className="hidden md:flex text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 flex-shrink-0 h-[32px] items-center">
+    <Card className="flex flex-col w-full h-auto md:h-full p-6 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+      <h2 className="hidden md:flex text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4 flex-shrink-0 h-[32px] items-center">
         Quick Stats
       </h2>
 
-      <div className="flex flex-row overflow-x-auto hide-scrollbar gap-2 py-1 md:flex-col md:overflow-visible md:gap-2 md:py-0 md:flex-1 md:min-h-0 touch-pan-x">
+      <div className="flex flex-row overflow-x-auto hide-scrollbar gap-4 py-1 md:flex-col md:overflow-visible md:gap-3 md:py-0 md:flex-1 md:min-h-0 touch-pan-x">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
             <div 
               key={stat.id}
-              className="flex-shrink-0 w-[130px] h-[72px] rounded-lg p-3 flex flex-col justify-between border border-border/50 bg-background/50 md:bg-transparent md:border-0 md:w-auto md:h-auto md:rounded-none md:p-2 md:flex-row md:items-center hover:bg-muted/50 transition-colors"
+              className="flex-shrink-0 w-[140px] h-[80px] rounded-xl p-4 flex flex-col justify-between border border-white/[0.04] bg-surface-2 md:bg-transparent md:border-transparent md:hover:border-white/[0.04] md:w-auto md:h-auto md:rounded-xl md:p-3 md:flex-row md:items-center hover:bg-surface-2 transition-all duration-200 group"
             >
-              <div className="flex items-center gap-2 md:gap-3 md:flex-1">
+              <div className="flex items-center gap-3 md:gap-4 md:flex-1">
                 <div 
-                  className={`flex items-center justify-center w-6 h-6 rounded-md md:w-8 md:h-8 md:rounded-lg flex-shrink-0 ${stat.iconBg}`}
+                  className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 shadow-sm transition-transform group-hover:scale-105 ${stat.iconBg}`}
+                  style={stat.customBgStyle}
                 >
-                  <Icon className={`w-3.5 h-3.5 md:w-4 md:h-4 ${stat.iconColor}`} />
+                  <Icon className={`w-4 h-4 ${stat.iconColor}`} style={stat.customStyle} />
                 </div>
-                <span className="text-xs md:text-sm text-muted-foreground truncate font-medium">
+                <span className="text-xs md:text-sm text-muted-foreground truncate font-medium group-hover:text-foreground transition-colors">
                   {stat.label}
                 </span>
               </div>
               
-              <div className="flex-shrink-0 text-left md:text-right md:w-24">
+              <div className="flex-shrink-0 text-left md:text-right md:w-28 mt-2 md:mt-0">
                 <span 
-                  className={`text-sm md:text-base font-bold ${stat.isCurrency ? 'font-mono' : ''} ${stat.isCapitalize ? 'capitalize' : ''} ${stat.textColor || 'text-foreground'}`}
+                  className={`text-sm md:text-base font-semibold ${stat.isCurrency ? 'tabular-money' : ''} ${stat.isCapitalize ? 'capitalize' : ''} ${stat.textColor || 'text-foreground'}`}
+                  style={stat.customStyle}
                 >
                   {stat.value}
                 </span>

@@ -17,6 +17,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Wallet } from "lucide-react";
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" as const } },
+};
+
 export function DashboardClient() {
   const { status } = useSession();
   const { profiles, setProfiles, getTotalBalance, fetchProfiles } = useProfileStore();
@@ -80,21 +95,21 @@ export function DashboardClient() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="flex w-full h-auto flex-col space-y-4 p-4 lg:p-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-          <Skeleton className="h-36 w-full rounded-xl" />
-          <Skeleton className="h-36 w-full rounded-xl" />
-          <Skeleton className="h-36 w-full rounded-xl" />
-          <Skeleton className="h-36 w-full rounded-xl" />
+      <div className="flex w-full h-auto flex-col space-y-6 p-6 lg:p-8 max-w-[1600px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <Skeleton className="h-[140px] w-full" />
+          <Skeleton className="h-[140px] w-full" />
+          <Skeleton className="h-[140px] w-full" />
+          <Skeleton className="h-[140px] w-full" />
         </div>
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-          <Skeleton className="h-[280px] w-full rounded-xl" />
-          <Skeleton className="h-[280px] w-full rounded-xl" />
-          <Skeleton className="h-[280px] w-full rounded-xl" />
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <Skeleton className="h-[320px] w-full" />
+          <Skeleton className="h-[320px] w-full" />
+          <Skeleton className="h-[320px] w-full" />
         </div>
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          <Skeleton className="h-[400px] w-full rounded-xl" />
-          <Skeleton className="h-[400px] w-full rounded-xl" />
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <Skeleton className="h-[500px] w-full xl:col-span-2" />
+          <Skeleton className="h-[500px] w-full xl:col-span-1" />
         </div>
       </div>
     );
@@ -121,23 +136,23 @@ export function DashboardClient() {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="p-4 lg:p-8 space-y-4 lg:space-y-6 max-w-7xl mx-auto"
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto"
     >
       {/* ROW 1: Hero Stats (Bento Grid) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <StatsStrip 
           netBalance={netBalance}
           income={income}
           expenses={expenses}
           sparklineData={sparklineData.length > 0 ? sparklineData : [{ value: netBalance }, { value: netBalance }]}
         />
-      </div>
+      </motion.div>
 
       {/* ROW 2: Profiles, Quick Stats, Spending Chart */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <div className="h-auto md:h-full">
           <ProfileCard 
             profiles={profiles} 
@@ -157,17 +172,17 @@ export function DashboardClient() {
         <div className="h-auto md:h-full md:col-span-2 xl:col-span-1">
           <SpendingChart />
         </div>
-      </div>
+      </motion.div>
 
       {/* ROW 3: Transactions Feed & Top Categories */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 h-auto lg:h-[500px]">
           <TransactionFeed transactions={transactions} />
         </div>
         <div className="xl:col-span-1 h-auto lg:h-[500px]">
           <TopCategories />
         </div>
-      </div>
+      </motion.div>
 
       <CreateProfileModal
         open={profileModalOpen}
