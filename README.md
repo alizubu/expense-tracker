@@ -42,34 +42,38 @@ expense-tracker/
 ├── src/
 │   ├── app/                      # Next.js App Router (Pages & API)
 │   │   ├── (auth)/               # Route Group: Authentication
-│   │   │   ├── sign-in/page.tsx  # User Sign-in page
-│   │   │   └── sign-up/page.tsx  # User Registration page
+│   │   │   ├── sign-in/          # User Sign-in page
+│   │   │   └── sign-up/          # User Registration page
 │   │   ├── (dashboard)/          # Route Group: Authenticated App
 │   │   │   ├── analytics/        # Full analytics & charts view
 │   │   │   ├── profiles/         # Profile management & dynamic details
 │   │   │   ├── settings/         # User & app settings
 │   │   │   ├── transactions/     # Comprehensive transaction timeline
-│   │   │   ├── layout.tsx        # Protected dashboard shell (Topbar/Sidebar)
-│   │   │   └── DashboardPage.tsx # Core dashboard overview
+│   │   │   ├── DashboardPage.tsx # Core dashboard overview
+│   │   │   └── layout.tsx        # Protected dashboard shell (Topbar/Sidebar)
 │   │   ├── api/                  # Backend API endpoints
-│   │   │   ├── auth/[...nextauth]/route.ts  # NextAuth handlers
-│   │   │   ├── dashboard/route.ts           # Aggregated dashboard stats
-│   │   │   ├── profiles/route.ts            # Profile CRUD operations
-│   │   │   ├── register/route.ts            # Account creation logic
-│   │   │   ├── transactions/route.ts        # Transaction CRUD operations
-│   │   │   └── user/route.ts                # User data retrieval
+│   │   │   ├── auth/             # NextAuth handlers
+│   │   │   ├── dashboard/        # Aggregated dashboard stats
+│   │   │   ├── profiles/         # Profile CRUD operations
+│   │   │   ├── register/         # Account creation logic
+│   │   │   ├── transactions/     # Transaction CRUD operations
+│   │   │   └── user/             # User data retrieval
 │   │   ├── fonts/                # Local font assets (Geist & GeistMono)
+│   │   ├── onboarding/           # Route Group: User Onboarding
+│   │   ├── error.tsx             # Global error boundary
 │   │   ├── globals.css           # Global Tailwind directives & custom keyframes
 │   │   ├── layout.tsx            # Root application layout & provider wrapping
-│   │   └── middleware.ts         # Edge Middleware for auth route protection
+│   │   └── loading.tsx           # Global loading state
 │   ├── components/               # Reusable React UI Components
 │   │   ├── analytics/            # Recharts implementations (Donut, Bar, Line)
 │   │   ├── dashboard/            # Dashboard-specific widgets (QuickStats, TransactionFeed)
 │   │   ├── layout/               # Shell components (MobileNav, Sidebar, Topbar)
 │   │   ├── magicui/              # High-end animated micro-components (BlurFade, Meteors)
+│   │   ├── pages/                # Page-level components
 │   │   ├── profiles/             # Modals and forms for Profile manipulation
 │   │   ├── providers/            # React Context providers (Theme, NextAuth)
-│   │   └── transactions/         # Modals, Grids, and Forms for Transactions
+│   │   ├── transactions/         # Modals, Grids, and Forms for Transactions
+│   │   └── ui/                   # Reusable base UI primitives (Button, Card, Input)
 │   ├── lib/                      # Helper Utilities & Core Configs
 │   │   ├── auth.ts               # NextAuth configuration options
 │   │   ├── categories.ts         # Master list of transaction categories and meta
@@ -77,10 +81,11 @@ expense-tracker/
 │   │   ├── formatters.ts         # Number and Date formatting helpers
 │   │   ├── prisma.ts             # Global Prisma Client singleton
 │   │   └── utils.ts              # Tailwind class merging (cn)
-│   └── store/                    # Zustand Stores (Client State)
-│       ├── useProfileStore.ts    # Manages loaded profiles
-│       ├── useTransactionStore.ts# Manages transactions, filtering, and sorting
-│       └── useUIStore.ts         # Manages global modals, sidebar state, and currency
+│   ├── store/                    # Zustand Stores (Client State)
+│   │   ├── useProfileStore.ts    # Manages loaded profiles
+│   │   ├── useTransactionStore.ts# Manages transactions, filtering, and sorting
+│   │   └── useUIStore.ts         # Manages global modals, sidebar state, and currency
+│   └── middleware.ts             # Edge Middleware for auth route protection
 ├── .env.local                    # Local environment variables (Auth secrets, DB URL)
 ├── next.config.mjs               # Next.js configuration & compiler options
 ├── tailwind.config.ts            # Tailwind theme, colors, and custom animations
