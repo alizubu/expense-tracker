@@ -4,6 +4,14 @@ A premium, modern, full-stack Personal Expense Tracker built with **Next.js 14 (
 
 ---
 
+## 🎉 What's New in v4.0
+
+- **Headless UI Migration**: Completely migrated to a combination of [Base UI](https://base-ui.com/) and [Shadcn UI](https://ui.shadcn.com/) for enhanced accessibility, better types, and rock-solid primitive component foundations.
+- **Architectural Cleanup**: Removed heavyweight animation libraries (MagicUI) in favor of optimized, custom Framer Motion transitions and Base UI logic, improving layout shift metrics and render speeds.
+- **Flawless Type Safety**: Rewritten custom abstractions across forms, modals, and layouts to guarantee zero `tsc` build errors and perfectly typed component hierarchies.
+
+---
+
 ## 🚀 Features
 
 - **Premium UI/UX Design**: A stunning $50,000-level mobile-first interface. Features glassmorphism, floating bottom navigation with safe-area support, custom animated pills, and fluid micro-interactions powered by Framer Motion.
@@ -27,7 +35,8 @@ A premium, modern, full-stack Personal Expense Tracker built with **Next.js 14 (
 - **Authentication**: [NextAuth.js](https://next-auth.js.org/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/) (Client-side global stores)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/) & [MagicUI](https://magicui.design/)
+- **UI Components**: [Shadcn UI](https://ui.shadcn.com/) & [Base UI](https://base-ui.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Charts**: [Recharts](https://recharts.org/)
 
@@ -38,108 +47,126 @@ A premium, modern, full-stack Personal Expense Tracker built with **Next.js 14 (
 ```text
 expense-tracker/
 ├── prisma/
-│   └── schema.prisma             # Database schema, models, and relations
+│   └── schema.prisma
 ├── src/
-│   ├── app/                      # Next.js App Router (Pages & API)
-│   │   ├── (auth)/               # Route Group: Authentication
-│   │   │   ├── sign-in/page.tsx  # User Sign-in page
-│   │   │   └── sign-up/page.tsx  # User Registration page
-│   │   ├── (dashboard)/          # Route Group: Authenticated App
-│   │   │   ├── analytics/page.tsx# Full analytics & charts view
-│   │   │   ├── profiles/         # Profile management & dynamic details
-│   │   │   │   ├── [id]/page.tsx # Dynamic profile detail view
-│   │   │   │   └── page.tsx      # Profile listing page
-│   │   │   ├── settings/page.tsx # User & app settings
-│   │   │   ├── transactions/page.tsx # Comprehensive transaction timeline
-│   │   │   ├── DashboardPage.tsx # Core dashboard overview component
-│   │   │   ├── layout.tsx        # Protected dashboard shell (Topbar/Sidebar)
-│   │   │   └── page.tsx          # Core dashboard overview page
-│   │   ├── api/                  # Backend API endpoints
-│   │   │   ├── auth/[...nextauth]/route.ts  # NextAuth handlers
-│   │   │   ├── dashboard/route.ts           # Aggregated dashboard stats
-│   │   │   ├── profiles/route.ts            # Profile CRUD operations
-│   │   │   ├── register/route.ts            # Account creation logic
-│   │   │   ├── transactions/route.ts        # Transaction CRUD operations
-│   │   │   └── user/route.ts                # User data retrieval
-│   │   ├── fonts/                # Local font assets (Geist & GeistMono)
-│   │   ├── onboarding/page.tsx   # User Onboarding page
-│   │   ├── error.tsx             # Global error boundary
-│   │   ├── globals.css           # Global Tailwind directives & custom keyframes
-│   │   ├── layout.tsx            # Root application layout & provider wrapping
-│   │   └── loading.tsx           # Global loading state
-│   ├── components/               # Reusable React UI Components
-│   │   ├── analytics/            # Recharts implementations (Donut, Bar, Line)
+│   ├── app/
+│   │   ├── (auth)/
+│   │   │   ├── sign-in/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── SignInPage.tsx
+│   │   │   └── sign-up/
+│   │   │       ├── page.tsx
+│   │   │       └── SignUpPage.tsx
+│   │   ├── (dashboard)/
+│   │   │   ├── analytics/
+│   │   │   │   ├── AnalyticsPage.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── DashboardPage.tsx
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── profiles/
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── ProfilesPage.tsx
+│   │   │   │   └── [id]/
+│   │   │   │       ├── page.tsx
+│   │   │   │       └── ProfileDetailPage.tsx
+│   │   │   ├── settings/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── SettingsPage.tsx
+│   │   │   └── transactions/
+│   │   │       ├── page.tsx
+│   │   │       └── TransactionsPage.tsx
+│   │   ├── api/
+│   │   │   ├── auth/
+│   │   │   │   └── [...nextauth]/
+│   │   │   │       ├── nextauthHandler.ts
+│   │   │   │       └── route.ts
+│   │   │   ├── dashboard/
+│   │   │   │   └── route.ts
+│   │   │   ├── profiles/
+│   │   │   │   └── route.ts
+│   │   │   ├── register/
+│   │   │   │   └── route.ts
+│   │   │   ├── transactions/
+│   │   │   │   └── route.ts
+│   │   │   └── user/
+│   │   │       └── route.ts
+│   │   ├── error.tsx
+│   │   ├── favicon.ico
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── loading.tsx
+│   │   └── onboarding/
+│   │       ├── OnboardingPage.tsx
+│   │       └── page.tsx
+│   ├── components/
+│   │   ├── analytics/
 │   │   │   ├── AnalyticsStatsRow.tsx
 │   │   │   ├── CategoryDonutChart.tsx
 │   │   │   ├── DailyLineChart.tsx
 │   │   │   ├── MonthlyBarChart.tsx
 │   │   │   ├── ProfileAreaChart.tsx
 │   │   │   └── TopCategories.tsx
-│   │   ├── dashboard/            # Dashboard-specific widgets (QuickStats, TransactionFeed)
+│   │   ├── dashboard/
 │   │   │   ├── DashboardClient.tsx
 │   │   │   ├── ProfileCard.tsx
 │   │   │   ├── QuickStats.tsx
 │   │   │   ├── SpendingChart.tsx
 │   │   │   ├── StatsStrip.tsx
 │   │   │   └── TransactionFeed.tsx
-│   │   ├── layout/               # Shell components (MobileNav, Sidebar, Topbar)
+│   │   ├── layout/
 │   │   │   ├── ClientLayoutWrapper.tsx
 │   │   │   ├── MobileNav.tsx
 │   │   │   ├── Sidebar.tsx
 │   │   │   └── Topbar.tsx
-│   │   ├── magicui/              # High-end animated micro-components (BlurFade, Meteors)
-│   │   │   ├── animated-gradient-text.tsx
-│   │   │   ├── animated-list.tsx
-│   │   │   ├── blur-fade.tsx
-│   │   │   ├── border-beam.tsx
-│   │   │   ├── magic-card.tsx
-│   │   │   ├── meteors.tsx
-│   │   │   ├── number-ticker.tsx
-│   │   │   ├── shimmer-button.tsx
-│   │   │   └── sparkles.tsx
-│   │   ├── profiles/             # Modals and forms for Profile manipulation
+│   │   ├── profiles/
 │   │   │   ├── CreateProfileModal.tsx
 │   │   │   └── EditProfileModal.tsx
-│   │   ├── providers/            # React Context providers (Theme, NextAuth)
+│   │   ├── providers/
 │   │   │   ├── AuthProvider.tsx
 │   │   │   ├── GlobalModals.tsx
 │   │   │   ├── PageTransitionProvider.tsx
 │   │   │   └── ThemeProvider.tsx
-│   │   ├── transactions/         # Modals, Grids, and Forms for Transactions
+│   │   ├── transactions/
 │   │   │   ├── AccountSelector.tsx
 │   │   │   ├── AddTransactionModal.tsx
 │   │   │   ├── CategoryGrid.tsx
 │   │   │   ├── ConfirmButton.tsx
 │   │   │   └── EditTransactionModal.tsx
-│   │   └── ui/                   # Reusable base UI primitives (Button, Card, Input)
+│   │   └── ui/
 │   │       ├── avatar.tsx
 │   │       ├── badge.tsx
 │   │       ├── button.tsx
 │   │       ├── card.tsx
 │   │       ├── dialog.tsx
+│   │       ├── dropdown-menu.tsx
 │   │       ├── empty-state.tsx
 │   │       ├── input.tsx
 │   │       ├── select.tsx
 │   │       ├── skeleton.tsx
+│   │       ├── table.tsx
 │   │       ├── tabs.tsx
 │   │       ├── textarea.tsx
 │   │       └── tooltip.tsx
-│   ├── lib/                      # Helper Utilities & Core Configs
-│   │   ├── auth.ts               # NextAuth configuration options
-│   │   ├── categories.ts         # Master list of transaction categories and meta
-│   │   ├── currencies.ts         # Supported global currency symbols
-│   │   ├── formatters.ts         # Number and Date formatting helpers
-│   │   ├── prisma.ts             # Global Prisma Client singleton
-│   │   └── utils.ts              # Tailwind class merging (cn)
-│   ├── store/                    # Zustand Stores (Client State)
-│   │   ├── useProfileStore.ts    # Manages loaded profiles
-│   │   ├── useTransactionStore.ts# Manages transactions, filtering, and sorting
-│   │   └── useUIStore.ts         # Manages global modals, sidebar state, and currency
-│   └── middleware.ts             # Edge Middleware for auth route protection
-├── .env.local                    # Local environment variables (Auth secrets, DB URL)
-├── next.config.mjs               # Next.js configuration & compiler options
-├── tailwind.config.ts            # Tailwind theme, colors, and custom animations
-└── tsconfig.json                 # TypeScript compiler configuration
+│   ├── lib/
+│   │   ├── audit.ts
+│   │   ├── auth.ts
+│   │   ├── categories.ts
+│   │   ├── currencies.ts
+│   │   ├── formatters.ts
+│   │   ├── prisma.ts
+│   │   ├── profile-types.ts
+│   │   ├── profiles.ts
+│   │   ├── rate-limit.ts
+│   │   ├── security.ts
+│   │   ├── types.ts
+│   │   ├── utils.ts
+│   │   └── validators.ts
+│   ├── middleware.ts
+│   └── store/
+│       ├── useProfileStore.ts
+│       ├── useTransactionStore.ts
+│       └── useUIStore.ts
 ```
 
 ---
