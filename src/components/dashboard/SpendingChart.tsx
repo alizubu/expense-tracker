@@ -12,7 +12,6 @@ import { useTransactionStore } from "@/store/useTransactionStore";
 import { useUIStore } from "@/store/useUIStore";
 import { getCategoryById } from "@/lib/categories";
 import { getCurrencySymbol } from "@/lib/currencies";
-import { motion } from "framer-motion";
 
 interface ChartDataItem {
   name: string;
@@ -22,8 +21,8 @@ interface ChartDataItem {
 }
 
 const colorOrder = [
-  "var(--accent-brass)", "var(--accent-teal)", "var(--accent-clay)", "var(--accent-violet)", 
-  "var(--accent-dim)", "var(--text-muted)", "var(--bg-raised)"
+  "#7c3aed", "#10b981", "#f43f5e", "#3b82f6", 
+  "#f59e0b", "#ec4899", "#06b6d4", "#84cc16"
 ];
 
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: ChartDataItem }> }) {
@@ -32,14 +31,14 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
   const symbol = getCurrencySymbol(useUIStore.getState().selectedCurrency);
 
   return (
-    <div className="bg-[var(--bg-raised)] border border-[var(--border-hair)] rounded-[8px] px-[12px] py-[8px] text-[12px] shadow-lg">
+    <div className="bg-[rgba(14,14,28,0.96)] border border-[rgba(124,58,237,0.2)] rounded-[10px] px-[12px] py-[8px] text-[12px] shadow-lg backdrop-blur-md">
       <div className="flex flex-col gap-1">
-        <span className="text-[11px] font-ui text-[var(--text-muted)]">{data.name}</span>
+        <span className="text-[11px] text-[#94a3b8]">{data.name}</span>
         <div className="flex items-baseline gap-2">
-          <span className="text-[13px] font-medium text-[var(--text-primary)] font-mono">
+          <span className="text-[13px] font-semibold text-[#f1f5f9] font-amount">
             {symbol}{data.value.toLocaleString("en-US", { maximumFractionDigits: 0 })}
           </span>
-          <span className="text-[10px] text-[var(--text-muted)] font-mono">
+          <span className="text-[10px] text-[#475569]">
             {data.percentage.toFixed(1)}%
           </span>
         </div>
@@ -47,6 +46,8 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
     </div>
   );
 }
+
+import { motion } from "framer-motion";
 
 export function SpendingChart() {
   const { transactions } = useTransactionStore();
@@ -97,43 +98,43 @@ export function SpendingChart() {
   const totalSpent = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="flex flex-col w-full h-auto lg:h-full bg-[var(--bg-surface)] p-[16px] overflow-visible lg:overflow-hidden rounded-[16px] border border-[var(--border-hair)] transition-all duration-200">
+    <div className="flex flex-col w-full h-auto lg:h-full premium-card p-[16px] overflow-visible lg:overflow-hidden rounded-[16px] border border-[rgba(255,255,255,0.055)] bg-[linear-gradient(145deg,#0f0f1e_0%,#0c0c18_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.25)] transition-all duration-200 card-hover">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 flex-shrink-0 h-[32px]">
-        <h2 className="text-[11px] font-ui text-[var(--text-muted)] uppercase tracking-[0.08em]">
+        <h2 className="text-[10px] font-medium text-[#334155] uppercase tracking-[0.10em]">
           SPENDING BY CATEGORY
         </h2>
-        <span className="text-[12px] font-ui text-[var(--text-muted)] cursor-pointer hover:text-[var(--text-primary)] transition-colors">
+        <span className="text-[12px] text-[#475569] cursor-pointer hover:text-[#94a3b8] transition-colors">
           This Month ▾
         </span>
       </div>
 
       {chartData.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center">
-          <div className="w-[40px] h-[40px] rounded-full bg-[var(--bg-raised)] flex items-center justify-center mb-2">
-            <div className="w-[16px] h-[16px] border-2 border-[var(--text-muted)] rounded-full" />
+          <div className="w-[40px] h-[40px] rounded-full bg-[rgba(255,255,255,0.02)] flex items-center justify-center mb-2">
+            <div className="w-[16px] h-[16px] border-2 border-[#1e293b] rounded-full" />
           </div>
-          <span className="text-[12px] text-[var(--text-muted)] font-ui">No data yet</span>
+          <span className="text-[12px] text-[#1e293b]">No data yet</span>
         </div>
       ) : (
         <div className="flex flex-col flex-1 min-h-0">
-          {/* Chart Area - 50% Open Ring */}
-          <div className="relative h-[160px] flex-shrink-0 mt-4">
+          {/* Chart Area */}
+          <div className="relative h-[150px] flex-shrink-0">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={chartData}
                   cx="50%"
-                  cy="100%" /* Shifted down for half circle */
-                  innerRadius={110}
-                  outerRadius={140}
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={68}
                   paddingAngle={2}
                   stroke="none"
                   dataKey="value"
                   isAnimationActive={true}
                   animationDuration={1000}
-                  startAngle={180}
-                  endAngle={0}
+                  startAngle={90}
+                  endAngle={450}
                 >
                   {chartData.map((entry, index) => (
                     <Cell key={index} fill={entry.color} />
@@ -147,41 +148,36 @@ export function SpendingChart() {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute bottom-2 left-0 right-0 flex flex-col items-center justify-end pointer-events-none"
+              className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
             >
-              <span className="text-[10px] font-ui text-[var(--text-muted)] uppercase tracking-widest">
-                TOTAL SPENT
+              <span className="text-[9px] font-medium text-[#334155] uppercase tracking-widest mt-1">
+                SPENT
               </span>
-              <span className="text-[24px] font-medium text-[var(--text-primary)] font-mono tracking-tight leading-none mt-1">
+              <span className="text-[15px] font-bold text-[#f1f5f9] font-amount tracking-tight leading-none mt-[2px]">
                 {symbol}{totalSpent.toLocaleString("en-US", { maximumFractionDigits: 0 })}
               </span>
             </motion.div>
           </div>
 
           {/* Legend Area */}
-          <div className="overflow-visible flex-1 overflow-y-auto hide-scrollbar mt-6 border-t border-[var(--border-hair)] pt-4">
-            <div className="grid grid-cols-1 gap-y-2">
-              {chartData.slice(0, showAllLegend ? undefined : 4).map((item) => (
-                <div key={item.name} className="flex justify-between items-center group cursor-default">
-                  <div className="flex items-center gap-3">
-                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: item.color }} />
-                    <span className="text-[13px] font-ui text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors">{item.name}</span>
-                  </div>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-[10px] font-mono text-[var(--text-muted)]">{item.percentage.toFixed(1)}%</span>
-                    <span className="font-mono text-[13px] text-[var(--text-primary)] font-medium">
-                      {symbol}{item.value.toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                    </span>
-                  </div>
+          <div className="overflow-visible flex-1 overflow-y-auto hide-scrollbar mt-2">
+            <div className="grid grid-cols-2 gap-x-[12px] gap-y-[3px]">
+              {chartData.slice(0, showAllLegend ? undefined : 6).map((item) => (
+                <div key={item.name} className="flex items-center h-[22px] gap-[7px]">
+                  <span className="w-[8px] h-[8px] rounded-full flex-shrink-0" style={{ background: item.color }} />
+                  <span className="text-[11px] text-[#94a3b8] truncate flex-1">{item.name}</span>
+                  <span className="font-amount text-[11px] text-[#f1f5f9] flex-shrink-0 text-right">
+                    {symbol}{item.value.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                  </span>
                 </div>
               ))}
             </div>
-            {!showAllLegend && chartData.length > 4 && (
+            {!showAllLegend && chartData.length > 6 && (
               <button 
                 onClick={() => setShowAllLegend(true)}
-                className="mt-3 text-[11px] font-ui text-[var(--text-muted)] hover:text-[var(--accent-brass)] bg-transparent border-none outline-none cursor-pointer w-full text-center py-1 transition-colors"
+                className="mt-[6px] text-[10px] text-[#7c3aed] hover:underline bg-transparent border-none outline-none cursor-pointer"
               >
-                Show All Categories
+                +{chartData.length - 6} more
               </button>
             )}
           </div>

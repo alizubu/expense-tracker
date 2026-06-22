@@ -11,6 +11,22 @@ function getIcon(iconName: string) {
   return Icon || LucideIcons.Wallet;
 }
 
+function getProfileColors(type: string) {
+  switch (type.toLowerCase()) {
+    case "cash":
+      return { bg: "rgba(16,185,129,0.15)", icon: "#10b981" };
+    case "bank":
+    case "bank account":
+      return { bg: "rgba(59,130,246,0.15)", icon: "#3b82f6" };
+    case "wallet":
+      return { bg: "rgba(124,58,237,0.15)", icon: "#a78bfa" };
+    case "moneybag":
+      return { bg: "rgba(245,158,11,0.15)", icon: "#f59e0b" };
+    default:
+      return { bg: "rgba(100,116,139,0.15)", icon: "#64748b" };
+  }
+}
+
 interface ProfileListCardProps {
   profiles: any[];
   netBalance: number;
@@ -23,72 +39,76 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
   const router = useRouter();
 
   return (
-    <div className="flex flex-col w-full h-auto lg:h-full bg-[var(--bg-surface)] p-[16px] overflow-visible lg:overflow-hidden rounded-[16px] border border-[var(--border-hair)] transition-all duration-200">
+    <div className="flex flex-col w-full h-auto lg:h-full premium-card p-[16px] overflow-visible lg:overflow-hidden rounded-[16px] border border-[rgba(255,255,255,0.055)] bg-[linear-gradient(145deg,#0f0f1e_0%,#0c0c18_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.25)] transition-all duration-200 card-hover">
       {/* Header */}
       <div className="flex items-center justify-between h-[32px] mb-2 flex-shrink-0">
-        <h2 className="text-[11px] font-ui text-[var(--text-muted)] uppercase tracking-[0.08em]">
+        <h2 className="text-[10px] font-medium text-[#334155] uppercase tracking-[0.10em]">
           YOUR PROFILES
         </h2>
         <button 
           onClick={onAdd}
-          className="h-8 px-2 rounded-[8px] text-[12px] font-medium text-[var(--accent-brass)] hover:bg-[var(--bg-raised)] active:scale-[0.98] transition-all flex items-center gap-2 border-none"
+          className="text-[12px] font-medium text-[#7c3aed] bg-transparent border-none outline-none hover:underline flex items-center gap-[4px] active:scale-[0.97]"
         >
-          <LucideIcons.Plus size={12} /> Add New
+          <LucideIcons.Plus size={12} />
+          <span>+ Add New</span>
         </button>
       </div>
 
       {/* List */}
-      <div className="flex flex-col lg:flex-1 lg:overflow-y-auto hide-scrollbar lg:min-h-0 gap-2">
+      <div className="flex flex-col lg:flex-1 lg:overflow-y-auto hide-scrollbar lg:min-h-0">
         {profiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <LucideIcons.Wallet className="h-[32px] w-[32px] text-[var(--text-muted)] mb-2" />
-            <span className="text-[12px] text-[var(--text-muted)]">No data yet</span>
+            <LucideIcons.Wallet className="h-[32px] w-[32px] text-[#1e293b] mb-2" />
+            <span className="text-[12px] text-[#1e293b]">No data yet</span>
           </div>
         ) : (
           profiles.map((profile, i) => {
             const Icon = getIcon(profile.icon);
             const percentage = netBalance > 0 ? Math.max(0, Math.min(100, (profile.balance / netBalance) * 100)) : 0;
+            const colors = getProfileColors(profile.type);
             
             return (
               <div 
                 key={profile.id}
                 onClick={() => router.push(`/profiles/${profile.id}`)}
-                className="group flex flex-col justify-center py-2 rounded-[8px] hover:bg-[var(--bg-raised)] cursor-pointer transition-colors duration-150 border border-transparent hover:border-[var(--border-hair)] px-2"
+                className="group flex flex-col justify-center h-[52px] rounded-[10px] hover:bg-[rgba(255,255,255,0.018)] cursor-pointer transition-colors duration-150 relative border-b border-[rgba(255,255,255,0.035)] last:border-0 flex-shrink-0"
               >
-                <div className="grid grid-cols-[28px_1fr_auto] gap-[12px] items-center mb-2">
+                <div className="grid grid-cols-[34px_1fr_auto] gap-[12px] items-center px-1">
                   {/* Left: Icon */}
                   <motion.div 
                     whileHover={{ scale: 1.08 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    className="flex h-[28px] w-[28px] flex-shrink-0 items-center justify-center rounded-[6px] bg-[var(--bg-raised)] border border-[var(--border-hair)] group-hover:border-[var(--accent-brass)] transition-colors"
+                    className="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-[10px]"
+                    style={{ backgroundColor: colors.bg }}
                   >
-                    <Icon size={14} color="var(--accent-brass)" />
+                    <Icon size={16} color={colors.icon} />
                   </motion.div>
 
                   {/* Center: Name + Type */}
                   <div className="flex flex-col min-w-0">
-                    <span className="text-[13px] font-medium text-[var(--text-primary)] truncate">{profile.name}</span>
-                    <span className="text-[10px] text-[var(--text-muted)] truncate capitalize font-ui">{profile.type.toLowerCase()}</span>
+                    <span className="text-[13px] font-medium text-[#f1f5f9] truncate">{profile.name}</span>
+                    <span className="text-[11px] text-[#475569] truncate capitalize">{profile.type.toLowerCase()}</span>
                   </div>
 
-                  {/* Right: Balance */}
+                  {/* Right: Balance + Percentage */}
                   <div className="flex flex-col items-end flex-shrink-0">
-                    <span className="text-[13px] font-medium text-[var(--text-primary)] font-mono">
+                    <span className="text-[13px] font-semibold text-[#f1f5f9] font-amount">
                       {symbol}{profile.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </span>
-                    <span className="text-[10px] text-[var(--text-muted)] font-mono">
+                    <span className="text-[10px] text-[#475569]">
                       {percentage.toFixed(1)}%
                     </span>
                   </div>
                 </div>
 
                 {/* Bottom Progress Bar */}
-                <div className="h-[2px] w-full bg-[var(--bg-base)] rounded-full overflow-hidden">
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[rgba(255,255,255,0.05)] rounded-[1px] m-0 overflow-hidden mb-[4px]">
                   <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${percentage}%` }}
-                    transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.1 }}
-                    className="h-full bg-[var(--accent-brass)] rounded-full"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+                    style={{ backgroundColor: colors.icon, width: `${percentage}%`, transformOrigin: "left" }}
+                    className="h-full rounded-[1px]"
                   />
                 </div>
               </div>
@@ -99,9 +119,9 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
 
       {/* Total Row */}
       {profiles.length > 0 && (
-        <div className="h-[36px] mt-2 border-t border-[var(--border-hair)] flex justify-between items-center px-1 flex-shrink-0">
-          <span className="text-[11px] text-[var(--text-muted)] font-ui uppercase tracking-[0.05em]">Total</span>
-          <span className="text-[14px] font-medium text-[var(--text-primary)] font-mono">
+        <div className="h-[36px] mt-2 border-t border-[rgba(255,255,255,0.05)] flex justify-between items-center px-1 flex-shrink-0">
+          <span className="text-[11px] text-[#334155] font-medium uppercase tracking-[0.05em]">Total</span>
+          <span className="text-[13px] font-semibold text-[#f1f5f9] font-amount">
             {symbol}{netBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
           </span>
         </div>
