@@ -69,14 +69,61 @@ expense-tracker/
 │   │   └── loading.tsx           # Global loading state
 │   ├── components/               # Reusable React UI Components
 │   │   ├── analytics/            # Recharts implementations (Donut, Bar, Line)
+│   │   │   ├── AnalyticsStatsRow.tsx
+│   │   │   ├── CategoryDonutChart.tsx
+│   │   │   ├── DailyLineChart.tsx
+│   │   │   ├── MonthlyBarChart.tsx
+│   │   │   ├── ProfileAreaChart.tsx
+│   │   │   └── TopCategories.tsx
 │   │   ├── dashboard/            # Dashboard-specific widgets (QuickStats, TransactionFeed)
+│   │   │   ├── DashboardClient.tsx
+│   │   │   ├── ProfileCard.tsx
+│   │   │   ├── QuickStats.tsx
+│   │   │   ├── SpendingChart.tsx
+│   │   │   ├── StatsStrip.tsx
+│   │   │   └── TransactionFeed.tsx
 │   │   ├── layout/               # Shell components (MobileNav, Sidebar, Topbar)
+│   │   │   ├── ClientLayoutWrapper.tsx
+│   │   │   ├── MobileNav.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── Topbar.tsx
 │   │   ├── magicui/              # High-end animated micro-components (BlurFade, Meteors)
-│   │   ├── pages/                # Page-level components
+│   │   │   ├── animated-gradient-text.tsx
+│   │   │   ├── animated-list.tsx
+│   │   │   ├── blur-fade.tsx
+│   │   │   ├── border-beam.tsx
+│   │   │   ├── magic-card.tsx
+│   │   │   ├── meteors.tsx
+│   │   │   ├── number-ticker.tsx
+│   │   │   ├── shimmer-button.tsx
+│   │   │   └── sparkles.tsx
 │   │   ├── profiles/             # Modals and forms for Profile manipulation
+│   │   │   ├── CreateProfileModal.tsx
+│   │   │   └── EditProfileModal.tsx
 │   │   ├── providers/            # React Context providers (Theme, NextAuth)
+│   │   │   ├── AuthProvider.tsx
+│   │   │   ├── GlobalModals.tsx
+│   │   │   ├── PageTransitionProvider.tsx
+│   │   │   └── ThemeProvider.tsx
 │   │   ├── transactions/         # Modals, Grids, and Forms for Transactions
+│   │   │   ├── AccountSelector.tsx
+│   │   │   ├── AddTransactionModal.tsx
+│   │   │   ├── CategoryGrid.tsx
+│   │   │   ├── ConfirmButton.tsx
+│   │   │   └── EditTransactionModal.tsx
 │   │   └── ui/                   # Reusable base UI primitives (Button, Card, Input)
+│   │       ├── avatar.tsx
+│   │       ├── badge.tsx
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── dialog.tsx
+│   │       ├── empty-state.tsx
+│   │       ├── input.tsx
+│   │       ├── select.tsx
+│   │       ├── skeleton.tsx
+│   │       ├── tabs.tsx
+│   │       ├── textarea.tsx
+│   │       └── tooltip.tsx
 │   ├── lib/                      # Helper Utilities & Core Configs
 │   │   ├── auth.ts               # NextAuth configuration options
 │   │   ├── categories.ts         # Master list of transaction categories and meta
