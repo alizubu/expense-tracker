@@ -35,10 +35,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
   const [category, setCategory] = useState(transaction.category);
   const [profileId, setProfileId] = useState(transaction.profileId);
   const [toProfileId, setToProfileId] = useState(transaction.toProfileId || "");
-  const [date, setDate] = useState(() => {
-    const d = new Date(transaction.date);
-    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-  });
+  const [date, setDate] = useState(new Date(transaction.date).toISOString().split("T")[0]);
   const [tags, setTags] = useState(transaction.tags.join(", "));
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
@@ -202,7 +199,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                   Date
                 </label>
                 <input
-                  type="datetime-local"
+                  type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] hover:border-[var(--accent-light)] hover:shadow-[0_0_12px_var(--accent-glow)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-glow)] transition-all cursor-pointer [color-scheme:dark]"

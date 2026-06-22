@@ -35,10 +35,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
   const [category, setCategory] = useState("");
   const [profileId, setProfileId] = useState("");
   const [toProfileId, setToProfileId] = useState("");
-  const [date, setDate] = useState(() => {
-    const now = new Date();
-    return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-  });
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [tags, setTags] = useState("");
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
@@ -223,7 +220,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                   Date
                 </label>
                 <input
-                  type="datetime-local"
+                  type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full h-10 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[13px] text-[var(--text-primary)] hover:border-[var(--accent-light)] hover:shadow-[0_0_12px_var(--accent-glow)] focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-glow)] transition-all cursor-pointer [color-scheme:dark]"
