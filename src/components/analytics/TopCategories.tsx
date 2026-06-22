@@ -20,19 +20,19 @@ import { getCategoryById } from "@/lib/categories";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { Card } from "@/components/ui/card";
 
-function getCategoryTheme(categoryId: string): { Icon: LucideIcon, accent: string } {
-  const mapping: Record<string, { Icon: LucideIcon, accent: string }> = {
-    "food": { Icon: Utensils, accent: "#f59e0b" },
-    "fastfood": { Icon: Utensils, accent: "#f97316" },
-    "groceries": { Icon: ShoppingCart, accent: "#10b981" },
-    "gaming": { Icon: Gamepad2, accent: "#7c3aed" },
-    "electronics": { Icon: Cpu, accent: "#3b82f6" },
-    "ride": { Icon: Car, accent: "#06b6d4" },
-    "tax": { Icon: AlertCircle, accent: "#f43f5e" },
-    "clothing": { Icon: Shirt, accent: "#ec4899" },
+function getCategoryTheme(categoryId: string): { Icon: LucideIcon, accent: string, bg: string } {
+  const mapping: Record<string, { Icon: LucideIcon, accent: string, bg: string }> = {
+    "food": { Icon: Utensils, accent: "text-amber-500", bg: "bg-amber-500/10" },
+    "fastfood": { Icon: Utensils, accent: "text-orange-500", bg: "bg-orange-500/10" },
+    "groceries": { Icon: ShoppingCart, accent: "text-emerald-500", bg: "bg-emerald-500/10" },
+    "gaming": { Icon: Gamepad2, accent: "text-violet-500", bg: "bg-violet-500/10" },
+    "electronics": { Icon: Cpu, accent: "text-blue-500", bg: "bg-blue-500/10" },
+    "ride": { Icon: Car, accent: "text-cyan-500", bg: "bg-cyan-500/10" },
+    "tax": { Icon: AlertCircle, accent: "text-rose-500", bg: "bg-rose-500/10" },
+    "clothing": { Icon: Shirt, accent: "text-pink-500", bg: "bg-pink-500/10" },
   };
 
-  return mapping[categoryId.toLowerCase()] || { Icon: Circle, accent: "#64748b" };
+  return mapping[categoryId.toLowerCase()] || { Icon: Circle, accent: "text-slate-500", bg: "bg-slate-500/10" };
 }
 
 export function TopCategories() {
@@ -70,66 +70,58 @@ export function TopCategories() {
   }, [transactions, selectedMonth, selectedYear]);
 
   return (
-    <Card className="flex flex-col w-full h-[350px] p-4 md:p-6 overflow-hidden hover:shadow-md transition-all duration-200">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-2 flex-shrink-0">
-        <h3 className="text-sm font-semibold text-text-primary">
+    <Card className="flex flex-col w-full h-auto min-h-[350px] p-4 rounded-xl shadow-sm border-border">
+      <div className="flex items-center justify-between mb-4 flex-shrink-0 h-8">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           Top Spending
         </h3>
-        <span className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">
+        <span className="text-[11px] font-medium text-muted-foreground bg-muted px-2 py-1 rounded-md">
           This Month
         </span>
       </div>
 
-      {/* Content Area */}
-      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 -mx-2 px-2 flex flex-col justify-start pb-2">
+      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 flex flex-col justify-start pb-2">
         {categoryData.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-8">
-            <div className="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center text-accent mb-3 border border-accent/10">
-              <Tag size={18} />
+            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-3">
+              <Tag className="h-5 w-5 text-muted-foreground/50" />
             </div>
-            <span className="text-xs font-semibold text-text-primary">No expenses yet</span>
-            <span className="text-[10px] text-text-muted mt-0.5">Top spent categories will show here</span>
+            <span className="text-sm font-medium text-muted-foreground">No expenses yet</span>
+            <span className="text-xs text-muted-foreground mt-1">Top spent categories will show here</span>
           </div>
         ) : (
           categoryData.map((cat, index) => {
-            const { Icon, accent } = getCategoryTheme(cat.id);
+            const { Icon, accent, bg } = getCategoryTheme(cat.id);
             const categoryDef = getCategoryById(cat.id);
             const name = categoryDef?.label || cat.id;
 
             return (
               <div 
                 key={cat.id} 
-                className="flex flex-col justify-center py-2 px-2 rounded-xl hover:bg-white/[0.02] dark:hover:bg-white/[0.02] hover:bg-black/[0.01] transition-colors border-b border-border/30 last:border-b-0"
+                className="flex flex-col justify-center py-3 px-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50"
               >
-                {/* Line 1 */}
-                <div className="flex items-center gap-2 mb-1.5">
-                  <div 
-                    className="flex h-[22px] w-[22px] rounded-full items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: `${accent}15` }}
-                  >
-                    <Icon size={11} color={accent} />
+                <div className="flex items-center gap-3 mb-2">
+                  <div className={`flex h-8 w-8 rounded-md items-center justify-center flex-shrink-0 ${bg}`}>
+                    <Icon size={14} className={accent} />
                   </div>
-                  <span className="text-xs font-semibold text-text-primary flex-1 truncate">
+                  <span className="text-sm font-semibold text-foreground flex-1 truncate">
                     {name}
                   </span>
-                  <span className="text-xs font-bold text-text-primary font-mono flex-shrink-0">
+                  <span className="text-sm font-bold text-foreground font-mono flex-shrink-0">
                     {symbol}{cat.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </span>
                 </div>
                 
-                {/* Line 2 */}
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-[4px] bg-border/40 rounded-full overflow-hidden">
+                <div className="flex items-center gap-3 pl-11">
+                  <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${cat.fillRatio}%` }}
                       transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.05 }}
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: accent }}
+                      className={`h-full rounded-full bg-current ${accent}`}
                     />
                   </div>
-                  <span className="text-[10px] text-text-muted w-[32px] text-right font-medium">
+                  <span className="text-xs text-muted-foreground w-10 text-right font-medium">
                     {cat.percentage.toFixed(1)}%
                   </span>
                 </div>

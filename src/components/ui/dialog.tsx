@@ -1,159 +1,160 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import * as React from "react"
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 
-export interface DialogProps {
-  open: boolean;
-  onClose: () => void;
-  title?: React.ReactNode;
-  children: React.ReactNode;
-  className?: string;
-  showCloseButton?: boolean;
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { XIcon } from "lucide-react"
+
+function Dialog({ ...props }: DialogPrimitive.Root.Props) {
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
-export function Dialog({
-  open,
-  onClose,
-  title,
-  children,
+function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+}
+
+function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+}
+
+function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+}
+
+function DialogOverlay({
   className,
-  showCloseButton = true,
-}: DialogProps) {
-  // Prevent background scroll when open
-  React.useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  // Handle escape key
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
-
+  ...props
+}: DialogPrimitive.Backdrop.Props) {
   return (
-    <AnimatePresence>
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={onClose}
-          />
-
-          {/* Modal Container */}
-          <motion.div
-            initial={{ opacity: 0, y: "100%", scale: 1 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: "100%", scale: 1 }}
-            transition={{ type: "spring", damping: 25, stiffness: 220 }}
-            className={cn(
-              "relative z-10 w-full bg-card border-t md:border border-border rounded-t-3xl md:rounded-2xl max-h-[90vh] md:max-w-[480px] flex flex-col shadow-2xl",
-              className
-            )}
-          >
-            {/* Mobile Drag Handle */}
-            <div className="w-full flex justify-center pt-3 pb-1 md:hidden flex-shrink-0">
-              <div className="w-10 h-1.5 rounded-full bg-white/[0.15] dark:bg-white/[0.15]" />
-            </div>
-
-            {/* Header */}
-            {title && (
-              <div className="flex-none sticky top-0 z-20 flex items-center justify-between border-b border-border bg-card px-6 py-4">
-                <h2 className="text-base font-semibold text-text-primary">
-                  {title}
-                </h2>
-                {showCloseButton && (
-                  <button
-                    onClick={onClose}
-                    className="rounded-full p-1.5 text-text-muted hover:bg-card-hover hover:text-text-secondary transition-colors cursor-pointer"
-                  >
-                    <X className="h-[18px] w-[18px]" />
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Content */}
-            <div className="flex-1 overflow-y-auto no-scrollbar p-6">
-              {children}
-            </div>
-          </motion.div>
-        </div>
+    <DialogPrimitive.Backdrop
+      data-slot="dialog-overlay"
+      className={cn(
+        "fixed inset-0 isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        className
       )}
-    </AnimatePresence>
-  );
+      {...props}
+    />
+  )
 }
 
-// Confirmation Dialog Shortcut Component
-interface ConfirmDialogProps {
-  open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  description: string;
-  confirmLabel?: string;
-  cancelLabel?: string;
-  isDestructive?: boolean;
-}
-
-export function ConfirmDialog({
-  open,
-  onClose,
-  onConfirm,
-  title,
-  description,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
-  isDestructive = false,
-}: ConfirmDialogProps) {
+function DialogContent({
+  className,
+  children,
+  showCloseButton = true,
+  ...props
+}: DialogPrimitive.Popup.Props & {
+  showCloseButton?: boolean
+}) {
   return (
-    <Dialog open={open} onClose={onClose} title={title} showCloseButton={false}>
-      <div className="space-y-4">
-        <p className="text-sm text-text-secondary leading-relaxed">
-          {description}
-        </p>
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-xl text-text-secondary hover:bg-card-hover transition-colors cursor-pointer"
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Popup
+        data-slot="dialog-content"
+        className={cn(
+          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          className
+        )}
+        {...props}
+      >
+        {children}
+        {showCloseButton && (
+          <DialogPrimitive.Close
+            data-slot="dialog-close"
+            render={
+              <Button
+                variant="ghost"
+                className="absolute top-2 right-2"
+                size="icon-sm"
+              />
+            }
           >
-            {cancelLabel}
-          </button>
-          <button
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
-            className={cn(
-              "px-4 py-2 text-sm font-medium rounded-xl text-white transition-all cursor-pointer shadow-sm",
-              isDestructive
-                ? "bg-red-600 hover:bg-red-500 shadow-red-500/10"
-                : "bg-brand-purple hover:bg-violet-600 shadow-violet-500/10"
-            )}
-          >
-            {confirmLabel}
-          </button>
-        </div>
-      </div>
-    </Dialog>
-  );
+            <XIcon
+            />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
+        )}
+      </DialogPrimitive.Popup>
+    </DialogPortal>
+  )
+}
+
+function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="dialog-header"
+      className={cn("flex flex-col gap-2", className)}
+      {...props}
+    />
+  )
+}
+
+function DialogFooter({
+  className,
+  showCloseButton = false,
+  children,
+  ...props
+}: React.ComponentProps<"div"> & {
+  showCloseButton?: boolean
+}) {
+  return (
+    <div
+      data-slot="dialog-footer"
+      className={cn(
+        "-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      {showCloseButton && (
+        <DialogPrimitive.Close render={<Button variant="outline" />}>
+          Close
+        </DialogPrimitive.Close>
+      )}
+    </div>
+  )
+}
+
+function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
+  return (
+    <DialogPrimitive.Title
+      data-slot="dialog-title"
+      className={cn(
+        "font-heading text-base leading-none font-medium",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function DialogDescription({
+  className,
+  ...props
+}: DialogPrimitive.Description.Props) {
+  return (
+    <DialogPrimitive.Description
+      data-slot="dialog-description"
+      className={cn(
+        "text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
 }

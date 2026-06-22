@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -14,13 +14,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-/* ─── MagicUI imports ─────────────────────────────────────────────────────── */
-import { Meteors } from "@/components/magicui/meteors";
-import { BorderBeam } from "@/components/magicui/border-beam";
-import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
-import { Sparkles } from "@/components/magicui/sparkles";
-
-/* ─── Custom validation schema ───────────────────────────────────────────── */
 const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().min(1, "Email is required").email("Invalid email address"),
@@ -33,38 +26,12 @@ const signUpSchema = z.object({
 
 type SignUpInput = z.infer<typeof signUpSchema>;
 
-function GridLines() {
+function GridBackground() {
   return (
-    <svg
-      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.04] dark:opacity-[0.04]"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <pattern id="grid-su" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#grid-su)" className="text-text-primary" />
-    </svg>
-  );
-}
-
-function Orbs() {
-  return (
-    <>
-      <motion.div
-        aria-hidden
-        animate={{ scale: [1, 1.18, 1], opacity: [0.25, 0.45, 0.25] }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute -top-32 -right-32 h-[460px] w-[460px] rounded-full bg-violet-600/20 blur-[120px] dark:bg-violet-600/25"
-      />
-      <motion.div
-        aria-hidden
-        animate={{ scale: [1, 1.22, 1], opacity: [0.15, 0.3, 0.15] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="pointer-events-none absolute -bottom-40 -left-20 h-[400px] w-[400px] rounded-full bg-pink-600/15 blur-[100px] dark:bg-pink-600/20"
-      />
-    </>
+    <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden bg-background">
+      <div className="absolute top-0 w-full h-full bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] dark:opacity-20 opacity-40"></div>
+      <div className="absolute inset-0 bg-background/50 backdrop-blur-[100px]"></div>
+    </div>
   );
 }
 
@@ -79,17 +46,10 @@ function strengthScore(pw: string): 0 | 1 | 2 | 3 {
 
 const strengthMeta = [
   { label: "", color: "bg-transparent" },
-  { label: "Weak", color: "bg-rose-500" },
-  { label: "Fair", color: "bg-amber-400" },
-  { label: "Strong", color: "bg-emerald-500" },
+  { label: "Weak", color: "bg-destructive" },
+  { label: "Fair", color: "bg-amber-500" },
+  { label: "Strong", color: "bg-primary" },
 ] as const;
-
-const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.45, ease, delay },
-});
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -109,17 +69,10 @@ export default function SignUpPage() {
   } = useForm<SignUpInput>({
     resolver: async (data) => {
       const result = signUpSchema.safeParse(data);
-      if (result.success) {
-        return { values: result.data, errors: {} };
-      }
+      if (result.success) return { values: result.data, errors: {} };
       const formErrors: any = {};
       result.error.issues.forEach((err) => {
-        if (err.path[0]) {
-          formErrors[err.path[0]] = {
-            type: err.code,
-            message: err.message,
-          };
-        }
+        if (err.path[0]) formErrors[err.path[0]] = { type: err.code, message: err.message };
       });
       return { values: {}, errors: formErrors };
     },
@@ -193,111 +146,77 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-page flex items-center justify-center p-4">
-      <GridLines />
-      <Orbs />
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <Meteors number={12} />
-      </div>
+    <div className="relative min-h-screen flex items-center justify-center p-4 selection:bg-primary selection:text-primary-foreground">
+      <GridBackground />
 
-      <motion.div {...fadeUp(0)} className="relative z-10 w-full max-w-[440px]">
-        {/* Glow border ring */}
-        <div className="absolute -inset-[1px] rounded-[24px] bg-gradient-to-br from-violet-600/30 via-transparent to-pink-600/20 blur-[1px]" />
-
-        <Card className="relative rounded-[22px] border border-border/80 bg-card/90 px-8 py-8 shadow-2xl backdrop-blur-2xl">
-          <BorderBeam
-            size={180}
-            duration={12}
-            colorFrom="var(--accent-color)"
-            colorTo="#db2777"
-            borderWidth={1.2}
-          />
-
-          {/* Header */}
-          <div className="mb-5 flex flex-col items-center">
-            <motion.div
-              initial={{ scale: 0, rotate: -15 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.1 }}
-              className="relative mb-4"
-            >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 via-purple-600 to-pink-600 shadow-lg shadow-violet-500/25">
-                <Wallet className="h-6 w-6 text-white" />
-              </div>
-              <div className="pointer-events-none absolute -inset-3">
-                <Sparkles count={5} color="#f0abfc">
-                  <span />
-                </Sparkles>
-              </div>
-            </motion.div>
-
-            <motion.div {...fadeUp(0.15)} className="mb-3">
-              <AnimatedGradientText className="rounded-full border border-pink-500/20 bg-pink-500/10 px-3 py-0.5 text-[10px] font-semibold tracking-wider text-pink-600 dark:text-pink-300 uppercase animate-pulse">
-                Get Started Free
-              </AnimatedGradientText>
-            </motion.div>
-
-            <motion.h1
-              {...fadeUp(0.2)}
-              className="text-2xl font-bold tracking-tight text-text-primary"
-            >
-              Create an account
-            </motion.h1>
-            <motion.p {...fadeUp(0.25)} className="mt-1 text-xs text-text-secondary">
-              Start tracking your expenses today
-            </motion.p>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-sm"
+      >
+        <div className="mb-8 flex flex-col items-center text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg mb-4">
+            <Wallet className="h-6 w-6" />
           </div>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Create an account</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Start tracking your expenses today
+          </p>
+        </div>
 
-          {/* Form */}
+        <Card className="p-6 glass border-border/50">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Full Name */}
-            <div>
-              <Input
-                label="Full Name"
-                placeholder="John Doe"
-                disabled={loading || blocked}
-                error={errors.name?.message}
-                leftIcon={<User className="h-4 w-4" />}
-                {...register("name")}
-              />
+            <div className="space-y-2 relative">
+              <label className="text-sm font-medium text-foreground">Full Name</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="John Doe"
+                  disabled={loading || blocked}
+                  className="pl-9 bg-background/50 border-border/50 focus-visible:ring-primary"
+                  {...register("name")}
+                />
+              </div>
+              {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
             </div>
 
-            {/* Email */}
-            <div>
-              <Input
-                label="Email"
-                type="email"
-                placeholder="you@example.com"
-                disabled={loading || blocked}
-                error={errors.email?.message}
-                leftIcon={<Mail className="h-4 w-4" />}
-                {...register("email")}
-              />
+            <div className="space-y-2 relative">
+              <label className="text-sm font-medium text-foreground">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="email"
+                  placeholder="you@example.com"
+                  disabled={loading || blocked}
+                  className="pl-9 bg-background/50 border-border/50 focus-visible:ring-primary"
+                  {...register("email")}
+                />
+              </div>
+              {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
             </div>
 
-            {/* Password */}
-            <div>
-              <Input
-                label="Password"
-                type={showPw ? "text" : "password"}
-                placeholder="Min. 8 characters"
-                disabled={loading || blocked}
-                error={errors.password?.message}
-                leftIcon={<Lock className="h-4 w-4" />}
-                rightIcon={
-                  <button
-                    type="button"
-                    onClick={() => setShowPw((v) => !v)}
-                    className="text-text-muted hover:text-text-secondary cursor-pointer focus:outline-none"
-                    aria-label="Toggle password visibility"
-                  >
-                    {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                }
-                {...register("password")}
-              />
+            <div className="space-y-2 relative">
+              <label className="text-sm font-medium text-foreground">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type={showPw ? "text" : "password"}
+                  placeholder="Min. 8 characters"
+                  disabled={loading || blocked}
+                  className="pl-9 pr-9 bg-background/50 border-border/50 focus-visible:ring-primary"
+                  {...register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+                >
+                  {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {errors.password && <p className="text-xs text-destructive mt-1">{errors.password.message}</p>}
 
-              {/* Password strength indicators */}
               <AnimatePresence>
                 {passwordValue.length > 0 && (
                   <motion.div
@@ -312,22 +231,22 @@ export default function SignUpPage() {
                         <div
                           key={s}
                           className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-                            strength >= s ? meta.color : "bg-white/[0.08]"
+                            strength >= s ? meta.color : "bg-muted"
                           }`}
                         />
                       ))}
                     </div>
                     <div className="mt-1 flex items-center gap-1.5">
-                      {strength === 3 && <CheckCircle2 className="h-3 w-3 text-emerald-500" />}
-                      <span className="text-[10px] text-text-muted">
+                      {strength === 3 && <CheckCircle2 className="h-3 w-3 text-primary" />}
+                      <span className="text-[10px] text-muted-foreground">
                         {strength > 0 && (
                           <span
                             className={
                               strength === 1
-                                ? "text-rose-400 font-semibold"
+                                ? "text-destructive font-medium"
                                 : strength === 2
-                                ? "text-amber-400 font-semibold"
-                                : "text-emerald-400 font-semibold"
+                                ? "text-amber-500 font-medium"
+                                : "text-primary font-medium"
                             }
                           >
                             {meta.label}{" "}
@@ -341,50 +260,37 @@ export default function SignUpPage() {
               </AnimatePresence>
             </div>
 
-            {/* Terms */}
-            <p className="text-[10px] leading-relaxed text-text-muted select-none">
+            <p className="text-[10px] leading-relaxed text-muted-foreground select-none">
               By creating an account you agree to our{" "}
-              <Link href="#" className="text-accent font-medium hover:text-brand-purple-light transition-colors">
+              <Link href="#" className="font-medium text-foreground hover:underline transition-colors">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="#" className="text-accent font-medium hover:text-brand-purple-light transition-colors">
+              <Link href="#" className="font-medium text-foreground hover:underline transition-colors">
                 Privacy Policy
               </Link>
               .
             </p>
 
-            {/* Submit */}
-            <div className="pt-1">
-              <Button
-                type="submit"
-                isLoading={loading}
-                disabled={blocked}
-                className="w-full font-semibold"
-              >
-                {blocked ? `Try again in ${cooldown}s` : "Create Account"}
-                {!loading && !blocked && <ArrowRight className="h-4 w-4 ml-1" />}
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              disabled={loading || blocked}
+              className="w-full mt-2"
+            >
+              {loading ? "Creating..." : blocked ? `Try again in ${cooldown}s` : "Create Account"}
+              {!loading && !blocked && <ArrowRight className="h-4 w-4 ml-2" />}
+            </Button>
           </form>
 
-          {/* Divider */}
-          <div className="my-5 flex items-center gap-4">
-            <div className="h-px flex-1 bg-border" />
-            <span className="text-[10px] tracking-wider uppercase font-semibold text-text-muted">or</span>
-            <div className="h-px flex-1 bg-border" />
-          </div>
-
-          {/* Sign in link */}
-          <p className="text-center text-xs text-text-secondary">
-            Already have an account?{" "}
+          <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-muted-foreground">
+            <span>Already have an account?</span>
             <Link
               href="/sign-in"
-              className="font-semibold text-accent hover:text-brand-purple-light transition-colors underline underline-offset-2 decoration-accent/40"
+              className="font-medium text-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
             >
               Sign in
             </Link>
-          </p>
+          </div>
         </Card>
       </motion.div>
     </div>

@@ -80,21 +80,21 @@ export function DashboardClient() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="flex w-full h-[60vh] flex-col space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-          <Skeleton className="h-[96px] w-full" />
-          <Skeleton className="h-[96px] w-full" />
-          <Skeleton className="h-[96px] w-full" />
-          <Skeleton className="h-[96px] w-full" />
+      <div className="flex w-full h-auto flex-col space-y-4 p-4 lg:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <Skeleton className="h-36 w-full rounded-xl" />
+          <Skeleton className="h-36 w-full rounded-xl" />
+          <Skeleton className="h-36 w-full rounded-xl" />
+          <Skeleton className="h-36 w-full rounded-xl" />
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-          <Skeleton className="h-[280px] w-full" />
-          <Skeleton className="h-[280px] w-full" />
-          <Skeleton className="h-[280px] w-full" />
+          <Skeleton className="h-[280px] w-full rounded-xl" />
+          <Skeleton className="h-[280px] w-full rounded-xl" />
+          <Skeleton className="h-[280px] w-full rounded-xl" />
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          <Skeleton className="h-[400px] w-full" />
-          <Skeleton className="h-[400px] w-full" />
+          <Skeleton className="h-[400px] w-full rounded-xl" />
+          <Skeleton className="h-[400px] w-full rounded-xl" />
         </div>
       </div>
     );
@@ -102,7 +102,7 @@ export function DashboardClient() {
 
   if (profiles.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-[60vh] w-full">
+      <div className="flex flex-col items-center justify-center h-[60vh] w-full px-4">
         <EmptyState
           icon={Wallet}
           title="Welcome to ExpenseTracker"
@@ -124,16 +124,10 @@ export function DashboardClient() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="
-        space-y-3 lg:space-y-0
-        lg:h-full
-        lg:grid
-        lg:gap-3
-        lg:grid-rows-[88px_minmax(0,220px)_minmax(0,1fr)]
-      "
+      className="p-4 lg:p-8 space-y-4 lg:space-y-6 max-w-7xl mx-auto"
     >
-      {/* ROW 1 — Stats Strip */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-3">
+      {/* ROW 1: Hero Stats (Bento Grid) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
         <StatsStrip 
           netBalance={netBalance}
           income={income}
@@ -142,16 +136,16 @@ export function DashboardClient() {
         />
       </div>
 
-      {/* ROW 2 — Middle panels */}
-      <div className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 lg:min-h-0">
-        <div className="lg:min-h-0 lg:h-full">
+      {/* ROW 2: Profiles, Quick Stats, Spending Chart */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+        <div className="h-auto md:h-full">
           <ProfileCard 
             profiles={profiles} 
             netBalance={netBalance} 
             onAdd={() => setProfileModalOpen(true)} 
           />
         </div>
-        <div className="lg:min-h-0 lg:h-full">
+        <div className="h-auto md:h-full">
           <QuickStats 
             transactionsCount={transactionsCount}
             avgDailySpend={avgDailySpend}
@@ -160,17 +154,17 @@ export function DashboardClient() {
             profilesCount={profiles.length}
           />
         </div>
-        <div className="lg:min-h-0 lg:h-full md:col-span-2 xl:col-span-1">
+        <div className="h-auto md:h-full md:col-span-2 xl:col-span-1">
           <SpendingChart />
         </div>
       </div>
 
-      {/* ROW 3 — Bottom panels */}
-      <div className="flex flex-col xl:grid xl:grid-cols-[1.65fr_1fr] gap-3 lg:min-h-0">
-        <div className="lg:min-h-0 lg:h-full">
+      {/* ROW 3: Transactions Feed & Top Categories */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
+        <div className="xl:col-span-2 h-auto lg:h-[500px]">
           <TransactionFeed transactions={transactions} />
         </div>
-        <div className="lg:min-h-0 lg:h-full">
+        <div className="xl:col-span-1 h-auto lg:h-[500px]">
           <TopCategories />
         </div>
       </div>

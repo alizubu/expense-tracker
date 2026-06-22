@@ -1,84 +1,20 @@
-"use client";
+import * as React from "react"
+import { Input as InputPrimitive } from "@base-ui/react/input"
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  error?: string;
-  label?: string;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-  containerClassName?: string;
+function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+  return (
+    <InputPrimitive
+      type={type}
+      data-slot="input"
+      className={cn(
+        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      className,
-      type = "text",
-      error,
-      label,
-      leftIcon,
-      rightIcon,
-      containerClassName,
-      disabled,
-      id,
-      ...props
-    },
-    ref
-  ) => {
-    const fallbackId = React.useId();
-    const inputId = id || fallbackId;
-
-    return (
-      <div className={cn("flex flex-col gap-1.5 w-full", containerClassName)}>
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none"
-          >
-            {label}
-          </label>
-        )}
-        <div className="relative flex items-center">
-          {leftIcon && (
-            <div className="absolute left-3.5 text-text-muted flex items-center pointer-events-none">
-              {leftIcon}
-            </div>
-          )}
-          <input
-            id={inputId}
-            type={type}
-            disabled={disabled}
-            ref={ref}
-            className={cn(
-              "w-full rounded-xl border bg-white/[0.02] dark:bg-white/[0.02] px-4 py-2.5 text-sm text-text-primary outline-none transition-all duration-200",
-              "border-border placeholder:text-text-muted/60",
-              "focus:border-brand-purple focus:bg-brand-purple/[0.02]",
-              "focus:shadow-[0_0_0_3px_rgba(124,58,237,0.12)]",
-              "disabled:cursor-not-allowed disabled:opacity-50",
-              leftIcon && "pl-10",
-              rightIcon && "pr-10",
-              error && "border-red-500/50 focus:border-red-500 focus:shadow-[0_0_0_3px_rgba(244,63,94,0.12)]",
-              className
-            )}
-            {...props}
-          />
-          {rightIcon && (
-            <div className="absolute right-3 text-text-muted flex items-center">
-              {rightIcon}
-            </div>
-          )}
-        </div>
-        {error && (
-          <span className="text-[11px] text-red-500 font-medium tracking-wide">
-            {error}
-          </span>
-        )}
-      </div>
-    );
-  }
-);
-
-Input.displayName = "Input";
+export { Input }

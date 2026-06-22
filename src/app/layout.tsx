@@ -50,6 +50,11 @@ import { PageTransitionProvider } from "@/components/providers/PageTransitionPro
 import { GlobalModals } from "@/components/providers/GlobalModals";
 
 import { headers } from "next/headers";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 
 export default function RootLayout({
   children,
@@ -59,7 +64,7 @@ export default function RootLayout({
   const nonce = headers().get("X-Nonce") ?? "";
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={cn(GeistSans.variable, GeistMono.variable, "font-sans", geist.variable)}>
       <body
         className={`${GeistSans.className} antialiased min-h-screen flex flex-col no-select`}
       >
@@ -113,10 +118,10 @@ export default function RootLayout({
               {children}
             </PageTransitionProvider>
             <GlobalModals />
-            <Toaster
+              <Toaster
               position="bottom-right"
               toastOptions={{
-                className: "dark:bg-[#1C1C27] dark:text-[#F8FAFC] dark:border-white/10 bg-white text-slate-900 border-slate-200",
+                className: "bg-card text-foreground border-border",
               }}
             />
           </AuthProvider>

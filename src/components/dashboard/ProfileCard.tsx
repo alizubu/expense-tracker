@@ -5,6 +5,8 @@ import * as LucideIcons from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
@@ -14,17 +16,17 @@ function getIcon(iconName: string) {
 function getProfileColors(type: string) {
   switch (type.toLowerCase()) {
     case "cash":
-      return { bg: "rgba(16,185,129,0.12)", icon: "var(--green)" };
+      return { bg: "bg-emerald-500/10", icon: "text-emerald-500", bar: "bg-emerald-500" };
     case "bank":
     case "bank account":
-      return { bg: "rgba(59,130,246,0.12)", icon: "#3b82f6" };
+      return { bg: "bg-blue-500/10", icon: "text-blue-500", bar: "bg-blue-500" };
     case "wallet":
     case "custom":
-      return { bg: "var(--accent-glow)", icon: "var(--accent-color)" };
+      return { bg: "bg-violet-500/10", icon: "text-violet-500", bar: "bg-violet-500" };
     case "moneybag":
-      return { bg: "rgba(245,158,11,0.12)", icon: "#f59e0b" };
+      return { bg: "bg-amber-500/10", icon: "text-amber-500", bar: "bg-amber-500" };
     default:
-      return { bg: "rgba(148,163,184,0.12)", icon: "var(--text-muted)" };
+      return { bg: "bg-slate-500/10", icon: "text-slate-500", bar: "bg-slate-500" };
   }
 }
 
@@ -40,27 +42,27 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
   const router = useRouter();
 
   return (
-    <div className="flex flex-col w-full h-auto lg:h-full border border-border bg-card shadow-sm p-4 rounded-2xl overflow-visible lg:overflow-hidden hover:border-accent/10 hover:shadow-md transition-all duration-200">
-      {/* Header */}
-      <div className="flex items-center justify-between h-[32px] mb-2 flex-shrink-0">
-        <h2 className="text-[10px] font-semibold text-text-secondary uppercase tracking-[0.08em]">
+    <Card className="flex flex-col w-full h-auto lg:h-full p-4 rounded-xl shadow-sm border-border">
+      <div className="flex items-center justify-between h-[32px] mb-4 flex-shrink-0">
+        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           Your Profiles
         </h2>
-        <button 
+        <Button 
+          variant="ghost" 
+          size="sm" 
           onClick={onAdd}
-          className="text-xs font-semibold text-accent bg-transparent hover:text-brand-purple-light hover:underline flex items-center gap-[4px] active:scale-[0.97] cursor-pointer"
+          className="h-8 px-2 text-primary hover:text-primary hover:bg-primary/10"
         >
-          <LucideIcons.Plus size={12} />
+          <LucideIcons.Plus size={14} className="mr-1" />
           <span className="hidden sm:inline">Add New</span>
-        </button>
+        </Button>
       </div>
 
-      {/* List */}
-      <div className="flex flex-col lg:flex-1 lg:overflow-y-auto hide-scrollbar lg:min-h-0 space-y-0.5">
+      <div className="flex flex-col lg:flex-1 lg:overflow-y-auto hide-scrollbar lg:min-h-0 space-y-2">
         {profiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-6">
-            <LucideIcons.Wallet className="h-7 w-7 text-text-muted/40 mb-2 animate-pulse" />
-            <span className="text-xs text-text-muted">No data yet</span>
+            <LucideIcons.Wallet className="h-8 w-8 text-muted-foreground/50 mb-3 animate-pulse" />
+            <span className="text-sm text-muted-foreground">No profiles yet</span>
           </div>
         ) : (
           profiles.map((profile, i) => {
@@ -75,42 +77,34 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
                 onClick={() => router.push(`/profiles/${profile.id}`)}
-                className="group flex flex-col justify-center h-[44px] sm:h-[48px] rounded-xl hover:bg-card-hover cursor-pointer transition-colors relative border-b border-border/40 last:border-0 flex-shrink-0"
+                className="group flex flex-col justify-center p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors relative border border-border/50 bg-background/50 flex-shrink-0"
               >
-                <div className="flex items-center gap-[10px] px-1">
-                  {/* Left: Icon */}
-                  <div 
-                    className="flex h-[26px] w-[26px] sm:h-[32px] sm:w-[32px] flex-shrink-0 items-center justify-center rounded-[8px] sm:rounded-[10px]"
-                    style={{ backgroundColor: colors.bg }}
-                  >
-                    <Icon size={15} color={colors.icon} />
+                <div className="flex items-center gap-3">
+                  <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md ${colors.bg}`}>
+                    <Icon size={18} className={colors.icon} />
                   </div>
 
-                  {/* Center: Name + Type */}
                   <div className="flex flex-col flex-1 min-w-0">
-                    <span className="text-[13px] font-semibold text-text-primary truncate">{profile.name}</span>
-                    <span className="text-[11px] text-text-secondary truncate capitalize">{profile.type.toLowerCase()}</span>
+                    <span className="text-sm font-semibold text-foreground truncate">{profile.name}</span>
+                    <span className="text-xs text-muted-foreground truncate capitalize">{profile.type.toLowerCase()}</span>
                   </div>
 
-                  {/* Right: Balance + Percentage */}
                   <div className="flex flex-col items-end flex-shrink-0">
-                    <span className="text-[12px] sm:text-[13px] font-bold text-text-primary font-mono">
+                    <span className="text-sm font-bold text-foreground font-mono tracking-tight">
                       {symbol}{profile.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </span>
-                    <span className="hidden sm:block text-[10px] text-text-muted">
+                    <span className="hidden sm:block text-xs text-muted-foreground">
                       {percentage.toFixed(1)}%
                     </span>
                   </div>
                 </div>
 
-                {/* Bottom Progress Bar */}
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-card-elevated rounded-[1px] m-0 overflow-hidden">
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-border/50 rounded-b-lg m-0 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="h-full rounded-[1px]"
-                    style={{ backgroundColor: colors.icon }}
+                    className={`h-full rounded-b-lg ${colors.bar}`}
                   />
                 </div>
               </motion.div>
@@ -118,6 +112,6 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
           })
         )}
       </div>
-    </div>
+    </Card>
   );
 }

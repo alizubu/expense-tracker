@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useProfileStore } from "@/store/useProfileStore";
@@ -19,24 +19,38 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-// 2G - Category Icon Map
 const CATEGORY_MAP: Record<string, { icon: any, color: string, bg: string }> = {
-  "Food / Restaurant": { icon: Utensils,       color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
-  "Groceries":         { icon: ShoppingCart,   color: "#10b981", bg: "rgba(16,185,129,0.12)" },
-  "Gaming":            { icon: Gamepad2,       color: "#a78bfa", bg: "rgba(124,58,237,0.12)" },
-  "Electronics":       { icon: Cpu,            color: "#3b82f6", bg: "rgba(59,130,246,0.12)" },
-  "Ride Share":        { icon: Car,            color: "#06b6d4", bg: "rgba(6,182,212,0.12)" },
-  "Tax / Fines":       { icon: AlertCircle,    color: "#f43f5e", bg: "rgba(243,67,94,0.12)" },
-  "Transfer":          { icon: ArrowLeftRight, color: "#64748b", bg: "rgba(100,116,139,0.12)" },
-  "Clothing":          { icon: Shirt,          color: "#ec4899", bg: "rgba(236,72,153,0.12)" },
-  "Fastfood":          { icon: Beef,           color: "#f97316", bg: "rgba(249,115,22,0.12)" },
-  "Medicine":          { icon: Pill,           color: "#14b8a6", bg: "rgba(20,184,166,0.12)" },
-  "Travel":            { icon: Plane,          color: "#8b5cf6", bg: "rgba(139,92,246,0.12)" },
+  "Food / Restaurant": { icon: Utensils,       color: "text-amber-500", bg: "bg-amber-500/10" },
+  "Groceries":         { icon: ShoppingCart,   color: "text-emerald-500", bg: "bg-emerald-500/10" },
+  "Gaming":            { icon: Gamepad2,       color: "text-violet-500", bg: "bg-violet-500/10" },
+  "Electronics":       { icon: Cpu,            color: "text-blue-500", bg: "bg-blue-500/10" },
+  "Ride Share":        { icon: Car,            color: "text-cyan-500", bg: "bg-cyan-500/10" },
+  "Tax / Fines":       { icon: AlertCircle,    color: "text-rose-500", bg: "bg-rose-500/10" },
+  "Transfer":          { icon: ArrowLeftRight, color: "text-slate-500", bg: "bg-slate-500/10" },
+  "Clothing":          { icon: Shirt,          color: "text-pink-500", bg: "bg-pink-500/10" },
+  "Fastfood":          { icon: Beef,           color: "text-orange-500", bg: "bg-orange-500/10" },
+  "Medicine":          { icon: Pill,           color: "text-teal-500", bg: "bg-teal-500/10" },
+  "Travel":            { icon: Plane,          color: "text-purple-500", bg: "bg-purple-500/10" },
 };
 
 function getCatStyle(label: string) {
-  return CATEGORY_MAP[label] || { icon: Circle, color: "var(--text-secondary)", bg: "var(--border-subtle)" };
+  return CATEGORY_MAP[label] || { icon: Circle, color: "text-slate-500", bg: "bg-slate-500/10" };
 }
 
 export default function TransactionsPage() {
@@ -47,7 +61,6 @@ export default function TransactionsPage() {
 
   const [editTxnId, setEditTxnId] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isSortOpen, setIsSortOpen] = useState(false);
 
   const filtered = getFilteredTransactions();
   const editTransaction = transactions.find(t => t.id === editTxnId);
@@ -75,43 +88,23 @@ export default function TransactionsPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* 2A - Mobile Topbar */}
-      <div className="sticky top-0 z-40 lg:hidden flex items-center justify-between h-[52px] px-[12px] bg-card/95 backdrop-blur-[16px] border-b border-border/60">
-        <button onClick={openSidebar} className="flex items-center justify-center w-[32px] h-[32px] rounded-xl bg-card-elevated border border-border cursor-pointer">
-          <Menu size={16} className="text-text-secondary" />
+    <div className="flex flex-col min-h-screen p-4 lg:p-8 max-w-7xl mx-auto w-full">
+      {/* Mobile Topbar */}
+      <div className="sticky top-0 z-40 lg:hidden flex items-center justify-between h-14 -mx-4 px-4 bg-background/95 backdrop-blur-md border-b border-border/50 mb-4">
+        <button onClick={openSidebar} className="flex items-center justify-center w-8 h-8 rounded-md bg-muted border border-border">
+          <Menu size={16} className="text-muted-foreground" />
         </button>
-        <span className="text-[13px] font-semibold text-text-primary flex-1 text-center">Transactions</span>
-        <div className="flex items-center gap-[8px]">
-          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="flex items-center justify-center w-[32px] h-[32px] rounded-xl bg-card-elevated border border-border cursor-pointer">
-            <Search size={15} className="text-text-secondary" />
+        <span className="text-sm font-semibold text-foreground flex-1 text-center">Transactions</span>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="flex items-center justify-center w-8 h-8 rounded-md bg-muted border border-border">
+            <Search size={15} className="text-muted-foreground" />
           </button>
-          <button onClick={() => openModal("addTransaction")} className="flex items-center justify-center w-[32px] h-[32px] rounded-xl bg-accent shadow-md shadow-violet-500/20 cursor-pointer">
-            <Plus size={16} color="white" />
+          <button onClick={() => openModal("addTransaction")} className="flex items-center justify-center w-8 h-8 rounded-md bg-primary shadow-sm">
+            <Plus size={16} className="text-primary-foreground" />
           </button>
         </div>
       </div>
 
-      {/* 2B - Desktop Search Bar */}
-      <div className="hidden lg:flex pt-4">
-        <div className="relative flex items-center w-full max-w-md h-[40px] rounded-xl bg-card-elevated border border-border px-[14px]">
-          <Search size={14} className="text-text-muted absolute left-[14px]" />
-          <input
-            type="text"
-            placeholder="Search by title, amount, category..."
-            value={filters.search}
-            onChange={(e) => setFilters({ search: e.target.value })}
-            className="flex-1 bg-transparent border-none text-[13px] text-text-primary placeholder:text-text-muted/60 focus:outline-none pl-[24px]"
-          />
-          {filters.search.length > 0 && (
-            <button onClick={() => setFilters({ search: "" })} className="p-1 cursor-pointer">
-              <X size={13} className="text-text-muted hover:text-text-secondary" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* 2B - Mobile Search Overlay */}
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div
@@ -119,21 +112,21 @@ export default function TransactionsPage() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -8, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="sticky top-[52px] z-30 lg:hidden w-full bg-card border-b border-border/80 p-2"
+            className="sticky top-14 z-30 lg:hidden w-full bg-background border-b border-border/50 -mx-4 px-4 py-2 mb-4"
           >
-            <div className="relative flex items-center w-full h-[40px] rounded-xl bg-card-elevated border border-border px-3 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent-dim">
-              <Search size={14} className="text-text-muted" />
+            <div className="relative flex items-center w-full h-10 rounded-md bg-muted border border-border px-3 focus-within:ring-2 focus-within:ring-primary/20">
+              <Search size={14} className="text-muted-foreground" />
               <input
                 autoFocus
                 type="text"
-                placeholder="Search by title, amount, category..."
+                placeholder="Search transactions..."
                 value={filters.search}
                 onChange={(e) => setFilters({ search: e.target.value })}
-                className="flex-1 bg-transparent border-none text-[13px] text-text-primary placeholder:text-text-muted/60 focus:outline-none ml-2"
+                className="flex-1 bg-transparent border-none text-sm text-foreground placeholder:text-muted-foreground focus:outline-none ml-2"
               />
               {filters.search.length > 0 && (
-                <button onClick={() => setFilters({ search: "" })} className="p-1 cursor-pointer">
-                  <X size={13} className="text-text-muted" />
+                <button onClick={() => setFilters({ search: "" })} className="p-1">
+                  <X size={13} className="text-muted-foreground" />
                 </button>
               )}
             </div>
@@ -141,134 +134,120 @@ export default function TransactionsPage() {
         )}
       </AnimatePresence>
 
-      {/* 2C - Page Header Section (Desktop only) */}
-      <div className="hidden lg:flex items-center justify-between pt-4">
+      {/* Desktop Header */}
+      <div className="hidden lg:flex items-end justify-between mb-8">
         <div>
-          <h1 className="text-[22px] font-bold text-text-primary tracking-[-0.03em]">Transactions</h1>
-          <div className="flex items-center gap-3 mt-1.5">
-            <Badge variant="secondary">
-              {filtered.length} transactions
-            </Badge>
+          <h1 className="text-3xl font-bold text-foreground tracking-tight">Transactions</h1>
+          <p className="text-sm text-muted-foreground mt-1">Manage and view your financial history.</p>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <div className="relative w-64">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search..."
+              value={filters.search}
+              onChange={(e) => setFilters({ search: e.target.value })}
+              className="pl-9 h-10 bg-background"
+            />
+            {filters.search.length > 0 && (
+              <button onClick={() => setFilters({ search: "" })} className="absolute right-3 top-1/2 -translate-y-1/2">
+                <X size={14} className="text-muted-foreground hover:text-foreground" />
+              </button>
+            )}
           </div>
+          <Button onClick={() => openModal("addTransaction")}>
+            <Plus size={16} className="mr-2" />
+            Add Transaction
+          </Button>
         </div>
       </div>
 
-      {/* 2D - Filter Tabs */}
-      <div className="flex gap-2 pt-4 overflow-x-auto hide-scrollbar scroll-touch">
-        {(["ALL", "INCOME", "EXPENSE", "TRANSFER"] as const).map((t) => {
-          const isActive = filters.type === t;
-          let activeStyles = "bg-accent-dim text-accent border-accent/20";
-          if (t === "INCOME") { activeStyles = "bg-income/10 text-income border-income/20"; }
-          if (t === "EXPENSE") { activeStyles = "bg-expense/10 text-expense border-expense/20"; }
-          if (t === "TRANSFER") { activeStyles = "bg-transfer/10 text-transfer border-transfer/20"; }
+      {/* Filters & Actions */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex gap-2 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-2 sm:pb-0">
+          {(["ALL", "INCOME", "EXPENSE", "TRANSFER"] as const).map((t) => {
+            const isActive = filters.type === t;
+            let activeStyles = "bg-primary text-primary-foreground border-primary";
+            if (t === "INCOME") { activeStyles = "bg-emerald-500 text-white border-emerald-500"; }
+            if (t === "EXPENSE") { activeStyles = "bg-destructive text-destructive-foreground border-destructive"; }
+            if (t === "TRANSFER") { activeStyles = "bg-slate-500 text-white border-slate-500"; }
 
-          return (
-            <button
-              key={t}
-              onClick={() => setFilters({ type: t })}
-              className={cn(
-                "relative flex h-[30px] px-[14px] items-center justify-center rounded-full text-[12px] font-semibold whitespace-nowrap transition-colors duration-150 border cursor-pointer select-none",
-                isActive ? activeStyles : "bg-card-elevated border-border text-text-secondary hover:text-text-primary"
-              )}
-            >
-              <span>
+            return (
+              <Badge
+                key={t}
+                variant={isActive ? "default" : "outline"}
+                className={cn(
+                  "cursor-pointer text-xs px-3 py-1 font-medium whitespace-nowrap transition-colors",
+                  isActive ? activeStyles : "hover:bg-muted"
+                )}
+                onClick={() => setFilters({ type: t })}
+              >
                 {t === "ALL" ? "All" : t.charAt(0) + t.slice(1).toLowerCase()}
-              </span>
-            </button>
-          )
-        })}
+              </Badge>
+            )
+          })}
+        </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8">
+                <ArrowDownUp size={14} className="mr-2 text-muted-foreground" />
+                {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort by Date"}
+                <ChevronDown size={14} className="ml-2 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {sortOptions.map(opt => (
+                <DropdownMenuItem 
+                  key={opt.value}
+                  onClick={() => setFilters({ sortBy: opt.value as any })}
+                  className={cn(filters.sortBy === opt.value && "bg-muted font-medium")}
+                >
+                  {opt.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleTrashView}
+            className={cn("h-8", filters.showDeleted && "border-destructive text-destructive hover:bg-destructive/10")}
+          >
+            <Trash2 size={14} className="mr-2" />
+            {filters.showDeleted ? "Exit Trash" : "View Trash"}
+          </Button>
+        </div>
       </div>
 
-      {/* 2I - Summary Stats Bar */}
-      <div className="py-4 grid grid-cols-3 gap-3">
-        {/* Stat 1: Total */}
-        <Card className="p-3 flex flex-col justify-between h-[52px]">
-          <span className="text-[9px] uppercase tracking-[0.08em] font-semibold text-text-muted">Total</span>
-          <span className="text-[13px] font-bold font-mono-amount text-text-primary truncate">
+      {/* Summary Stats */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <Card className="p-4 flex flex-col justify-center">
+          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wider mb-1">Total</span>
+          <span className="text-xl font-bold font-mono text-foreground truncate">
             {symbol}{filtered.reduce((sum, t) => sum + (t.type === "EXPENSE" ? -t.amount : t.amount), 0).toLocaleString()}
           </span>
         </Card>
-        {/* Stat 2: Count */}
-        <Card className="p-3 flex flex-col justify-between h-[52px]">
-          <span className="text-[9px] uppercase tracking-[0.08em] font-semibold text-text-muted">Count</span>
-          <span className="text-[13px] font-bold font-mono-amount text-text-primary truncate">{filtered.length}</span>
+        <Card className="p-4 flex flex-col justify-center">
+          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wider mb-1">Count</span>
+          <span className="text-xl font-bold font-mono text-foreground truncate">{filtered.length}</span>
         </Card>
-        {/* Stat 3: Largest */}
-        <Card className="p-3 flex flex-col justify-between h-[52px] border-l-[3px] border-l-expense">
-          <span className="text-[9px] uppercase tracking-[0.08em] font-semibold text-text-muted">Largest</span>
-          <span className="text-[13px] font-bold font-mono-amount text-expense truncate">
+        <Card className="p-4 flex flex-col justify-center">
+          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wider mb-1">Largest</span>
+          <span className="text-xl font-bold font-mono text-destructive truncate">
             {symbol}{filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)).toLocaleString() : 0}
           </span>
         </Card>
       </div>
 
-      {/* 2E - Sort + Actions Row */}
-      <div className="pb-3 flex items-center justify-between relative z-20">
-        {/* Custom Dropdown */}
-        <div className="relative">
-          <button 
-            onClick={() => setIsSortOpen(!isSortOpen)}
-            className="h-[32px] px-3 rounded-xl bg-card-elevated border border-border text-[12px] text-text-secondary flex items-center gap-1.5 cursor-pointer select-none"
-          >
-            <ArrowDownUp size={13} className="text-text-muted" />
-            {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort by Date"}
-            <ChevronDown size={12} />
-          </button>
-          
-          <AnimatePresence>
-            {isSortOpen && (
-              <>
-                <div className="fixed inset-0" onClick={() => setIsSortOpen(false)} />
-                <motion.div
-                  initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute top-[calc(100%+4px)] left-0 min-w-[160px] rounded-xl bg-card border border-border shadow-[0_8px_24px_rgba(0,0,0,0.4)] p-[6px]"
-                >
-                  {sortOptions.map(opt => (
-                    <button
-                      key={opt.value}
-                      onClick={() => {
-                        setFilters({ sortBy: opt.value as any });
-                        setIsSortOpen(false);
-                      }}
-                      className={cn(
-                        "w-full text-left flex items-center h-[32px] px-2 rounded-lg text-xs transition-colors cursor-pointer select-none",
-                        filters.sortBy === opt.value
-                          ? "text-brand-purple-light bg-brand-purple/10 font-semibold"
-                          : "text-text-secondary hover:bg-card-hover hover:text-text-primary"
-                      )}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* View Trash Button */}
-        <button
-          onClick={toggleTrashView}
-          className={cn(
-            "h-[32px] px-3 rounded-xl font-semibold text-[11px] flex items-center transition-all cursor-pointer border select-none",
-            filters.showDeleted
-              ? "bg-rose-500/10 border-rose-500/20 text-rose-500"
-              : "bg-card-elevated border-border text-text-secondary hover:bg-card-hover hover:text-text-primary"
-          )}
-        >
-          <Trash2 size={12} className="mr-1.5" />
-          {filters.showDeleted ? "Exit Trash" : "View Trash"}
-        </button>
-      </div>
-
-      {/* 2F & 2H - List Items / Empty State */}
-      <div className="flex-1 pb-safe mb-nav">
+      {/* Transactions List */}
+      <Card className="flex-1 overflow-hidden flex flex-col border-border shadow-sm">
         {filtered.length === 0 ? (
-          /* Empty State */
-          <div className="py-8">
+          <div className="py-16">
             <EmptyState
               icon={ReceiptText}
               title="No transactions yet"
@@ -278,74 +257,80 @@ export default function TransactionsPage() {
             />
           </div>
         ) : (
-          <div className="space-y-4">
-            {Array.from(grouped.entries()).map(([dateLabel, txns]) => (
-              <div key={dateLabel}>
-                {/* Sticky Date Header */}
-                <div className="sticky top-0 z-10 h-[28px] bg-page/80 backdrop-blur-md flex items-center gap-[10px] text-[10px] text-text-muted font-bold uppercase tracking-[0.08em]">
-                  {dateLabel}
-                  <div className="flex-1 h-[1px] bg-border/40" />
-                </div>
+          <div className="overflow-x-auto hide-scrollbar">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="w-[60px]"></TableHead>
+                  <TableHead>Transaction</TableHead>
+                  <TableHead className="hidden md:table-cell">Category</TableHead>
+                  <TableHead className="hidden sm:table-cell">Profile</TableHead>
+                  <TableHead className="hidden lg:table-cell">Date</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.from(grouped.entries()).map(([dateLabel, txns]) => (
+                  <React.Fragment key={dateLabel}>
+                    <TableRow className="bg-muted/50 hover:bg-muted/50">
+                      <TableCell colSpan={6} className="py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                        {dateLabel}
+                      </TableCell>
+                    </TableRow>
+                    {txns.map((transaction) => {
+                      const profile = getProfile(transaction.profileId);
+                      const categoryLabel = getCategoryById(transaction.category)?.label || transaction.category;
+                      const catStyle = getCatStyle(transaction.type === "TRANSFER" ? "Transfer" : categoryLabel);
+                      const Icon = catStyle.icon;
 
-                <div className="divide-y divide-border/30">
-                  {txns.map((transaction, index) => {
-                    const profile = getProfile(transaction.profileId);
-                    const categoryLabel = getCategoryById(transaction.category)?.label || transaction.category;
-                    const catStyle = getCatStyle(transaction.type === "TRANSFER" ? "Transfer" : categoryLabel);
-                    const Icon = catStyle.icon;
+                      const amountColor =
+                        transaction.type === "INCOME" ? "text-emerald-500"
+                        : transaction.type === "EXPENSE" ? "text-destructive"
+                        : "text-slate-500";
 
-                    const amountColor =
-                      transaction.type === "INCOME" ? "text-income"
-                      : transaction.type === "EXPENSE" ? "text-expense"
-                      : "text-transfer";
+                      const sign = transaction.type === "INCOME" ? "+" : transaction.type === "EXPENSE" ? "−" : "→";
 
-                    const sign = transaction.type === "INCOME" ? "+" : transaction.type === "EXPENSE" ? "−" : "→";
-
-                    return (
-                      <motion.div
-                        key={transaction.id}
-                        initial={{ y: 4, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: Math.min(index * 0.03, 0.5) }}
-                        onClick={() => setEditTxnId(transaction.id)}
-                        className="grid grid-cols-[36px_1fr_auto] gap-[12px] items-center py-3 min-h-[56px] cursor-pointer hover:bg-card-hover rounded-xl px-2 transition-colors duration-150"
-                      >
-                        {/* Icon */}
-                        <div 
-                          className="w-[36px] h-[36px] rounded-xl flex items-center justify-center"
-                          style={{ backgroundColor: catStyle.bg }}
+                      return (
+                        <TableRow 
+                          key={transaction.id}
+                          onClick={() => setEditTxnId(transaction.id)}
+                          className="cursor-pointer transition-colors hover:bg-muted/50"
                         >
-                          <Icon size={16} color={catStyle.color} />
-                        </div>
-
-                        {/* Title & Sub */}
-                        <div className="min-w-0">
-                          <p className="text-[13px] font-semibold text-text-primary truncate">
-                            {transaction.title}
-                          </p>
-                          <p className="text-[11px] text-text-secondary truncate mt-0.5">
-                            {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel} {profile ? `· ${profile.name}` : ''}
-                          </p>
-                        </div>
-
-                        {/* Amount & Date */}
-                        <div className="text-right flex flex-col justify-center">
-                          <span className={cn("text-[13px] font-bold font-mono-amount", amountColor)}>
-                            {sign}{symbol}{Math.abs(transaction.amount).toLocaleString()}
-                          </span>
-                          <span className="text-[10px] text-text-muted mt-0.5">
+                          <TableCell>
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${catStyle.bg}`}>
+                              <Icon size={14} className={catStyle.color} />
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-medium text-foreground">{transaction.title}</div>
+                            <div className="text-xs text-muted-foreground sm:hidden mt-1">
+                              {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel} • {profile?.name}
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
+                            {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel}
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
+                            {profile?.name || "Unknown"}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell text-muted-foreground text-sm">
                             {new Date(transaction.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </span>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+                          </TableCell>
+                          <TableCell className="text-right font-mono font-bold">
+                            <span className={amountColor}>
+                              {sign}{symbol}{Math.abs(transaction.amount).toLocaleString()}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </React.Fragment>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Edit Modal */}
       {editTxnId && editTransaction && (

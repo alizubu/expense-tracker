@@ -1,11 +1,11 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { TrendingUp, TrendingDown } from "lucide-react";
-import { ResponsiveContainer, LineChart, Line } from "recharts";
-import { NumberTicker } from "@/components/magicui/number-ticker";
+import { TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Activity } from "lucide-react";
+import { ResponsiveContainer, LineChart, Line, Area, AreaChart } from "recharts";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
+import { Card } from "@/components/ui/card";
 
 interface StatsStripProps {
   netBalance: number;
@@ -20,128 +20,80 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
   
   const savingsRate = income > 0 ? Math.max(0, ((income - expenses) / income) * 100) : 0;
 
-  const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 6 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.07,
-        duration: 0.35,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    })
-  };
-
   return (
     <>
-      {/* Card 1: Net Balance */}
-      <motion.div
-        custom={0}
-        initial="hidden"
-        animate="visible"
-        variants={cardVariants}
-        className="col-span-2 xl:col-span-1 min-h-[76px] xl:h-[88px] rounded-2xl px-4 py-3 xl:px-5 xl:py-3.5 flex items-center justify-between border border-border bg-card shadow-sm hover:border-accent/20 hover:shadow-md transition-all duration-200 border-l-[3.5px] border-l-accent group"
-      >
-        <div className="flex flex-col h-full justify-between gap-[4px] xl:gap-0">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold tracking-[0.08em] uppercase text-text-secondary">Net Balance</span>
-            <div className="flex items-center gap-[4px]">
-              <div className="h-[6px] w-[6px] rounded-full bg-income animate-pulse" />
-              <span className="hidden sm:inline text-[9px] font-semibold text-income uppercase tracking-wider">Live</span>
+      <Card className="col-span-2 md:col-span-2 xl:col-span-2 min-h-[140px] rounded-xl p-6 flex flex-col justify-between border-border relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-background">
+        <div className="absolute right-0 top-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -z-10 translate-x-1/2 -translate-y-1/2"></div>
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <h3 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              Total Net Balance
+              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            </h3>
+            <div className="flex items-baseline gap-1 text-foreground">
+              <span className="text-3xl font-bold">{symbol}</span>
+              <span className="text-5xl font-bold tracking-tighter font-mono">
+                {netBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+              </span>
             </div>
           </div>
-          <div className="flex items-baseline">
-            <span className="text-[20px] sm:text-[22px] xl:text-[24px] font-bold tracking-[-0.04em] text-text-primary mr-[2px]">{symbol}</span>
-            <NumberTicker value={netBalance} decimalPlaces={0} className="text-[20px] sm:text-[22px] xl:text-[24px] font-bold tracking-[-0.04em] text-text-primary font-mono" />
+          <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+            <Activity className="h-6 w-6" />
           </div>
         </div>
+
         {sparklineData && sparklineData.length > 0 && (
-          <div className="hidden md:block h-[36px] w-[80px]">
+          <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none opacity-50">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={sparklineData}>
+              <AreaChart data={sparklineData}>
                 <defs>
-                  <linearGradient id="sparklineGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--accent-color)" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="var(--accent-color)" stopOpacity={0}/>
+                  <linearGradient id="colorNet" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <Line type="monotone" dataKey="value" stroke="var(--accent-color)" strokeWidth={1.5} dot={false} isAnimationActive={false} />
-              </LineChart>
+                <Area type="monotone" dataKey="value" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorNet)" strokeWidth={2} />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         )}
-      </motion.div>
+      </Card>
 
-      {/* Card 2: Income */}
-      <motion.div
-        custom={1}
-        initial="hidden"
-        animate="visible"
-        variants={cardVariants}
-        className="col-span-1 min-h-[76px] xl:h-[88px] rounded-2xl px-4 py-3 xl:px-5 xl:py-3.5 flex items-center justify-between border border-border bg-card shadow-sm hover:border-income/20 hover:shadow-md transition-all duration-200 border-l-[3.5px] border-l-income"
-      >
-        <div className="flex flex-col h-full justify-between gap-[4px] xl:gap-0">
-          <div className="text-[10px] font-semibold tracking-[0.08em] uppercase text-text-secondary">Income</div>
-          <div>
-            <div className="flex items-baseline text-income">
-              <span className="text-[20px] sm:text-[22px] xl:text-[24px] font-bold tracking-[-0.04em] mr-[2px]">{symbol}</span>
-              <NumberTicker value={income} decimalPlaces={0} className="text-[20px] sm:text-[22px] xl:text-[24px] font-bold tracking-[-0.04em] text-income font-mono" />
-            </div>
-            <div className="hidden sm:block text-[9px] font-semibold uppercase text-text-muted mt-0.5">This month</div>
+      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[140px] rounded-xl p-5 flex flex-col justify-between border-border bg-background shadow-sm hover:shadow-md transition-all">
+        <div className="space-y-1">
+          <h3 className="text-sm font-medium text-muted-foreground">Income</h3>
+          <div className="flex items-baseline gap-1 text-emerald-500">
+            <span className="text-xl font-bold">{symbol}</span>
+            <span className="text-2xl font-bold font-mono tracking-tight">
+              {income.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+            </span>
           </div>
         </div>
-        <TrendingUp className="hidden sm:block h-[15px] w-[15px] text-income" />
-      </motion.div>
-
-      {/* Card 3: Expenses */}
-      <motion.div
-        custom={2}
-        initial="hidden"
-        animate="visible"
-        variants={cardVariants}
-        className="col-span-1 min-h-[76px] xl:h-[88px] rounded-2xl px-4 py-3 xl:px-5 xl:py-3.5 flex items-center justify-between border border-border bg-card shadow-sm hover:border-expense/20 hover:shadow-md transition-all duration-200 border-l-[3.5px] border-l-expense"
-      >
-        <div className="flex flex-col h-full justify-between gap-[4px] xl:gap-0">
-          <div className="text-[10px] font-semibold tracking-[0.08em] uppercase text-text-secondary">Expenses</div>
-          <div>
-            <div className="flex items-baseline text-expense">
-              <span className="text-[20px] sm:text-[22px] xl:text-[24px] font-bold tracking-[-0.04em] mr-[2px]">{symbol}</span>
-              <NumberTicker value={expenses} decimalPlaces={0} className="text-[20px] sm:text-[22px] xl:text-[24px] font-bold tracking-[-0.04em] text-expense font-mono" />
-            </div>
-            <div className="hidden sm:block text-[9px] font-semibold uppercase text-text-muted mt-0.5">This month</div>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1 text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-md">
+            <TrendingUp className="h-3 w-3" />
+            <span className="font-medium">This month</span>
           </div>
         </div>
-        <TrendingDown className="hidden sm:block h-[15px] w-[15px] text-expense" />
-      </motion.div>
+      </Card>
 
-      {/* Card 4: Savings Rate */}
-      <motion.div
-        custom={3}
-        initial="hidden"
-        animate="visible"
-        variants={cardVariants}
-        className="col-span-2 xl:col-span-1 min-h-[76px] xl:h-[88px] rounded-2xl px-4 py-3 xl:px-5 xl:py-3.5 flex flex-col justify-between border border-border bg-card shadow-sm hover:border-transfer/20 hover:shadow-md transition-all duration-200 border-l-[3.5px] border-l-transfer relative pb-5"
-      >
-        <div className="flex justify-between w-full">
-          <div className="text-[10px] font-semibold tracking-[0.08em] uppercase text-text-secondary">Savings Rate</div>
-        </div>
-        <div className="flex flex-col gap-[2px] xl:gap-0">
-          <div className="flex items-baseline text-text-primary">
-            <NumberTicker value={savingsRate} decimalPlaces={1} className="text-[20px] sm:text-[22px] xl:text-[24px] font-bold tracking-[-0.04em] text-text-primary font-mono" />
-            <span className="text-[20px] sm:text-[22px] xl:text-[24px] font-bold tracking-[-0.04em]">%</span>
+      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[140px] rounded-xl p-5 flex flex-col justify-between border-border bg-background shadow-sm hover:shadow-md transition-all">
+        <div className="space-y-1">
+          <h3 className="text-sm font-medium text-muted-foreground">Expenses</h3>
+          <div className="flex items-baseline gap-1 text-destructive">
+            <span className="text-xl font-bold">{symbol}</span>
+            <span className="text-2xl font-bold font-mono tracking-tight">
+              {expenses.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+            </span>
           </div>
-          <div className="hidden sm:block text-[9px] font-semibold uppercase text-text-muted mt-0.5">of income saved</div>
         </div>
-        <div className="absolute bottom-[8px] xl:bottom-[10px] left-4 right-4 xl:left-5 xl:right-5 h-[3px] bg-card-elevated rounded-full overflow-hidden">
-          <motion.div 
-            initial={{ width: 0 }}
-            animate={{ width: `${Math.min(100, savingsRate)}%` }}
-            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-            className="h-full bg-transfer rounded-full"
-          />
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1 text-destructive bg-destructive/10 px-2 py-1 rounded-md">
+            <TrendingDown className="h-3 w-3" />
+            <span className="font-medium">This month</span>
+          </div>
         </div>
-      </motion.div>
+      </Card>
     </>
   );
 }

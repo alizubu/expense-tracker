@@ -1,6 +1,7 @@
 "use client";
 
-import { BlurFade } from "@/components/magicui/blur-fade";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -9,11 +10,10 @@ import { useUIStore } from "@/store/useUIStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { CURRENCIES } from "@/lib/currencies";
 import { EXPENSE_CATEGORIES } from "@/lib/categories";
-import { Moon, Sun, Download, Globe, Palette, LogOut, Shield, User, Save } from "lucide-react";
+import { Moon, Sun, Download, Globe, Palette, LogOut, Shield, User, Save, Wallet } from "lucide-react";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
 
 export default function SettingsPage() {
   const { selectedCurrency, setCurrency } = useUIStore();
@@ -105,177 +105,175 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-[1000px] w-full px-3 py-3 pb-20 md:px-5 md:py-5 md:pb-6 space-y-4 md:space-y-6">
-      <BlurFade delay={0}>
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-text-primary tracking-heading">Settings</h1>
-          <p className="text-sm text-text-muted mt-1">Manage your account preferences and app settings.</p>
-        </div>
-      </BlurFade>
+    <div className="flex flex-col min-h-screen p-4 lg:p-8 max-w-4xl mx-auto w-full space-y-8">
+      <div className="mb-2">
+        <h1 className="text-3xl font-bold text-foreground tracking-tight">Settings</h1>
+        <p className="text-sm text-muted-foreground mt-1">Manage your account preferences and app settings.</p>
+      </div>
 
       <div className="space-y-6">
         {/* Profile Information */}
-        <BlurFade delay={0.05}>
-          <Card className="p-5 md:p-6 bg-card border border-border">
-            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
-              <User className="h-5 w-5 text-brand-purple" />
+        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05, duration: 0.3 }}>
+          <Card className="p-6 bg-card border-border shadow-sm">
+            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+              <User className="h-5 w-5 text-primary" />
               Profile Information
             </h2>
-            <div className="space-y-5">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5 border-b border-border/20 pb-4 last:border-0 last:pb-0">
+            <div className="space-y-6">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="max-w-md">
-                  <p className="text-sm font-semibold text-text-primary">Full Name</p>
-                  <p className="text-xs text-text-muted mt-1 leading-relaxed">Your display name across the application.</p>
+                  <p className="text-sm font-semibold text-foreground">Full Name</p>
+                  <p className="text-xs text-muted-foreground mt-1">Your display name across the application.</p>
                 </div>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  containerClassName="w-full md:w-64"
+                  className="w-full md:w-64"
                   disabled={isSaving}
                 />
               </div>
 
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5 border-b border-border/20 pb-4 last:border-0 last:pb-0">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-t border-border/50">
                 <div className="max-w-md">
-                  <p className="text-sm font-semibold text-text-primary">Email Address</p>
-                  <p className="text-xs text-text-muted mt-1 leading-relaxed">Used for login and notifications (cannot be changed).</p>
+                  <p className="text-sm font-semibold text-foreground">Email Address</p>
+                  <p className="text-xs text-muted-foreground mt-1">Used for login and notifications (cannot be changed).</p>
                 </div>
                 <Input
                   type="email"
                   value={session?.user?.email || ""}
                   disabled
-                  containerClassName="w-full md:w-64"
+                  className="w-full md:w-64 bg-muted/50"
                 />
               </div>
 
-              <div className="flex justify-end pt-3">
+              <div className="flex justify-end pt-6 border-t border-border/50">
                 <Button
                   onClick={handleSaveProfile}
-                  isLoading={isSaving}
-                  disabled={!name}
-                  variant="primary"
+                  disabled={!name || isSaving}
                   className="gap-2"
                 >
                   <Save className="h-4 w-4" />
-                  Save Profile
+                  {isSaving ? "Saving..." : "Save Profile"}
                 </Button>
               </div>
             </div>
           </Card>
-        </BlurFade>
+        </motion.div>
 
         {/* Preferences */}
-        <BlurFade delay={0.1}>
-          <Card className="p-5 md:p-6 bg-card border border-border">
-            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
-              <Globe className="h-5 w-5 text-brand-purple" />
+        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.3 }}>
+          <Card className="p-6 bg-card border-border shadow-sm">
+            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+              <Globe className="h-5 w-5 text-primary" />
               Preferences
             </h2>
-            <div className="space-y-5">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5 border-b border-border/20 pb-4 last:border-0 last:pb-0">
+            <div className="space-y-6">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="max-w-md">
-                  <p className="text-sm font-semibold text-text-primary">Base Currency</p>
-                  <p className="text-xs text-text-muted mt-1 leading-relaxed">Used for all calculations, reports, and displays.</p>
+                  <p className="text-sm font-semibold text-foreground">Base Currency</p>
+                  <p className="text-xs text-muted-foreground mt-1">Used for all calculations, reports, and displays.</p>
                 </div>
-                <Select 
-                  value={selectedCurrency}
-                  onChange={setCurrency}
-                  options={currencyOptions}
-                  containerClassName="w-full md:w-64"
-                />
+                <div className="w-full md:w-64">
+                  <Select 
+                    value={selectedCurrency}
+                    onChange={setCurrency}
+                    options={currencyOptions}
+                  />
+                </div>
               </div>
 
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5 last:border-0 last:pb-0">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-t border-border/50">
                 <div className="max-w-md">
-                  <p className="text-sm font-semibold text-text-primary">Timezone</p>
-                  <p className="text-xs text-text-muted mt-1 leading-relaxed">For transaction dates and monthly reports sync.</p>
+                  <p className="text-sm font-semibold text-foreground">Timezone</p>
+                  <p className="text-xs text-muted-foreground mt-1">For transaction dates and monthly reports sync.</p>
                 </div>
-                <Select 
-                  value={timezone}
-                  onChange={setTimezone}
-                  options={timezoneOptions}
-                  containerClassName="w-full md:w-64"
-                />
+                <div className="w-full md:w-64">
+                  <Select 
+                    value={timezone}
+                    onChange={setTimezone}
+                    options={timezoneOptions}
+                  />
+                </div>
               </div>
             </div>
           </Card>
-        </BlurFade>
+        </motion.div>
 
         {/* Appearance */}
-        <BlurFade delay={0.2}>
-          <Card className="p-5 md:p-6 bg-card border border-border">
-            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
-              <Palette className="h-5 w-5 text-brand-purple" />
+        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15, duration: 0.3 }}>
+          <Card className="p-6 bg-card border-border shadow-sm">
+            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+              <Palette className="h-5 w-5 text-primary" />
               Appearance
             </h2>
-            <div className="flex items-center justify-between py-1.5">
-              <div>
-                <p className="text-sm font-semibold text-text-primary">Theme</p>
-                <p className="text-xs text-text-muted mt-1 leading-relaxed">Choose between light and dark mode styling.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="max-w-md">
+                <p className="text-sm font-semibold text-foreground">Theme</p>
+                <p className="text-xs text-muted-foreground mt-1">Choose between light and dark mode styling.</p>
               </div>
-              <div className="flex bg-card-elevated border border-border/60 rounded-xl p-1">
+              <div className="flex bg-muted rounded-lg p-1 w-full md:w-auto">
                 <button 
                   onClick={() => setTheme("light")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${theme === "light" ? "bg-white dark:bg-zinc-800 text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary"}`}
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${theme === "light" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   <Sun className="h-4 w-4" /> Light
                 </button>
                 <button 
                   onClick={() => setTheme("dark")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${theme === "dark" ? "bg-zinc-800 dark:bg-white/[0.08] text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary"}`}
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${theme === "dark" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   <Moon className="h-4 w-4" /> Dark
                 </button>
               </div>
             </div>
           </Card>
-        </BlurFade>
+        </motion.div>
 
         {/* Data Export */}
-        <BlurFade delay={0.3}>
-          <Card className="p-5 md:p-6 bg-card border border-border">
-            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
-              <Download className="h-5 w-5 text-brand-purple" />
+        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.3 }}>
+          <Card className="p-6 bg-card border-border shadow-sm">
+            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+              <Download className="h-5 w-5 text-primary" />
               Data Export
             </h2>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5">
-              <div>
-                <p className="text-sm font-semibold text-text-primary">Export Transactions</p>
-                <p className="text-xs text-text-muted mt-1 leading-relaxed">Download all your transaction records as a standard CSV file.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="max-w-md">
+                <p className="text-sm font-semibold text-foreground">Export Transactions</p>
+                <p className="text-xs text-muted-foreground mt-1">Download all your transaction records as a standard CSV file.</p>
               </div>
               <Button 
                 onClick={handleExportCSV}
-                variant="secondary"
-                className="gap-2"
+                variant="outline"
+                className="gap-2 w-full md:w-auto"
               >
                 <Download className="h-4 w-4" /> Export CSV
               </Button>
             </div>
           </Card>
-        </BlurFade>
+        </motion.div>
 
         {/* Account */}
-        <BlurFade delay={0.4}>
-          <Card className="p-5 md:p-6 bg-card border border-border">
-            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
-              <Shield className="h-5 w-5 text-expense" />
-              Account
+        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.25, duration: 0.3 }}>
+          <Card className="p-6 bg-card border-destructive/20 shadow-sm">
+            <h2 className="text-lg font-bold text-destructive flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+              <Shield className="h-5 w-5" />
+              Account Security
             </h2>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5">
-              <div>
-                <p className="text-sm font-semibold text-text-primary">Sign Out</p>
-                <p className="text-xs text-text-muted mt-1 leading-relaxed">Log out of your current session safely.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="max-w-md">
+                <p className="text-sm font-semibold text-foreground">Sign Out</p>
+                <p className="text-xs text-muted-foreground mt-1">Log out of your current session safely.</p>
               </div>
               <Button 
                 onClick={() => import("next-auth/react").then(({ signOut }) => signOut())} 
                 variant="destructive"
-                className="gap-2 font-semibold"
+                className="gap-2 font-medium w-full md:w-auto"
               >
                 <LogOut className="h-4 w-4" /> Sign Out
               </Button>
             </div>
           </Card>
-        </BlurFade>
+        </motion.div>
       </div>
     </div>
   );
