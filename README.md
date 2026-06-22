@@ -42,24 +42,27 @@ expense-tracker/
 ├── src/
 │   ├── app/                      # Next.js App Router (Pages & API)
 │   │   ├── (auth)/               # Route Group: Authentication
-│   │   │   ├── sign-in/          # User Sign-in page
-│   │   │   └── sign-up/          # User Registration page
+│   │   │   ├── sign-in/page.tsx  # User Sign-in page
+│   │   │   └── sign-up/page.tsx  # User Registration page
 │   │   ├── (dashboard)/          # Route Group: Authenticated App
-│   │   │   ├── analytics/        # Full analytics & charts view
+│   │   │   ├── analytics/page.tsx# Full analytics & charts view
 │   │   │   ├── profiles/         # Profile management & dynamic details
-│   │   │   ├── settings/         # User & app settings
-│   │   │   ├── transactions/     # Comprehensive transaction timeline
-│   │   │   ├── DashboardPage.tsx # Core dashboard overview
-│   │   │   └── layout.tsx        # Protected dashboard shell (Topbar/Sidebar)
+│   │   │   │   ├── [id]/page.tsx # Dynamic profile detail view
+│   │   │   │   └── page.tsx      # Profile listing page
+│   │   │   ├── settings/page.tsx # User & app settings
+│   │   │   ├── transactions/page.tsx # Comprehensive transaction timeline
+│   │   │   ├── DashboardPage.tsx # Core dashboard overview component
+│   │   │   ├── layout.tsx        # Protected dashboard shell (Topbar/Sidebar)
+│   │   │   └── page.tsx          # Core dashboard overview page
 │   │   ├── api/                  # Backend API endpoints
-│   │   │   ├── auth/             # NextAuth handlers
-│   │   │   ├── dashboard/        # Aggregated dashboard stats
-│   │   │   ├── profiles/         # Profile CRUD operations
-│   │   │   ├── register/         # Account creation logic
-│   │   │   ├── transactions/     # Transaction CRUD operations
-│   │   │   └── user/             # User data retrieval
+│   │   │   ├── auth/[...nextauth]/route.ts  # NextAuth handlers
+│   │   │   ├── dashboard/route.ts           # Aggregated dashboard stats
+│   │   │   ├── profiles/route.ts            # Profile CRUD operations
+│   │   │   ├── register/route.ts            # Account creation logic
+│   │   │   ├── transactions/route.ts        # Transaction CRUD operations
+│   │   │   └── user/route.ts                # User data retrieval
 │   │   ├── fonts/                # Local font assets (Geist & GeistMono)
-│   │   ├── onboarding/           # Route Group: User Onboarding
+│   │   ├── onboarding/page.tsx   # User Onboarding page
 │   │   ├── error.tsx             # Global error boundary
 │   │   ├── globals.css           # Global Tailwind directives & custom keyframes
 │   │   ├── layout.tsx            # Root application layout & provider wrapping
