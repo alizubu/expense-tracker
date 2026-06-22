@@ -14,7 +14,7 @@ export default function DashboardLayout({
       <div className="flex flex-1 flex-col min-w-0 lg:overflow-hidden">
         <ClientLayoutWrapper>
           <Topbar />
-          <main className="flex-1 p-3 sm:p-4 xl:p-5 overflow-y-auto lg:overflow-hidden pb-20 lg:pb-5">
+          <main className="flex-1 p-3 sm:p-4 xl:p-5 overflow-y-auto pb-20 lg:pb-5">
             {children}
           </main>
         </ClientLayoutWrapper>
