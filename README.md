@@ -1,155 +1,117 @@
-# Personal Expense Tracker
+# Personal Expense Tracker 💳
 
-A modern, full-stack Personal Expense Tracker built with Next.js 14 (App Router), Prisma, NextAuth, and Tailwind CSS. The application allows users to effortlessly manage their finances, track transactions, and visualize their spending habits with beautiful interactive charts.
+A premium, modern, full-stack Personal Expense Tracker built with **Next.js 14 (App Router)**, **Prisma**, **NextAuth**, and **Tailwind CSS**. Designed with an obsessive focus on UI/UX, the application allows users to effortlessly manage their finances, track transactions, and visualize their spending habits with beautiful interactive charts and micro-animations.
+
+---
 
 ## 🚀 Features
 
-- **Authentication**: Secure sign-in and sign-up flows using NextAuth.js.
-- **Dashboard Overview**: Get a quick glance at your net balance, recent transactions, and spending summaries.
-- **Multiple Profiles**: Create and manage multiple financial profiles to organize personal vs. business expenses.
-- **Transaction Management**: Add, edit, and organize individual transactions seamlessly.
-- **Interactive Analytics**: Visualize your spending habits through category donuts, daily line charts, and monthly bar charts (powered by Recharts).
-- **Modern UI/UX**: Fully responsive, accessible, and beautifully animated using Tailwind CSS, Framer Motion, and MagicUI components.
-- **Dark/Light Mode**: Full theme customization depending on your preferences.
-- **Enterprise Security**: Comprehensive security hardening including API rate limiting, robust input validation and sanitization, audit logging, and advanced security headers.
+- **Premium UI/UX Design**: A stunning $50,000-level mobile-first interface. Features glassmorphism, floating bottom navigation with safe-area support, custom animated pills, and fluid micro-interactions powered by Framer Motion.
+- **Authentication & Security**: Secure sign-in, sign-up, and session management using NextAuth.js. Comprehensive security hardening including robust input validation, route protection, and sanitized endpoints.
+- **Interactive Dashboard Overview**: Get a quick, beautiful glance at your net balance, recent transactions, and spending summaries. 
+- **Multi-Profile Architecture**: Create and manage multiple financial profiles (e.g., Personal, Business, Savings) to keep distinct ledgers cleanly organized.
+- **Advanced Transaction Management**: 
+  - Add, edit, and organize individual transactions seamlessly.
+  - Granular control over Income, Expenses, and cross-profile Transfers.
+  - Category-themed UI elements (custom colors and icons for Groceries, Gaming, Travel, etc.).
+- **Interactive Analytics**: Visualize your spending habits through category donuts, daily line charts, and monthly bar charts powered by Recharts.
+- **Dark Mode Optimized**: Built ground-up for dark mode with curated HSL color palettes, subtle inner shadows, and glowing accent rings.
+
+---
 
 ## 🛠 Tech Stack
 
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Core Framework**: [Next.js 14](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Database ORM**: [Prisma](https://www.prisma.io/)
 - **Authentication**: [NextAuth.js](https://next-auth.js.org/)
-- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/) (Client-side global stores)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components**: [MagicUI](https://magicui.design/), [Lucide Icons](https://lucide.dev/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/) & [MagicUI](https://magicui.design/)
+- **Icons**: [Lucide React](https://lucide.dev/)
 - **Charts**: [Recharts](https://recharts.org/)
 
-## 📂 Project File Structure
+---
+
+## 📂 Detailed Project File Structure
 
 ```text
 expense-tracker/
 ├── prisma/
-│   └── schema.prisma             # Database schema and models
+│   └── schema.prisma             # Database schema, models, and relations
 ├── src/
-│   ├── app/                      # Next.js App Router root
-│   │   ├── (auth)/               # Auth routes group
-│   │   │   ├── sign-in/
-│   │   │   │   └── page.tsx      # Sign-in page
-│   │   │   └── sign-up/
-│   │   │       └── page.tsx      # Sign-up page
-│   │   ├── (dashboard)/          # Dashboard routes group
-│   │   │   ├── analytics/
-│   │   │   │   └── page.tsx      # Analytics view
-│   │   │   ├── profiles/
-│   │   │   │   ├── [id]/
-│   │   │   │   │   └── page.tsx  # Dynamic profile details
-│   │   │   │   └── page.tsx      # Profiles list view
-│   │   │   ├── settings/
-│   │   │   │   └── page.tsx      # App settings view
-│   │   │   ├── transactions/
-│   │   │   │   └── page.tsx      # Transactions list view
-│   │   │   ├── layout.tsx        # Dashboard specific layout
-│   │   │   └── page.tsx          # Dashboard overview home
-│   │   ├── api/                  # Backend API routes
-│   │   │   ├── auth/[...nextauth]/
-│   │   │   │   └── route.ts      # NextAuth.js endpoints
-│   │   │   ├── dashboard/
-│   │   │   │   └── route.ts      # Dashboard stats API
-│   │   │   ├── profiles/
-│   │   │   │   └── route.ts      # Profiles CRUD API
-│   │   │   ├── register/
-│   │   │   │   └── route.ts      # User registration API
-│   │   │   ├── transactions/
-│   │   │   │   └── route.ts      # Transactions CRUD API
-│   │   │   └── user/
-│   │   │       └── route.ts      # User details API
-│   │   ├── fonts/                # Custom local fonts
-│   │   │   ├── GeistMonoVF.woff
-│   │   │   └── GeistVF.woff
-│   │   ├── onboarding/
-│   │   │   └── page.tsx          # Initial onboarding flow
-│   │   ├── error.tsx             # Global error boundary
-│   │   ├── favicon.ico           # Website favicon
-│   │   ├── globals.css           # Global Tailwind CSS file
-│   │   ├── layout.tsx            # Root application layout
-│   │   └── loading.tsx           # Global loading state
-│   ├── components/               # React components directory
-│   │   ├── analytics/
-│   │   │   ├── AnalyticsStatsRow.tsx
-│   │   │   ├── CategoryDonutChart.tsx
-│   │   │   ├── DailyLineChart.tsx
-│   │   │   ├── MonthlyBarChart.tsx
-│   │   │   ├── ProfileAreaChart.tsx
-│   │   │   └── TopCategories.tsx
-│   │   ├── dashboard/
-│   │   │   ├── DashboardClient.tsx
-│   │   │   ├── ProfileCard.tsx
-│   │   │   ├── QuickStats.tsx
-│   │   │   ├── SpendingChart.tsx
-│   │   │   ├── StatsStrip.tsx
-│   │   │   └── TransactionFeed.tsx
-│   │   ├── layout/
-│   │   │   ├── ClientLayoutWrapper.tsx
-│   │   │   ├── MobileNav.tsx
-│   │   │   ├── Sidebar.tsx
-│   │   │   └── Topbar.tsx
-│   │   ├── magicui/              # MagicUI animated components
-│   │   │   ├── animated-gradient-text.tsx
-│   │   │   ├── animated-list.tsx
-│   │   │   ├── blur-fade.tsx
-│   │   │   ├── border-beam.tsx
-│   │   │   ├── magic-card.tsx
-│   │   │   ├── meteors.tsx
-│   │   │   ├── number-ticker.tsx
-│   │   │   ├── shimmer-button.tsx
-│   │   │   └── sparkles.tsx
-│   │   ├── profiles/
-│   │   │   └── CreateProfileModal.tsx
-│   │   ├── providers/
-│   │   │   ├── AuthProvider.tsx
-│   │   │   └── ThemeProvider.tsx
-│   │   ├── transactions/
-│   │   │   ├── AccountSelector.tsx       # Animated custom dropdown for profile selection
-│   │   │   ├── AddTransactionModal.tsx   # Modal for adding new transactions
-│   │   │   ├── CategoryGrid.tsx          # Interactive 3-column category grid
-│   │   │   ├── ConfirmButton.tsx         # Glowing animated submit button
-│   │   │   └── EditTransactionModal.tsx  # Modal for editing existing transactions
-│   ├── lib/                      # Helper functions and configurations
-│   │   ├── auth.ts               # NextAuth setup and options
-│   │   ├── categories.ts         # Expense category definitions
-│   │   ├── currencies.ts         # Supported currencies setup
-│   │   ├── formatters.ts         # Currency and Date formatting
-│   │   ├── prisma.ts             # Prisma DB client initialization
-│   │   ├── profile-types.ts      # Profile TS interfaces
-│   │   ├── profiles.ts           # Profile logic helpers
-│   │   ├── types.ts              # Global TS interfaces
-│   │   └── utils.ts              # Tailwind/general utility functions
-│   ├── store/                    # Zustand Global Stores
-│   │   ├── useProfileStore.ts
-│   │   ├── useTransactionStore.ts
-│   │   └── useUIStore.ts
-│   └── middleware.ts             # Next.js Edge Middleware for routing
-├── .env                          # Environment variables
-├── .env.local                    # Local environment overrides
-├── .eslintrc.json                # ESLint configuration
-├── .gitignore                    # Git ignored files
-├── next-env.d.ts                 # Next.js TypeScript definitions
-├── next.config.mjs               # Next.js configuration
-├── package-lock.json             # NPM dependency tree lock
-├── package.json                  # NPM dependencies and scripts
-├── postcss.config.mjs            # PostCSS configuration
-├── tailwind.config.ts            # Tailwind CSS configuration
-└── tsconfig.json                 # TypeScript configuration
+│   ├── app/                      # Next.js App Router (Pages & API)
+│   │   ├── (auth)/               # Route Group: Authentication
+│   │   │   ├── sign-in/page.tsx  # User Sign-in page
+│   │   │   └── sign-up/page.tsx  # User Registration page
+│   │   ├── (dashboard)/          # Route Group: Authenticated App
+│   │   │   ├── analytics/        # Full analytics & charts view
+│   │   │   ├── profiles/         # Profile management & dynamic details
+│   │   │   ├── settings/         # User & app settings
+│   │   │   ├── transactions/     # Comprehensive transaction timeline
+│   │   │   ├── layout.tsx        # Protected dashboard shell (Topbar/Sidebar)
+│   │   │   └── DashboardPage.tsx # Core dashboard overview
+│   │   ├── api/                  # Backend API endpoints
+│   │   │   ├── auth/[...nextauth]/route.ts  # NextAuth handlers
+│   │   │   ├── dashboard/route.ts           # Aggregated dashboard stats
+│   │   │   ├── profiles/route.ts            # Profile CRUD operations
+│   │   │   ├── register/route.ts            # Account creation logic
+│   │   │   ├── transactions/route.ts        # Transaction CRUD operations
+│   │   │   └── user/route.ts                # User data retrieval
+│   │   ├── fonts/                # Local font assets (Geist & GeistMono)
+│   │   ├── globals.css           # Global Tailwind directives & custom keyframes
+│   │   ├── layout.tsx            # Root application layout & provider wrapping
+│   │   └── middleware.ts         # Edge Middleware for auth route protection
+│   ├── components/               # Reusable React UI Components
+│   │   ├── analytics/            # Recharts implementations (Donut, Bar, Line)
+│   │   ├── dashboard/            # Dashboard-specific widgets (QuickStats, TransactionFeed)
+│   │   ├── layout/               # Shell components (MobileNav, Sidebar, Topbar)
+│   │   ├── magicui/              # High-end animated micro-components (BlurFade, Meteors)
+│   │   ├── profiles/             # Modals and forms for Profile manipulation
+│   │   ├── providers/            # React Context providers (Theme, NextAuth)
+│   │   └── transactions/         # Modals, Grids, and Forms for Transactions
+│   ├── lib/                      # Helper Utilities & Core Configs
+│   │   ├── auth.ts               # NextAuth configuration options
+│   │   ├── categories.ts         # Master list of transaction categories and meta
+│   │   ├── currencies.ts         # Supported global currency symbols
+│   │   ├── formatters.ts         # Number and Date formatting helpers
+│   │   ├── prisma.ts             # Global Prisma Client singleton
+│   │   └── utils.ts              # Tailwind class merging (cn)
+│   └── store/                    # Zustand Stores (Client State)
+│       ├── useProfileStore.ts    # Manages loaded profiles
+│       ├── useTransactionStore.ts# Manages transactions, filtering, and sorting
+│       └── useUIStore.ts         # Manages global modals, sidebar state, and currency
+├── .env.local                    # Local environment variables (Auth secrets, DB URL)
+├── next.config.mjs               # Next.js configuration & compiler options
+├── tailwind.config.ts            # Tailwind theme, colors, and custom animations
+└── tsconfig.json                 # TypeScript compiler configuration
 ```
+
+---
+
+## 🔐 Environment Variables
+
+To run this project locally, you will need to add the following environment variables to your `.env` or `.env.local` file:
+
+```env
+# Database configuration
+DATABASE_URL="your_database_connection_string"
+
+# NextAuth configuration
+NEXTAUTH_SECRET="your_generated_random_secret_string"
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+---
 
 ## 💻 Getting Started
 
 ### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) installed along with a package manager (`npm`, `yarn`, `pnpm`, or `bun`).
+Make sure you have [Node.js](https://nodejs.org/) (v18+ recommended) installed along with `npm`.
 
 ### Installation
 
-1. **Clone the repository** (if applicable):
+1. **Clone the repository**:
    ```bash
    git clone <your-repo-url>
    cd expense-tracker
@@ -161,7 +123,7 @@ Make sure you have [Node.js](https://nodejs.org/) installed along with a package
    ```
 
 3. **Set up the database**:
-   Configure your database environment variable in the `.env` file, then run Prisma migrations to initialize the database:
+   Configure your `DATABASE_URL` in the `.env` file, then run Prisma to sync the schema to your database:
    ```bash
    npx prisma generate
    npx prisma db push
@@ -172,8 +134,16 @@ Make sure you have [Node.js](https://nodejs.org/) installed along with a package
    npm run dev
    ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. **Open the app**:
+   Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
 
 ## 🚀 Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new). Make sure to set your Environment Variables (like `DATABASE_URL` and `NEXTAUTH_SECRET`) in your deployment dashboard. For more details, check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).
+This application is fully optimized for deployment on [Vercel](https://vercel.com/new). 
+
+1. Push your code to a GitHub repository.
+2. Import the project into Vercel.
+3. Add your `DATABASE_URL` and `NEXTAUTH_SECRET` environment variables in the Vercel dashboard.
+4. Deploy! Vercel will automatically run `prisma generate && next build` as configured in the `package.json` build script.
