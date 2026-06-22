@@ -12,8 +12,6 @@ interface QuickStatsProps {
   profilesCount: number;
 }
 
-import { motion } from "framer-motion";
-
 export function QuickStats({
   transactionsCount,
   avgDailySpend,
@@ -75,40 +73,43 @@ export function QuickStats({
   ];
 
   return (
-    <div className="flex flex-col w-full h-auto lg:h-full premium-card p-[16px] overflow-hidden rounded-[16px] border border-[rgba(255,255,255,0.055)] bg-[linear-gradient(145deg,#0f0f1e_0%,#0c0c18_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.25)] transition-all duration-200 card-hover">
+    <div className="flex flex-col w-full h-auto md:h-full md:premium-card md:p-[16px] md:overflow-hidden">
       {/* Header */}
-      <h2 className="text-[10px] font-medium text-[#334155] uppercase tracking-[0.10em] mb-2 flex-shrink-0 h-[32px] flex items-center">
-        QUICK STATS
+      <h2 className="hidden md:flex text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em] mb-2 flex-shrink-0 h-[32px] items-center">
+        Quick Stats
       </h2>
 
       {/* List */}
-      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto hide-scrollbar">
+      <div className="flex flex-row overflow-x-auto hide-scrollbar gap-[8px] py-[4px] md:flex-col md:overflow-visible md:gap-0 md:py-0 md:flex-1 md:min-h-0 touch-pan-x">
         {stats.map((stat, i) => {
           const Icon = stat.icon;
           return (
             <div 
               key={stat.id}
-              className="grid grid-cols-[28px_1fr_90px] gap-[14px] items-center flex-shrink-0 h-[44px] rounded-[8px] hover:bg-[rgba(255,255,255,0.018)] transition-colors duration-150 px-1 border-b border-[rgba(255,255,255,0.04)] last:border-0"
+              className="flex-shrink-0 w-[130px] h-[62px] rounded-[12px] p-[10px] flex flex-col justify-between border border-white/[0.06] md:border-x-0 md:border-t-0 md:border-b md:border-[rgba(255,255,255,0.04)] md:last:border-0 md:w-auto md:h-[40px] md:rounded-none md:p-0 md:flex-row md:items-center"
+              style={{
+                background: typeof window !== 'undefined' && window.innerWidth < 768 ? "linear-gradient(145deg, #111120, #0d0d18)" : "transparent"
+              }}
             >
-              {/* Icon Chip */}
-              <motion.div 
-                whileHover={{ rotate: i % 2 === 0 ? 5 : -5 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                className="flex items-center justify-center w-[28px] h-[28px] rounded-[8px]"
-                style={{ backgroundColor: stat.iconBg }}
-              >
-                <Icon size={13} color={stat.iconColor} />
-              </motion.div>
+              <div className="md:hidden absolute inset-0 bg-[linear-gradient(145deg,#111120_0%,#0d0d18_100%)] rounded-[12px] -z-10" />
               
-              {/* Label */}
-              <div className="text-[12px] text-[#64748b] truncate">
-                {stat.label}
+              {/* Top / Left */}
+              <div className="flex items-center gap-[6px] md:gap-[10px] md:flex-1">
+                <div 
+                  className="flex items-center justify-center w-[16px] h-[16px] rounded-[4px] md:w-[28px] md:h-[28px] md:rounded-[8px] flex-shrink-0"
+                  style={{ backgroundColor: stat.iconBg }}
+                >
+                  <Icon className="w-[10px] h-[10px] md:w-[13px] md:h-[13px]" color={stat.iconColor} />
+                </div>
+                <span className="text-[10px] md:text-[12px] text-[#64748b] truncate">
+                  {stat.label}
+                </span>
               </div>
               
-              {/* Value */}
-              <div className="text-right">
+              {/* Bottom / Right */}
+              <div className="flex-shrink-0 text-left md:text-right md:w-[80px]">
                 <span 
-                  className={`text-[13px] font-semibold ${stat.isCurrency ? 'font-amount' : 'font-mono'} ${stat.isCapitalize ? 'capitalize' : ''}`}
+                  className={`text-[13px] font-semibold ${stat.isCurrency ? 'font-mono' : ''} ${stat.isCapitalize ? 'capitalize' : ''}`}
                   style={{ color: stat.textColor || '#f1f5f9' }}
                 >
                   {stat.value}

@@ -34,9 +34,6 @@ interface TransactionFeedProps {
   transactions: any[];
 }
 
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-
 export function TransactionFeed({ transactions }: TransactionFeedProps) {
   const { selectedCurrency, openModal } = useUIStore();
   const { profiles } = useProfileStore();
@@ -83,23 +80,22 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
   });
 
   return (
-    <div className="flex flex-col w-full h-auto lg:h-full premium-card p-[16px] pb-2 overflow-visible lg:overflow-hidden rounded-[16px] border border-[rgba(255,255,255,0.055)] bg-[linear-gradient(145deg,#0f0f1e_0%,#0c0c18_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.25)] transition-all duration-200 card-hover">
+    <div className="flex flex-col w-full h-auto md:h-full premium-card p-[16px] pb-2 overflow-visible md:overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between flex-shrink-0 h-[32px] mb-2">
-        <h2 className="text-[10px] font-medium text-[#334155] uppercase tracking-[0.10em]">
-          RECENT TRANSACTIONS
+        <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em]">
+          Recent Transactions
         </h2>
         <Link 
           href="/transactions"
-          className="text-[12px] font-medium text-[#7c3aed] hover:underline transition-colors flex items-center gap-[4px]"
+          className="text-[12px] font-medium text-[#7c3aed] hover:underline transition-colors"
         >
-          <span>View all</span>
-          <ArrowRight size={12} />
+          View all →
         </Link>
       </div>
 
       {/* Content Area */}
-      <div className="flex flex-col flex-1 overflow-y-auto hide-scrollbar min-h-0 relative px-1 pb-2">
+      <div className="flex flex-col md:flex-1 md:overflow-y-auto hide-scrollbar md:min-h-0 relative -mx-2 px-2 pb-2">
         {transactions.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="w-[32px] h-[32px] rounded-full bg-[rgba(255,255,255,0.02)] flex items-center justify-center mb-2">
@@ -111,8 +107,8 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
           Object.entries(groupedByDate).map(([dateStr, txns], groupIndex) => (
             <div key={dateStr}>
               {/* Date Group Header */}
-              <div className="sticky top-0 z-10 h-[26px] bg-[rgba(14,14,28,0.97)] backdrop-blur-md flex items-center gap-[10px] px-[2px] mb-1 rounded-sm">
-                <span className="text-[10px] font-medium text-[#334155] uppercase tracking-[0.07em] flex-shrink-0">
+              <div className="sticky top-0 z-10 h-[24px] bg-[#0f0f1a] flex items-center gap-2 pt-1 mb-1">
+                <span className="text-[10px] font-medium text-[#334155] uppercase tracking-[0.06em] flex-shrink-0">
                   {dateStr}
                 </span>
                 <div className="h-[1px] bg-[rgba(255,255,255,0.04)] flex-1" />
@@ -139,28 +135,18 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                   prefix = "→";
                 }
 
-                // Calculate global index for staggered animation delay
-                let globalIndex = index;
-                for (let i = 0; i < groupIndex; i++) {
-                  globalIndex += Object.values(groupedByDate)[i].length;
-                }
-
                 return (
-                  <motion.div 
+                  <div 
                     key={t.id}
-                    initial={{ x: -8, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: globalIndex * 0.035, duration: 0.3 }}
-                    whileHover={{ x: 2, backgroundColor: "rgba(255,255,255,0.018)", borderRadius: "8px" }}
                     onClick={() => openModal("addTransaction")}
-                    className="grid grid-cols-[30px_1fr_auto] gap-[10px] items-center h-[42px] px-[2px] cursor-pointer transition-colors border-b border-[rgba(255,255,255,0.035)] last:border-b-0"
+                    className="grid grid-cols-[32px_1fr_auto] gap-[12px] items-center py-[10px] px-[4px] rounded-[8px] hover:bg-[rgba(255,255,255,0.02)] cursor-pointer transition-colors group border-b border-[rgba(255,255,255,0.04)] last:border-b-0"
                   >
                     {/* Icon */}
                     <div 
-                      className="w-[30px] h-[30px] rounded-[9px] flex items-center justify-center flex-shrink-0"
+                      className="w-[32px] h-[32px] rounded-[10px] flex items-center justify-center flex-shrink-0"
                       style={{ backgroundColor: catStyle.bg }}
                     >
-                      <Icon size={13} color={catStyle.color} />
+                      <Icon size={14} color={catStyle.color} />
                     </div>
 
                     {/* Title + Sub */}
@@ -168,18 +154,21 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                       <span className="text-[13px] font-medium text-[#f1f5f9] truncate">
                         {t.title}
                       </span>
-                      <span className="text-[10px] text-[#475569] truncate">
+                      <span className="text-[11px] text-[#475569] truncate mt-[1px]">
                         {t.type === "TRANSFER" ? "Transfer" : categoryLabel} · {profileName}
                       </span>
                     </div>
 
-                    {/* Amount (right-aligned, no date) */}
+                    {/* Amount + Date */}
                     <div className="flex flex-col items-end justify-center flex-shrink-0">
-                      <span className={`text-[13px] font-semibold font-amount ${amountColor}`}>
+                      <span className={`text-[13px] font-[600] font-mono-amount ${amountColor}`}>
                         {prefix}{symbol}{Math.abs(t.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                       </span>
+                      <span className="text-[10px] text-[#334155] mt-[2px]">
+                        {format(new Date(t.date), "h:mm a")}
+                      </span>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
