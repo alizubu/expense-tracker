@@ -9,12 +9,13 @@ const config: Config = {
   darkMode: "class",
   theme: {
     screens: {
-      xs: '320px',
+      xs: '360px',
       sm: '480px',
       md: '640px',
       lg: '768px',
       xl: '1024px',
       '2xl': '1280px',
+      '3xl': '1440px',
     },
     extend: {
       fontFamily: {
@@ -22,14 +23,15 @@ const config: Config = {
         mono: ["GeistMono", "monospace"],
       },
       colors: {
-        page: "#08080f",
-        card: "#0f0f1a",
-        "card-2": "#111120",
+        page: "#07070e",
+        card: "#0e0e1c",
+        accent: "#7c3aed",
+        "accent-light": "#a78bfa",
         "accent-dim": "rgba(124,58,237,0.12)",
+        "card-2": "#111120",
         "dark-base": "#0a0a0f",
         "dark-card": "#111118",
         "dark-border": "rgba(255,255,255,0.06)",
-        accent: "#7c3aed",
         background: {
           DEFAULT: "#0A0A0F",
           primary: "#0A0A0F",

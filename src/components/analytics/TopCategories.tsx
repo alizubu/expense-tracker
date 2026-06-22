@@ -68,11 +68,11 @@ export function TopCategories() {
   }, [transactions, selectedMonth, selectedYear]);
 
   return (
-    <div className="flex flex-col w-full h-full premium-card p-[16px] overflow-hidden">
+    <div className="flex flex-col w-full h-full premium-card p-[16px] overflow-hidden rounded-[16px] border border-[rgba(255,255,255,0.055)] bg-[linear-gradient(145deg,#0f0f1e_0%,#0c0c18_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.25)] transition-all duration-200 card-hover">
       {/* Header */}
       <div className="flex items-center justify-between mb-2 flex-shrink-0 h-[32px]">
-        <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em]">
-          Top Spending
+        <h2 className="text-[10px] font-medium text-[#334155] uppercase tracking-[0.10em]">
+          TOP SPENDING
         </h2>
         <span className="text-[10px] text-[#334155]">
           This month
@@ -80,7 +80,7 @@ export function TopCategories() {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 -mx-2 px-2 flex flex-col pb-2">
+      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 flex flex-col pb-2">
         {categoryData.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="w-[32px] h-[32px] rounded-full bg-[rgba(255,255,255,0.02)] flex items-center justify-center mb-2">
@@ -97,36 +97,36 @@ export function TopCategories() {
             return (
               <div 
                 key={cat.id} 
-                className="flex flex-col justify-center h-[52px] py-[6px] px-2 rounded-[8px] hover:bg-[rgba(255,255,255,0.02)] transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-b-0"
+                className="flex flex-col justify-center h-[54px] py-[6px] px-1 rounded-[8px] hover:bg-[rgba(255,255,255,0.018)] transition-colors border-b border-[rgba(255,255,255,0.035)] last:border-b-0"
               >
                 {/* Line 1 */}
                 <div className="flex items-center gap-2 mb-[4px]">
                   <div 
-                    className="flex h-[20px] w-[20px] rounded-full items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: `${accent}1F` }} // 1F is ~12% opacity in hex
+                    className="flex h-[20px] w-[20px] rounded-[7px] items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${accent}21` }} // 13% opacity roughly ~21 hex
                   >
                     <Icon size={11} color={accent} />
                   </div>
                   <span className="text-[12px] font-medium text-[#f1f5f9] flex-1 truncate">
                     {name}
                   </span>
-                  <span className="text-[13px] font-semibold text-[#f1f5f9] font-mono flex-shrink-0">
+                  <span className="text-[13px] font-semibold text-[#f1f5f9] font-amount flex-shrink-0 text-right">
                     {symbol}{cat.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </span>
                 </div>
                 
                 {/* Line 2 */}
                 <div className="flex items-center gap-3">
-                  <div className="flex-1 h-[4px] bg-[rgba(255,255,255,0.06)] rounded-[2px] overflow-hidden">
+                  <div className="flex-1 h-[4px] bg-[rgba(255,255,255,0.055)] rounded-[2px] overflow-hidden">
                     <motion.div
-                      initial={{ width: 0 }}
+                      initial={{ width: '0%' }}
                       animate={{ width: `${cat.fillRatio}%` }}
-                      transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.05 }}
+                      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: index * 0.06 }}
                       className="h-full rounded-[2px]"
                       style={{ backgroundColor: accent }}
                     />
                   </div>
-                  <span className="text-[10px] text-[#334155] w-[28px] text-right">
+                  <span className="text-[10px] text-[#475569] min-w-[36px] text-right">
                     {cat.percentage.toFixed(1)}%
                   </span>
                 </div>

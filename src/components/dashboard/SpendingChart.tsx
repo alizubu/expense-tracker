@@ -31,17 +31,23 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
   const symbol = getCurrencySymbol(useUIStore.getState().selectedCurrency);
 
   return (
-    <div className="bg-[#1a1830] border border-[rgba(124,58,237,0.25)] rounded-[8px] px-[10px] py-[6px] text-[12px] shadow-lg">
-      <div className="flex items-center gap-2 mb-1">
-        <div className="h-2 w-2 rounded-full" style={{ backgroundColor: data.color }} />
-        <span className="font-medium text-[#f1f5f9]">{data.name}</span>
+    <div className="bg-[rgba(14,14,28,0.96)] border border-[rgba(124,58,237,0.2)] rounded-[10px] px-[12px] py-[8px] text-[12px] shadow-lg backdrop-blur-md">
+      <div className="flex flex-col gap-1">
+        <span className="text-[11px] text-[#94a3b8]">{data.name}</span>
+        <div className="flex items-baseline gap-2">
+          <span className="text-[13px] font-semibold text-[#f1f5f9] font-amount">
+            {symbol}{data.value.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+          </span>
+          <span className="text-[10px] text-[#475569]">
+            {data.percentage.toFixed(1)}%
+          </span>
+        </div>
       </div>
-      <p className="text-[#94a3b8]">
-        {symbol}{data.value.toLocaleString("en-US", { maximumFractionDigits: 0 })} ({data.percentage.toFixed(1)}%)
-      </p>
     </div>
   );
 }
+
+import { motion } from "framer-motion";
 
 export function SpendingChart() {
   const { transactions } = useTransactionStore();
@@ -92,13 +98,13 @@ export function SpendingChart() {
   const totalSpent = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="flex flex-col w-full h-auto sm:h-full premium-card p-[16px] overflow-visible sm:overflow-hidden">
+    <div className="flex flex-col w-full h-auto lg:h-full premium-card p-[16px] overflow-visible lg:overflow-hidden rounded-[16px] border border-[rgba(255,255,255,0.055)] bg-[linear-gradient(145deg,#0f0f1e_0%,#0c0c18_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.25)] transition-all duration-200 card-hover">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 flex-shrink-0 h-[32px]">
-        <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em]">
-          Spending By Category
+        <h2 className="text-[10px] font-medium text-[#334155] uppercase tracking-[0.10em]">
+          SPENDING BY CATEGORY
         </h2>
-        <span className="text-[11px] text-[#64748b] cursor-pointer">
+        <span className="text-[12px] text-[#475569] cursor-pointer hover:text-[#94a3b8] transition-colors">
           This Month ▾
         </span>
       </div>
@@ -111,21 +117,24 @@ export function SpendingChart() {
           <span className="text-[12px] text-[#1e293b]">No data yet</span>
         </div>
       ) : (
-        <div className="flex flex-col sm:flex-1 min-h-0">
+        <div className="flex flex-col flex-1 min-h-0">
           {/* Chart Area */}
-          <div className="relative h-[140px] flex-shrink-0">
+          <div className="relative h-[150px] flex-shrink-0">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={isMobile ? 54 : 48}
-                  outerRadius={isMobile ? 72 : 66}
-                  strokeWidth={2}
-                  stroke="#0f0f1a"
+                  innerRadius={50}
+                  outerRadius={68}
+                  paddingAngle={2}
+                  stroke="none"
                   dataKey="value"
-                  isAnimationActive={false}
+                  isAnimationActive={true}
+                  animationDuration={1000}
+                  startAngle={90}
+                  endAngle={450}
                 >
                   {chartData.map((entry, index) => (
                     <Cell key={index} fill={entry.color} />
@@ -135,24 +144,29 @@ export function SpendingChart() {
               </PieChart>
             </ResponsiveContainer>
             {/* Center Text */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-[9px] font-medium text-[#475569] uppercase tracking-widest mt-1">
-                Spent
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+            >
+              <span className="text-[9px] font-medium text-[#334155] uppercase tracking-widest mt-1">
+                SPENT
               </span>
-              <span className="text-[16px] font-bold text-[#f1f5f9] font-mono tracking-tight leading-none">
+              <span className="text-[15px] font-bold text-[#f1f5f9] font-amount tracking-tight leading-none mt-[2px]">
                 {symbol}{totalSpent.toLocaleString("en-US", { maximumFractionDigits: 0 })}
               </span>
-            </div>
+            </motion.div>
           </div>
 
           {/* Legend Area */}
-          <div className="overflow-visible sm:flex-1 sm:overflow-y-auto hide-scrollbar mt-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[16px] gap-y-[4px]">
+          <div className="overflow-visible flex-1 overflow-y-auto hide-scrollbar mt-2">
+            <div className="grid grid-cols-2 gap-x-[12px] gap-y-[3px]">
               {chartData.slice(0, showAllLegend ? undefined : 6).map((item) => (
-                <div key={item.name} className="flex items-center h-[22px]">
+                <div key={item.name} className="flex items-center h-[22px] gap-[7px]">
                   <span className="w-[8px] h-[8px] rounded-full flex-shrink-0" style={{ background: item.color }} />
-                  <span className="ml-[6px] text-[11px] text-[#94a3b8] truncate flex-1">{item.name}</span>
-                  <span className="ml-[4px] font-mono text-[11px] text-[#f1f5f9] flex-shrink-0 text-right">
+                  <span className="text-[11px] text-[#94a3b8] truncate flex-1">{item.name}</span>
+                  <span className="font-amount text-[11px] text-[#f1f5f9] flex-shrink-0 text-right">
                     {symbol}{item.value.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </span>
                 </div>
@@ -161,7 +175,7 @@ export function SpendingChart() {
             {!showAllLegend && chartData.length > 6 && (
               <button 
                 onClick={() => setShowAllLegend(true)}
-                className="mt-[6px] text-[10px] text-[#7c3aed] hover:underline bg-transparent border-none outline-none"
+                className="mt-[6px] text-[10px] text-[#7c3aed] hover:underline bg-transparent border-none outline-none cursor-pointer"
               >
                 +{chartData.length - 6} more
               </button>

@@ -11,6 +11,7 @@ import { QuickStats } from "@/components/dashboard/QuickStats";
 import { ProfileCard } from "@/components/dashboard/ProfileCard";
 import { SpendingChart } from "@/components/dashboard/SpendingChart";
 import { TransactionFeed } from "@/components/dashboard/TransactionFeed";
+import { staggerContainer, fadeUp } from "@/lib/animations";
 import { TopCategories } from "@/components/analytics/TopCategories";
 
 export function DashboardClient() {
@@ -125,37 +126,47 @@ export function DashboardClient() {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      variants={staggerContainer(0.07)} 
+      initial="hidden" 
+      animate="show"
       className="
-        space-y-3 lg:space-y-0
-        lg:h-full
-        lg:grid
-        lg:gap-3
-        lg:grid-rows-[88px_minmax(0,220px)_minmax(0,1fr)]
+        space-y-3
+        xl:space-y-0 xl:grid xl:gap-3.5
+        xl:h-full xl:overflow-hidden
+        xl:grid-rows-[86px_minmax(0,210px)_minmax(0,1fr)]
+        pb-24 xl:pb-0
       "
     >
       {/* ROW 1 — Stats Strip */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 xl:gap-3">
+      <motion.div variants={fadeUp} className="grid grid-cols-2 xl:grid-cols-4 gap-3">
         <StatsStrip 
           netBalance={netBalance}
           income={income}
           expenses={expenses}
           sparklineData={sparklineData.length > 0 ? sparklineData : [{ value: netBalance }, { value: netBalance }]}
         />
-      </div>
+      </motion.div>
 
       {/* ROW 2 — Middle panels */}
-      <div className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 lg:min-h-0">
-        <div className="lg:min-h-0 lg:h-full">
+      <motion.div variants={fadeUp} className="flex flex-col xl:grid xl:grid-cols-3 gap-3 xl:min-h-0">
+        <motion.div variants={fadeUp} className="xl:min-h-0 xl:h-full flex flex-col md:grid md:grid-cols-2 xl:flex gap-3">
           <ProfileCard 
             profiles={profiles} 
             netBalance={netBalance} 
             onAdd={() => setProfileModalOpen(true)} 
           />
-        </div>
-        <div className="lg:min-h-0 lg:h-full">
+          <div className="xl:hidden">
+            <QuickStats 
+              transactionsCount={transactionsCount}
+              avgDailySpend={avgDailySpend}
+              largestExpense={largestExpense}
+              topCategory={topCategory}
+              profilesCount={profiles.length}
+            />
+          </div>
+        </motion.div>
+        
+        <motion.div variants={fadeUp} className="hidden xl:block xl:min-h-0 xl:h-full">
           <QuickStats 
             transactionsCount={transactionsCount}
             avgDailySpend={avgDailySpend}
@@ -163,21 +174,22 @@ export function DashboardClient() {
             topCategory={topCategory}
             profilesCount={profiles.length}
           />
-        </div>
-        <div className="lg:min-h-0 lg:h-full md:col-span-2 xl:col-span-1">
+        </motion.div>
+
+        <motion.div variants={fadeUp} className="xl:min-h-0 xl:h-full md:col-span-2 xl:col-span-1">
           <SpendingChart />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* ROW 3 — Bottom panels */}
-      <div className="flex flex-col xl:grid xl:grid-cols-[1.65fr_1fr] gap-3 lg:min-h-0">
-        <div className="lg:min-h-0 lg:h-full">
+      <motion.div variants={fadeUp} className="flex flex-col xl:grid xl:grid-cols-[1.6fr_1fr] gap-3 xl:min-h-0">
+        <motion.div variants={fadeUp} className="xl:min-h-0 xl:h-full">
           <TransactionFeed transactions={transactions} />
-        </div>
-        <div className="lg:min-h-0 lg:h-full">
+        </motion.div>
+        <motion.div variants={fadeUp} className="xl:min-h-0 xl:h-full">
           <TopCategories />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       <CreateProfileModal
         open={profileModalOpen}
