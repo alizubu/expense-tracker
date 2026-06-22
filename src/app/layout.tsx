@@ -50,7 +50,6 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import { HeroUIProvider } from "@/components/providers/HeroUIProvider";
 import { PageTransitionProvider } from "@/components/providers/PageTransitionProvider";
 import { GlobalModals } from "@/components/providers/GlobalModals";
 
@@ -113,20 +112,18 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <HeroUIProvider>
-            <AuthProvider>
-              <PageTransitionProvider>
-                {children}
-              </PageTransitionProvider>
-              <GlobalModals />
-              <Toaster
-                position="bottom-right"
-                toastOptions={{
-                  className: "dark:bg-[var(--bg-surface)] dark:text-[var(--text-primary)] dark:border-white/10 bg-white text-slate-900 border-slate-200",
-                }}
-              />
-            </AuthProvider>
-          </HeroUIProvider>
+          <AuthProvider>
+            <PageTransitionProvider>
+              {children}
+            </PageTransitionProvider>
+            <GlobalModals />
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
+                className: "dark:bg-[var(--bg-surface)] dark:text-[var(--text-primary)] dark:border-white/10 bg-white text-slate-900 border-slate-200",
+              }}
+            />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
