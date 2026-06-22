@@ -50,12 +50,6 @@ import { PageTransitionProvider } from "@/components/providers/PageTransitionPro
 import { GlobalModals } from "@/components/providers/GlobalModals";
 
 import { headers } from "next/headers";
-import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -64,7 +58,7 @@ export default function RootLayout({
   const nonce = headers().get("X-Nonce") ?? "";
 
   return (
-    <html lang="en" suppressHydrationWarning className={cn(GeistSans.variable, GeistMono.variable, "font-sans", geist.variable)}>
+    <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
       <body
         className={`${GeistSans.className} antialiased min-h-screen flex flex-col no-select`}
       >

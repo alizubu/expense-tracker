@@ -1,6 +1,6 @@
 "use client";
 
-import { BlurFade } from "@/components/magicui/blur-fade";
+import { motion } from "framer-motion";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { PieChart } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -15,16 +15,16 @@ export default function AnalyticsPage() {
   const { transactions } = useTransactionStore();
 
   return (
-    <div className="mx-auto max-w-[1400px] w-full px-3 py-3 pb-20 md:px-5 md:py-5 md:pb-6 space-y-4 md:space-y-6">
-      <BlurFade delay={0}>
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-text-primary tracking-heading">Analytics & Insights</h1>
-          <p className="text-sm text-text-muted mt-1">Deep dive into your spending habits and trends.</p>
+    <div className="flex flex-col min-h-screen p-4 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0 }}>
+        <div className="mb-2">
+          <h1 className="text-3xl font-bold text-foreground tracking-tight">Analytics & Insights</h1>
+          <p className="text-sm text-muted-foreground mt-1">Deep dive into your spending habits and trends.</p>
         </div>
-      </BlurFade>
+      </motion.div>
 
       {transactions.length === 0 ? (
-        <BlurFade delay={0.1}>
+        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
           <div className="flex flex-col items-center justify-center py-12">
             <EmptyState
               icon={PieChart}
@@ -32,38 +32,38 @@ export default function AnalyticsPage() {
               description="Add transactions to see your analytics and insights."
             />
           </div>
-        </BlurFade>
+        </motion.div>
       ) : (
         <>
           <AnalyticsStatsRow />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-            <BlurFade delay={0.2} className="lg:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="lg:col-span-2">
               <MonthlyBarChart />
-            </BlurFade>
-            <BlurFade delay={0.3} className="lg:col-span-1">
+            </motion.div>
+            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="lg:col-span-1">
               <CategoryDonutChart />
-            </BlurFade>
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-            <BlurFade delay={0.4}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
               <DailyLineChart />
-            </BlurFade>
-            <BlurFade delay={0.5}>
+            </motion.div>
+            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }}>
               <ProfileAreaChart />
-            </BlurFade>
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-            <BlurFade delay={0.6} className="lg:col-span-1">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }} className="lg:col-span-1">
               <TopCategories />
-            </BlurFade>
-            <BlurFade delay={0.7} className="lg:col-span-2">
-              <div className="h-full min-h-[200px] w-full rounded-2xl border border-border bg-card/40 flex items-center justify-center p-6 shadow-sm hover:shadow-md transition-all">
-                 <p className="text-text-muted text-xs font-semibold uppercase tracking-wider text-center">More insights coming soon...</p>
+            </motion.div>
+            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.7 }} className="lg:col-span-2">
+              <div className="h-full min-h-[200px] w-full rounded-xl border border-border bg-card flex items-center justify-center p-6 shadow-sm hover:shadow-md transition-all">
+                 <p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider text-center">More insights coming soon...</p>
               </div>
-            </BlurFade>
+            </motion.div>
           </div>
         </>
       )}

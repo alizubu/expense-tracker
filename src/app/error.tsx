@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { AlertCircle } from "lucide-react";
 
 export default function ErrorBoundary({

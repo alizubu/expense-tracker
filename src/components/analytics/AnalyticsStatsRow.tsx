@@ -1,11 +1,10 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { NumberTicker } from "@/components/magicui/number-ticker";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useUIStore } from "@/store/useUIStore";
 import { getCurrencySymbol } from "@/lib/currencies";
-import { BlurFade } from "@/components/magicui/blur-fade";
 import { TrendingUp, TrendingDown, Clock, Scale } from "lucide-react";
 
 export default function AnalyticsStatsRow() {
@@ -31,64 +30,64 @@ export default function AnalyticsStatsRow() {
     {
       label: "Spent This Month",
       value: totalSpent,
-      colorClass: "text-expense",
-      borderColorClass: "border-l-expense",
+      colorClass: "text-destructive",
+      borderColorClass: "border-l-destructive",
       icon: TrendingDown,
-      iconClass: "text-expense bg-expense/10",
+      iconClass: "text-destructive bg-destructive/10",
       decimalPlaces: 2,
     },
     {
       label: "Income This Month",
       value: totalIncome,
-      colorClass: "text-income",
-      borderColorClass: "border-l-income",
+      colorClass: "text-emerald-500",
+      borderColorClass: "border-l-emerald-500",
       icon: TrendingUp,
-      iconClass: "text-income bg-income/10",
+      iconClass: "text-emerald-500 bg-emerald-500/10",
       decimalPlaces: 2,
     },
     {
       label: "Avg Daily Spend",
       value: avgDaily,
-      colorClass: "text-text-primary",
-      borderColorClass: "border-l-brand-purple",
+      colorClass: "text-foreground",
+      borderColorClass: "border-l-primary",
       icon: Clock,
-      iconClass: "text-brand-purple bg-brand-purple/10",
+      iconClass: "text-primary bg-primary/10",
       decimalPlaces: 2,
     },
     {
       label: "Savings Rate",
       value: Math.max(0, savingsRate),
-      colorClass: "text-brand-purple-light",
-      borderColorClass: "border-l-transfer",
+      colorClass: "text-primary",
+      borderColorClass: "border-l-slate-500",
       icon: Scale,
-      iconClass: "text-transfer bg-transfer/10",
+      iconClass: "text-slate-500 bg-slate-500/10",
       decimalPlaces: 1,
       isPercentage: true,
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
       {stats.map((stat, idx) => {
         const Icon = stat.icon;
         return (
-          <BlurFade key={stat.label} delay={0.05 * (idx + 1)}>
-            <Card className={`p-4 md:p-5 flex flex-col justify-between border-l-[3.5px] ${stat.borderColorClass} bg-card hover:shadow-md transition-all duration-200 h-full`}>
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-[10px] font-semibold tracking-[0.08em] uppercase text-text-secondary">
+          <motion.div key={stat.label} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05 * (idx + 1) }}>
+            <Card className={`p-5 flex flex-col justify-between border-l-4 ${stat.borderColorClass} bg-card hover:shadow-sm transition-all duration-200 h-full`}>
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-[10px] font-bold tracking-[0.08em] uppercase text-muted-foreground">
                   {stat.label}
                 </span>
                 <div className={`p-1.5 rounded-lg ${stat.iconClass}`}>
-                  <Icon size={12} />
+                  <Icon size={14} />
                 </div>
               </div>
-              <div className={`text-xl md:text-2xl font-bold tracking-tight ${stat.colorClass} flex items-baseline gap-1 font-mono`}>
-                {!stat.isPercentage && <span className="text-sm md:text-base font-semibold">{symbol}</span>}
-                <NumberTicker value={stat.value} decimalPlaces={stat.decimalPlaces} />
-                {stat.isPercentage && <span className="text-sm md:text-base font-semibold">%</span>}
+              <div className={`text-2xl md:text-3xl font-bold tracking-tight ${stat.colorClass} flex items-baseline gap-1 font-mono`}>
+                {!stat.isPercentage && <span className="text-base font-semibold">{symbol}</span>}
+                <span>{stat.value.toLocaleString(undefined, { minimumFractionDigits: stat.decimalPlaces, maximumFractionDigits: stat.decimalPlaces })}</span>
+                {stat.isPercentage && <span className="text-base font-semibold">%</span>}
               </div>
             </Card>
-          </BlurFade>
+          </motion.div>
         );
       })}
     </div>
