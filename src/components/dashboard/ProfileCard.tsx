@@ -5,7 +5,6 @@ import * as LucideIcons from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { useRouter } from "next/navigation";
-import { Button } from "@heroui/react";
 
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
@@ -30,14 +29,12 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
         <h2 className="text-[11px] font-ui text-[var(--text-muted)] uppercase tracking-[0.08em]">
           YOUR PROFILES
         </h2>
-        <Button 
-          size="sm"
-          variant="ghost"
-          onPress={onAdd}
-          className="text-[12px] font-medium text-[var(--accent-brass)] flex items-center gap-2"
+        <button 
+          onClick={onAdd}
+          className="h-8 px-2 rounded-[8px] text-[12px] font-medium text-[var(--accent-brass)] hover:bg-[var(--bg-raised)] active:scale-[0.98] transition-all flex items-center gap-2 border-none"
         >
           <LucideIcons.Plus size={12} /> Add New
-        </Button>
+        </button>
       </div>
 
       {/* List */}

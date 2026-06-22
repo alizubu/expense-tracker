@@ -11,7 +11,6 @@ import { useUIStore } from "@/store/useUIStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { getCategoryById } from "@/lib/categories";
-import { Button } from "@heroui/react";
 
 const CATEGORY_MAP: Record<string, { icon: any, color: string }> = {
   "Food / Restaurant": { icon: Utensils,       color: "var(--accent-brass)" },
@@ -142,14 +141,12 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
 
         {hasMore && (
           <div className="mt-4 flex justify-center pb-2">
-            <Button 
-              size="sm" 
-              variant="ghost" 
-              onPress={loadMore}
-              className="bg-[var(--bg-raised)] text-[var(--text-primary)] hover:bg-[var(--border-hair)] border-none"
+            <button 
+              onClick={loadMore}
+              className="h-8 px-3 rounded-[8px] text-[12px] bg-[var(--bg-raised)] text-[var(--text-primary)] hover:bg-[var(--border-hair)] active:scale-[0.98] transition-all border-none font-medium"
             >
               Load More
-            </Button>
+            </button>
           </div>
         )}
       </div>

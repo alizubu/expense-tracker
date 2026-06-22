@@ -6,7 +6,6 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
-import { Button } from "@heroui/react";
 
 export function Topbar() {
   const pathname = usePathname();
@@ -48,13 +47,12 @@ export function Topbar() {
               className="w-full h-[40px] bg-[var(--bg-surface)] border border-[var(--border-hair)] hover:bg-[var(--bg-raised)] focus:bg-[var(--bg-raised)] focus:border-[var(--accent-brass)] focus:outline-none rounded-xl pl-10 pr-4 text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition-all"
             />
           </div>
-          <Button 
-            variant="ghost" 
-            onPress={() => setIsSearchExpanded(false)}
-            className="text-[var(--text-muted)] border-none min-w-0 px-3"
+          <button 
+            onClick={() => setIsSearchExpanded(false)}
+            className="text-[var(--text-muted)] border-none min-w-0 px-3 text-[14px] hover:text-[var(--text-primary)] transition-colors active:scale-[0.98]"
           >
             Cancel
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -105,14 +103,13 @@ export function Topbar() {
             {resolvedTheme === "dark" ? <Sun className="h-[16px] w-[16px]" /> : <Moon className="h-[16px] w-[16px]" />}
           </button>
         )}
-        <Button
-          onPress={() => openModal("addTransaction")}
-          className="font-medium shadow-md shadow-[var(--accent-dim)] flex items-center gap-2 bg-[var(--accent-brass)] text-[#13161D]"
-          size="md"
+        <button
+          onClick={() => openModal("addTransaction")}
+          className="h-[36px] px-4 rounded-[10px] text-[13px] font-medium shadow-md shadow-[var(--accent-dim)] flex items-center gap-2 bg-[var(--accent-brass)] text-[#13161D] hover:bg-[var(--accent-brass)]/90 active:scale-[0.97] transition-all"
         >
           <Plus className="w-4 h-4" />
           <span className="hidden lg:inline">Add Transaction</span>
-        </Button>
+        </button>
       </div>
     </header>
   );
