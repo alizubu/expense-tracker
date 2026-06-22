@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { PROFILE_TYPES } from "@/lib/profile-types";
 import { useProfileStore } from "@/store/useProfileStore";
 import { toast } from "sonner";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface EditProfileModalProps {
   open: boolean;
@@ -68,76 +69,85 @@ export function EditProfileModal({ open, onClose, profileId }: EditProfileModalP
   };
 
   return (
-    <Dialog open={open} onClose={onClose} title="Edit Profile" className="md:max-w-[500px]">
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Profile Type Selector */}
-        <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wider text-text-secondary select-none mb-2.5 block">
-            Wallet Type
-          </label>
-          <div className="grid grid-cols-4 gap-2">
-            {PROFILE_TYPES.map((p) => (
-              <button
-                type="button"
-                key={p.type}
-                onClick={() => handleTypeSelect(p)}
-                className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition-all text-center cursor-pointer ${
-                  selectedType.type === p.type
-                    ? "border-brand-purple bg-brand-purple/10 text-brand-purple"
-                    : "border-border hover:border-text-muted hover:bg-card-hover text-text-secondary"
-                }`}
-              >
-                <span className="text-xl">{p.emoji}</span>
-                <span className="text-[10px] font-bold leading-tight truncate w-full">{p.label}</span>
-              </button>
-            ))}
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Edit Profile</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Profile Type Selector */}
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none mb-2.5 block">
+              Wallet Type
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {PROFILE_TYPES.map((p) => (
+                <button
+                  type="button"
+                  key={p.type}
+                  onClick={() => handleTypeSelect(p)}
+                  className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition-all text-center cursor-pointer ${
+                    selectedType.type === p.type
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border hover:border-muted-foreground hover:bg-muted text-muted-foreground"
+                  }`}
+                >
+                  <span className="text-xl">{p.emoji}</span>
+                  <span className="text-[10px] font-bold leading-tight truncate w-full">{p.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Profile Name */}
-        <Input
-          label="Profile Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          disabled={loading}
-        />
-
-        {/* Description */}
-        <Input
-          label="Description (Optional)"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          disabled={loading}
-        />
-
-        {/* Error */}
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-500 text-xs font-medium">
-            {error}
+          {/* Profile Name */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-foreground">Profile Name</label>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              disabled={loading}
+            />
           </div>
-        )}
 
-        {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={onClose}
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            isLoading={loading}
-            disabled={!name.trim()}
-          >
-            Save Changes
-          </Button>
-        </div>
-      </form>
+          {/* Description */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-foreground">Description (Optional)</label>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              disabled={loading}
+            />
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div className="bg-destructive/10 border border-destructive/20 rounded-xl p-3 text-destructive text-xs font-medium">
+              {error}
+            </div>
+          )}
+
+          {/* Footer Actions */}
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={onClose}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="default"
+              disabled={!name.trim() || loading}
+            >
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Save Changes
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }

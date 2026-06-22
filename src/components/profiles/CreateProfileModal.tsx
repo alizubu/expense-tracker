@@ -6,9 +6,10 @@ import { useProfileStore } from "@/store/useProfileStore";
 import { useUIStore } from "@/store/useUIStore";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { toast } from "sonner";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface CreateProfileModalProps {
   open: boolean;
@@ -85,110 +86,126 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} title="Add New Profile" className="md:max-w-[500px]">
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Profile Type Selector */}
-        <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wider text-text-secondary select-none mb-2.5 block">
-            Wallet Type
-          </label>
-          <div className="grid grid-cols-4 gap-2">
-            {PROFILE_TYPES.map((p) => (
-              <button
-                type="button"
-                key={p.type}
-                onClick={() => handleTypeSelect(p)}
-                className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition-all text-center cursor-pointer ${
-                  selectedType.type === p.type
-                    ? "border-brand-purple bg-brand-purple/10 text-brand-purple"
-                    : "border-border hover:border-text-muted hover:bg-card-hover text-text-secondary"
-                }`}
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Add New Profile</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Profile Type Selector */}
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none mb-2.5 block">
+              Wallet Type
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {PROFILE_TYPES.map((p) => (
+                <button
+                  type="button"
+                  key={p.type}
+                  onClick={() => handleTypeSelect(p)}
+                  className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition-all text-center cursor-pointer ${
+                    selectedType.type === p.type
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border hover:border-muted-foreground hover:bg-muted text-muted-foreground"
+                  }`}
+                >
+                  <span className="text-xl">{p.emoji}</span>
+                  <span className="text-[10px] font-bold leading-tight truncate w-full">{p.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Profile Name */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-foreground">Profile Name</label>
+            <Input
+              placeholder={`e.g. My ${selectedType.label}`}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+
+          {/* Starting Balance */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-foreground">Starting Balance</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground font-mono">
+                {symbol}
+              </span>
+              <Input
+                type="number"
+                placeholder="0.00"
+                value={balance}
+                onChange={(e) => setBalance(e.target.value)}
+                min="0"
+                step="any"
+                disabled={loading}
+                className="pl-8"
+              />
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-foreground">Description (Optional)</label>
+            <Input
+              placeholder="e.g. Personal savings account"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              disabled={loading}
+            />
+          </div>
+
+          {/* Preview */}
+          <div className="bg-muted/50 rounded-xl p-4 border border-border">
+            <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-bold">Preview</p>
+            <div className="flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                style={{ background: selectedType.color + "15" }}
               >
-                <span className="text-xl">{p.emoji}</span>
-                <span className="text-[10px] font-bold leading-tight truncate w-full">{p.label}</span>
-              </button>
-            ))}
+                {selectedType.emoji}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold text-foreground truncate">{name || selectedType.label}</p>
+                <p className="text-muted-foreground font-semibold font-mono text-xs mt-0.5">
+                  {symbol}{parseFloat(balance || "0").toLocaleString("en-US", { minimumFractionDigits: 0 })}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Profile Name */}
-        <Input
-          label="Profile Name"
-          placeholder={`e.g. My ${selectedType.label}`}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          disabled={loading}
-        />
+          {/* Error */}
+          {error && (
+            <div className="bg-destructive/10 border border-destructive/20 rounded-xl p-3 text-destructive text-xs font-medium">
+              {error}
+            </div>
+          )}
 
-        {/* Starting Balance */}
-        <Input
-          label="Starting Balance"
-          type="number"
-          placeholder="0.00"
-          value={balance}
-          onChange={(e) => setBalance(e.target.value)}
-          min="0"
-          step="any"
-          disabled={loading}
-          leftIcon={<span className="text-xs font-semibold text-text-muted font-mono">{symbol}</span>}
-        />
-
-        {/* Description */}
-        <Input
-          label="Description (Optional)"
-          placeholder="e.g. Personal savings account"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          disabled={loading}
-        />
-
-        {/* Preview */}
-        <div className="bg-card-elevated/40 rounded-xl p-3.5 border border-border/40">
-          <p className="text-[10px] text-text-muted mb-2 uppercase tracking-wider font-bold">Preview</p>
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-              style={{ background: selectedType.color + "15" }}
+          {/* Footer Actions */}
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={handleClose}
+              disabled={loading}
             >
-              {selectedType.emoji}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-text-primary truncate">{name || selectedType.label}</p>
-              <p className="text-text-secondary font-semibold font-mono text-xs mt-0.5">
-                {symbol}{parseFloat(balance || "0").toLocaleString("en-US", { minimumFractionDigits: 0 })}
-              </p>
-            </div>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="default"
+              disabled={!name.trim() || loading}
+            >
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create Profile
+            </Button>
           </div>
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-500 text-xs font-medium">
-            {error}
-          </div>
-        )}
-
-        {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={handleClose}
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            isLoading={loading}
-            disabled={!name.trim()}
-          >
-            Create Profile
-          </Button>
-        </div>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }

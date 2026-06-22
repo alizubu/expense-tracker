@@ -177,7 +177,7 @@ export default function TransactionsPage() {
             return (
               <Badge
                 key={t}
-                variant={isActive ? "default" : "outline"}
+                variant={isActive ? "default" : "secondary"}
                 className={cn(
                   "cursor-pointer text-xs px-3 py-1 font-medium whitespace-nowrap transition-colors",
                   isActive ? activeStyles : "hover:bg-muted"
@@ -192,12 +192,10 @@ export default function TransactionsPage() {
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8">
-                <ArrowDownUp size={14} className="mr-2 text-muted-foreground" />
-                {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort by Date"}
-                <ChevronDown size={14} className="ml-2 text-muted-foreground" />
-              </Button>
+            <DropdownMenuTrigger render={<Button variant="outline" size="sm" className="h-8" />}>
+              <ArrowDownUp size={14} className="mr-2 text-muted-foreground" />
+              {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort by Date"}
+              <ChevronDown size={14} className="ml-2 text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {sortOptions.map(opt => (

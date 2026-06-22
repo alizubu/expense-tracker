@@ -146,6 +146,51 @@ function DialogDescription({
   )
 }
 
+function ConfirmDialog({
+  open,
+  onClose,
+  onConfirm,
+  title,
+  description,
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
+  isDestructive = false,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  description: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  isDestructive?: boolean;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            {cancelLabel}
+          </Button>
+          <Button
+            variant={isDestructive ? "destructive" : "default"}
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}
+          >
+            {confirmLabel}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export {
   Dialog,
   DialogClose,
@@ -157,4 +202,5 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
+  ConfirmDialog,
 }

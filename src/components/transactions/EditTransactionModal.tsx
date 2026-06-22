@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
 import { NumericFormat } from "react-number-format";
@@ -15,7 +15,7 @@ import { Transaction, TransactionType } from "@/lib/types";
 import { AccountSelector } from "./AccountSelector";
 import { CategoryGrid } from "./CategoryGrid";
 import { ConfirmButton } from "./ConfirmButton";
-import { Dialog, ConfirmDialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, ConfirmDialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
 interface EditTransactionModalProps {
@@ -36,9 +36,10 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const { updateTransaction, deleteTransaction } = useTransactionStore();
-  const { profiles, fetchProfiles, updateBalance } = useProfileStore();
+  const { fetchProfiles, updateBalance } = useProfileStore();
   const { selectedCurrency } = useUIStore();
   const symbol = getCurrencySymbol(selectedCurrency);
+  const profiles = useProfileStore((state) => state.profiles);
 
   const handleSubmit = async () => {
     if (!amount || !title || !profileId || (!category && type !== "TRANSFER")) {
@@ -121,155 +122,160 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
 
   return (
     <>
-      <Dialog open={true} onClose={onClose} title="Edit Transaction" className="md:max-w-[460px]">
-        <div className="space-y-6 pb-2">
-          {/* Type Switcher */}
-          <div className="flex p-1 rounded-xl bg-card-elevated border border-border">
-            {tabs.map((tab) => {
-              const isActive = type === tab.type;
-              return (
-                <button
-                  key={tab.type}
-                  type="button"
-                  onClick={() => {
-                    setType(tab.type);
-                    setCategory("");
-                  }}
-                  className={cn(
-                    "flex-1 relative rounded-lg py-2 text-xs font-semibold transition-colors z-10 cursor-pointer select-none",
-                    isActive ? "text-white" : "text-text-muted hover:text-text-secondary"
-                  )}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="edit-txn-tab"
-                      className="absolute inset-0 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 shadow-md"
-                      transition={{ type: "spring", bounce: 0.18, duration: 0.5 }}
-                    />
-                  )}
-                  <span className="relative z-20">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Amount Input */}
-          <div className="flex flex-col items-center justify-center py-2 select-none">
-            <p className="text-[10px] font-bold tracking-wider text-text-secondary uppercase mb-1">Amount</p>
-            <div className="flex items-center justify-center gap-1.5">
-              <span className="text-2xl font-bold text-text-secondary font-mono">{symbol}</span>
-              <NumericFormat
-                value={amount || ""}
-                onValueChange={(values) => setAmount(values.floatValue || 0)}
-                thousandSeparator=","
-                decimalScale={2}
-                placeholder="0.00"
-                className="w-[180px] bg-transparent text-center font-mono text-[36px] font-bold text-text-primary outline-none placeholder:text-text-muted/40"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            {/* Profile Selector */}
-            <div className="col-span-2 sm:col-span-1">
-              <AccountSelector
-                label={type === "TRANSFER" ? "From Account" : "Account"}
-                profiles={profiles}
-                selectedId={profileId}
-                onChange={(id) => setProfileId(id)}
-              />
+      <Dialog open={true} onOpenChange={(isOpen) => !isOpen && onClose()}>
+        <DialogContent className="sm:max-w-[460px]">
+          <DialogHeader>
+            <DialogTitle>Edit Transaction</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6 pb-2">
+            {/* Type Switcher */}
+            <div className="flex p-1 rounded-xl bg-muted border border-border">
+              {tabs.map((tab) => {
+                const isActive = type === tab.type;
+                return (
+                  <button
+                    key={tab.type}
+                    type="button"
+                    onClick={() => {
+                      setType(tab.type);
+                      setCategory("");
+                    }}
+                    className={cn(
+                      "flex-1 relative rounded-lg py-2 text-xs font-semibold transition-colors z-10 cursor-pointer select-none",
+                      isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="edit-txn-tab"
+                        className="absolute inset-0 rounded-lg bg-background shadow-sm"
+                        transition={{ type: "spring", bounce: 0.18, duration: 0.5 }}
+                      />
+                    )}
+                    <span className="relative z-20">{tab.label}</span>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* To Profile (Transfer only) */}
-            {type === "TRANSFER" && (
+            {/* Amount Input */}
+            <div className="flex flex-col items-center justify-center py-2 select-none">
+              <p className="text-[10px] font-bold tracking-wider text-muted-foreground uppercase mb-1">Amount</p>
+              <div className="flex items-center justify-center gap-1.5">
+                <span className="text-2xl font-bold text-muted-foreground font-mono">{symbol}</span>
+                <NumericFormat
+                  value={amount || ""}
+                  onValueChange={(values) => setAmount(values.floatValue || 0)}
+                  thousandSeparator=","
+                  decimalScale={2}
+                  placeholder="0.00"
+                  className="w-[180px] bg-transparent text-center font-mono text-[36px] font-bold text-foreground outline-none placeholder:text-muted-foreground/40"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* Profile Selector */}
               <div className="col-span-2 sm:col-span-1">
                 <AccountSelector
-                  label="To Account"
-                  profiles={profiles.filter((p) => p.id !== profileId)}
-                  selectedId={toProfileId}
-                  onChange={(id) => setToProfileId(id)}
+                  label={type === "TRANSFER" ? "From Account" : "Account"}
+                  profiles={profiles}
+                  selectedId={profileId}
+                  onChange={(id) => setProfileId(id)}
+                />
+              </div>
+
+              {/* To Profile (Transfer only) */}
+              {type === "TRANSFER" && (
+                <div className="col-span-2 sm:col-span-1">
+                  <AccountSelector
+                    label="To Account"
+                    profiles={profiles.filter((p) => p.id !== profileId)}
+                    selectedId={toProfileId}
+                    onChange={(id) => setToProfileId(id)}
+                  />
+                </div>
+              )}
+              
+              {/* Date */}
+              <div className="col-span-2 sm:col-span-1 space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Date</label>
+                <Input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="[color-scheme:light] dark:[color-scheme:dark]"
+                />
+              </div>
+            </div>
+
+            {/* Category Picker */}
+            {type !== "TRANSFER" && (
+              <div className="space-y-1.5">
+                <label className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground select-none">
+                  Category
+                </label>
+                <CategoryGrid
+                  categories={availableCategories}
+                  selectedCategory={category}
+                  onSelect={handleCategorySelect}
                 />
               </div>
             )}
-            
-            {/* Date */}
-            <div className="col-span-2 sm:col-span-1">
-              <Input
-                label="Date"
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="[color-scheme:light] dark:[color-scheme:dark]"
-              />
-            </div>
-          </div>
 
-          {/* Category Picker */}
-          {type !== "TRANSFER" && (
+            {/* Title */}
             <div className="space-y-1.5">
-              <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
-                Category
-              </label>
-              <CategoryGrid
-                categories={availableCategories}
-                selectedCategory={category}
-                onSelect={handleCategorySelect}
-              />
-            </div>
-          )}
-
-          {/* Title */}
-          <div>
-            <Input
-              label="Title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="What was this for?"
-            />
-          </div>
-
-          {/* Note & Tags */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Title</label>
               <Input
-                label="Note (optional)"
                 type="text"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Additional details"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="What was this for?"
               />
             </div>
-            <div>
-              <Input
-                label="Tags"
-                type="text"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-                placeholder="food, work..."
-              />
-            </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => setShowDeleteConfirm(true)}
-              className="flex items-center justify-center w-12 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all cursor-pointer shadow-sm select-none"
-              title="Delete Transaction"
-            >
-              <Trash2 className="h-[18px] w-[18px]" />
-            </button>
-            <div className="flex-1">
-              <ConfirmButton
-                onClick={handleSubmit}
-                disabled={amount === 0 || (!category && type !== "TRANSFER") || !profileId}
-                label="Save Changes"
-              />
+            {/* Note & Tags */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Note (optional)</label>
+                <Input
+                  type="text"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="Additional details"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tags</label>
+                <Input
+                  type="text"
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
+                  placeholder="food, work..."
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="flex items-center justify-center w-12 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all cursor-pointer shadow-sm select-none"
+                title="Delete Transaction"
+              >
+                <Trash2 className="h-[18px] w-[18px]" />
+              </button>
+              <div className="flex-1">
+                <ConfirmButton
+                  onClick={handleSubmit}
+                  disabled={amount === 0 || (!category && type !== "TRANSFER") || !profileId}
+                  label="Save Changes"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </DialogContent>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}

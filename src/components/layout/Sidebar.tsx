@@ -80,20 +80,18 @@ export function Sidebar() {
 
       <div className="p-3 border-t border-border mt-auto">
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className={cn("w-full h-auto p-2 justify-start hover:bg-secondary", sidebarCollapsed && "justify-center")}>
-              <Avatar className="w-8 h-8 shrink-0">
-                <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                  {session?.user?.name?.charAt(0) || "U"}
-                </AvatarFallback>
-              </Avatar>
-              {!sidebarCollapsed && (
-                <div className="flex flex-col items-start ml-3 overflow-hidden text-left">
-                  <span className="text-sm font-medium truncate w-full">{session?.user?.name || "User"}</span>
-                  <span className="text-xs text-muted-foreground truncate w-full">{session?.user?.email}</span>
-                </div>
-              )}
-            </Button>
+          <DropdownMenuTrigger render={<Button variant="ghost" className={cn("w-full h-auto p-2 justify-start hover:bg-secondary", sidebarCollapsed && "justify-center")} />}>
+            <Avatar className="w-8 h-8 shrink-0">
+              <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                {session?.user?.name?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            {!sidebarCollapsed && (
+              <div className="flex flex-col items-start ml-3 overflow-hidden text-left">
+                <span className="text-sm font-medium truncate w-full">{session?.user?.name || "User"}</span>
+                <span className="text-xs text-muted-foreground truncate w-full">{session?.user?.email}</span>
+              </div>
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 mb-2">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
