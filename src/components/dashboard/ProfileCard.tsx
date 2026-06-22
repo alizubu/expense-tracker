@@ -14,16 +14,17 @@ function getIcon(iconName: string) {
 function getProfileColors(type: string) {
   switch (type.toLowerCase()) {
     case "cash":
-      return { bg: "rgba(16,185,129,0.15)", icon: "#10b981" };
+      return { bg: "rgba(16,185,129,0.12)", icon: "var(--green)" };
     case "bank":
     case "bank account":
-      return { bg: "rgba(59,130,246,0.15)", icon: "#3b82f6" };
+      return { bg: "rgba(59,130,246,0.12)", icon: "#3b82f6" };
     case "wallet":
-      return { bg: "rgba(124,58,237,0.15)", icon: "#a78bfa" };
+    case "custom":
+      return { bg: "var(--accent-glow)", icon: "var(--accent-color)" };
     case "moneybag":
-      return { bg: "rgba(245,158,11,0.15)", icon: "#f59e0b" };
+      return { bg: "rgba(245,158,11,0.12)", icon: "#f59e0b" };
     default:
-      return { bg: "rgba(100,116,139,0.15)", icon: "#64748b" };
+      return { bg: "rgba(148,163,184,0.12)", icon: "var(--text-muted)" };
   }
 }
 
@@ -39,27 +40,27 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
   const router = useRouter();
 
   return (
-    <div className="flex flex-col w-full h-auto lg:h-full premium-card p-[16px] overflow-visible lg:overflow-hidden">
+    <div className="flex flex-col w-full h-auto lg:h-full border border-border bg-card shadow-sm p-4 rounded-2xl overflow-visible lg:overflow-hidden hover:border-accent/10 hover:shadow-md transition-all duration-200">
       {/* Header */}
       <div className="flex items-center justify-between h-[32px] mb-2 flex-shrink-0">
-        <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em]">
+        <h2 className="text-[10px] font-semibold text-text-secondary uppercase tracking-[0.08em]">
           Your Profiles
         </h2>
         <button 
           onClick={onAdd}
-          className="text-[12px] font-medium text-[#7c3aed] bg-transparent border-none outline-none hover:underline flex items-center gap-[4px] active:scale-[0.97]"
+          className="text-xs font-semibold text-accent bg-transparent hover:text-brand-purple-light hover:underline flex items-center gap-[4px] active:scale-[0.97] cursor-pointer"
         >
           <LucideIcons.Plus size={12} />
-          <span className="hidden sm:inline">+ Add New</span>
+          <span className="hidden sm:inline">Add New</span>
         </button>
       </div>
 
       {/* List */}
-      <div className="flex flex-col lg:flex-1 lg:overflow-y-auto hide-scrollbar lg:min-h-0">
+      <div className="flex flex-col lg:flex-1 lg:overflow-y-auto hide-scrollbar lg:min-h-0 space-y-0.5">
         {profiles.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <LucideIcons.Wallet className="h-[32px] w-[32px] text-[#1e293b] mb-2" />
-            <span className="text-[12px] text-[#1e293b]">No data yet</span>
+          <div className="flex flex-col items-center justify-center h-full text-center py-6">
+            <LucideIcons.Wallet className="h-7 w-7 text-text-muted/40 mb-2 animate-pulse" />
+            <span className="text-xs text-text-muted">No data yet</span>
           </div>
         ) : (
           profiles.map((profile, i) => {
@@ -74,7 +75,7 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
                 onClick={() => router.push(`/profiles/${profile.id}`)}
-                className="group flex flex-col justify-center h-[44px] sm:h-[48px] rounded-[8px] hover:bg-[rgba(255,255,255,0.02)] cursor-pointer transition-colors relative border-b border-[rgba(255,255,255,0.04)] last:border-0 flex-shrink-0"
+                className="group flex flex-col justify-center h-[44px] sm:h-[48px] rounded-xl hover:bg-card-hover cursor-pointer transition-colors relative border-b border-border/40 last:border-0 flex-shrink-0"
               >
                 <div className="flex items-center gap-[10px] px-1">
                   {/* Left: Icon */}
@@ -87,23 +88,23 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
 
                   {/* Center: Name + Type */}
                   <div className="flex flex-col flex-1 min-w-0">
-                    <span className="text-[13px] font-medium text-[#f1f5f9] truncate">{profile.name}</span>
-                    <span className="text-[11px] text-[#475569] truncate capitalize">{profile.type.toLowerCase()}</span>
+                    <span className="text-[13px] font-semibold text-text-primary truncate">{profile.name}</span>
+                    <span className="text-[11px] text-text-secondary truncate capitalize">{profile.type.toLowerCase()}</span>
                   </div>
 
                   {/* Right: Balance + Percentage */}
                   <div className="flex flex-col items-end flex-shrink-0">
-                    <span className="text-[12px] sm:text-[13px] font-semibold text-[#f1f5f9] font-mono">
+                    <span className="text-[12px] sm:text-[13px] font-bold text-text-primary font-mono">
                       {symbol}{profile.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </span>
-                    <span className="hidden sm:block text-[10px] text-[#475569]">
+                    <span className="hidden sm:block text-[10px] text-text-muted">
                       {percentage.toFixed(1)}%
                     </span>
                   </div>
                 </div>
 
                 {/* Bottom Progress Bar */}
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[rgba(255,255,255,0.05)] rounded-[1px] m-0 overflow-hidden">
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-card-elevated rounded-[1px] m-0 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}

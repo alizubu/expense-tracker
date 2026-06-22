@@ -11,12 +11,14 @@ import {
   AlertCircle, 
   Shirt, 
   Circle,
-  LucideIcon
+  LucideIcon,
+  Tag
 } from "lucide-react";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useUIStore } from "@/store/useUIStore";
 import { getCategoryById } from "@/lib/categories";
 import { getCurrencySymbol } from "@/lib/currencies";
+import { Card } from "@/components/ui/card";
 
 function getCategoryTheme(categoryId: string): { Icon: LucideIcon, accent: string } {
   const mapping: Record<string, { Icon: LucideIcon, accent: string }> = {
@@ -68,25 +70,26 @@ export function TopCategories() {
   }, [transactions, selectedMonth, selectedYear]);
 
   return (
-    <div className="flex flex-col w-full h-full premium-card p-[16px] overflow-hidden">
+    <Card className="flex flex-col w-full h-[350px] p-4 md:p-6 overflow-hidden hover:shadow-md transition-all duration-200">
       {/* Header */}
-      <div className="flex items-center justify-between mb-2 flex-shrink-0 h-[32px]">
-        <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em]">
+      <div className="flex items-center justify-between mb-2 flex-shrink-0">
+        <h3 className="text-sm font-semibold text-text-primary">
           Top Spending
-        </h2>
-        <span className="text-[10px] text-[#334155]">
-          This month
+        </h3>
+        <span className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">
+          This Month
         </span>
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 -mx-2 px-2 flex flex-col pb-2">
+      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 -mx-2 px-2 flex flex-col justify-start pb-2">
         {categoryData.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-[32px] h-[32px] rounded-full bg-[rgba(255,255,255,0.02)] flex items-center justify-center mb-2">
-              <Circle className="h-[16px] w-[16px] text-[#1e293b]" />
+          <div className="flex flex-col items-center justify-center h-full text-center py-8">
+            <div className="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center text-accent mb-3 border border-accent/10">
+              <Tag size={18} />
             </div>
-            <span className="text-[12px] text-[#1e293b]">No expenses yet</span>
+            <span className="text-xs font-semibold text-text-primary">No expenses yet</span>
+            <span className="text-[10px] text-text-muted mt-0.5">Top spent categories will show here</span>
           </div>
         ) : (
           categoryData.map((cat, index) => {
@@ -97,36 +100,36 @@ export function TopCategories() {
             return (
               <div 
                 key={cat.id} 
-                className="flex flex-col justify-center h-[52px] py-[6px] px-2 rounded-[8px] hover:bg-[rgba(255,255,255,0.02)] transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-b-0"
+                className="flex flex-col justify-center py-2 px-2 rounded-xl hover:bg-white/[0.02] dark:hover:bg-white/[0.02] hover:bg-black/[0.01] transition-colors border-b border-border/30 last:border-b-0"
               >
                 {/* Line 1 */}
-                <div className="flex items-center gap-2 mb-[4px]">
+                <div className="flex items-center gap-2 mb-1.5">
                   <div 
-                    className="flex h-[20px] w-[20px] rounded-full items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: `${accent}1F` }} // 1F is ~12% opacity in hex
+                    className="flex h-[22px] w-[22px] rounded-full items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${accent}15` }}
                   >
                     <Icon size={11} color={accent} />
                   </div>
-                  <span className="text-[12px] font-medium text-[#f1f5f9] flex-1 truncate">
+                  <span className="text-xs font-semibold text-text-primary flex-1 truncate">
                     {name}
                   </span>
-                  <span className="text-[13px] font-semibold text-[#f1f5f9] font-mono flex-shrink-0">
+                  <span className="text-xs font-bold text-text-primary font-mono flex-shrink-0">
                     {symbol}{cat.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </span>
                 </div>
                 
                 {/* Line 2 */}
                 <div className="flex items-center gap-3">
-                  <div className="flex-1 h-[4px] bg-[rgba(255,255,255,0.06)] rounded-[2px] overflow-hidden">
+                  <div className="flex-1 h-[4px] bg-border/40 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${cat.fillRatio}%` }}
                       transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.05 }}
-                      className="h-full rounded-[2px]"
+                      className="h-full rounded-full"
                       style={{ backgroundColor: accent }}
                     />
                   </div>
-                  <span className="text-[10px] text-[#334155] w-[28px] text-right">
+                  <span className="text-[10px] text-text-muted w-[32px] text-right font-medium">
                     {cat.percentage.toFixed(1)}%
                   </span>
                 </div>
@@ -135,6 +138,6 @@ export function TopCategories() {
           })
         )}
       </div>
-    </div>
+    </Card>
   );
 }

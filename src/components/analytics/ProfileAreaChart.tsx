@@ -4,8 +4,9 @@ import { useTransactionStore } from "@/store/useTransactionStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useUIStore } from "@/store/useUIStore";
 import { getCurrencySymbol } from "@/lib/currencies";
-import { MagicCard } from "@/components/magicui/magic-card";
+import { Card } from "@/components/ui/card";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Layers } from "lucide-react";
 
 export default function ProfileAreaChart() {
   const { transactions } = useTransactionStore();
@@ -33,24 +34,48 @@ export default function ProfileAreaChart() {
     return dayData;
   });
 
+  const hasData = profiles.length > 0;
+
   return (
-    <MagicCard className="p-4 md:p-6 w-full h-[350px]">
-      <h3 className="text-sm font-semibold text-text-primary mb-4">Profile Balances</h3>
-      <div className="flex-1 min-h-0 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-            <XAxis dataKey="name" stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${symbol}${val}`} />
-            <Tooltip
-              contentStyle={{ backgroundColor: "rgba(22, 22, 30, 0.8)", backdropFilter: "blur(8px)", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px", color: "#F8FAFC" }}
-            />
-            {profiles.map((p, idx) => (
-              <Area key={p.id} type="monotone" dataKey={p.name} stackId="1" stroke={p.color} fill={p.color} fillOpacity={0.3} />
-            ))}
-          </AreaChart>
-        </ResponsiveContainer>
+    <Card className="p-4 md:p-6 w-full h-[350px] flex flex-col justify-between hover:shadow-md transition-all duration-200">
+      <div className="flex items-center justify-between mb-4 flex-shrink-0">
+        <h3 className="text-sm font-semibold text-text-primary">Profile Balances</h3>
+        <span className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">
+          Last 7 Days
+        </span>
       </div>
-    </MagicCard>
+      <div className="flex-1 min-h-0 w-full flex items-center justify-center">
+        {hasData ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+              <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
+              <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(val) => `${symbol}${val}`} />
+              <Tooltip
+                contentStyle={{ 
+                  backgroundColor: "var(--bg-surface)", 
+                  borderColor: "var(--border-default)", 
+                  borderRadius: "12px", 
+                  color: "var(--text-primary)",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                }}
+                itemStyle={{ color: "var(--text-primary)", fontSize: "12px" }}
+              />
+              {profiles.map((p, idx) => (
+                <Area key={p.id} type="monotone" dataKey={p.name} stackId="1" stroke={p.color} fill={p.color} fillOpacity={0.15} />
+              ))}
+            </AreaChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center text-accent mb-3 border border-accent/10">
+              <Layers size={18} />
+            </div>
+            <span className="text-xs font-semibold text-text-primary">No data yet</span>
+            <span className="text-[10px] text-text-muted mt-0.5">Profile comparisons will show here</span>
+          </div>
+        )}
+      </div>
+    </Card>
   );
 }

@@ -13,6 +13,10 @@ import { SpendingChart } from "@/components/dashboard/SpendingChart";
 import { TransactionFeed } from "@/components/dashboard/TransactionFeed";
 import { TopCategories } from "@/components/analytics/TopCategories";
 
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Wallet } from "lucide-react";
+
 export function DashboardClient() {
   const { status } = useSession();
   const { profiles, setProfiles, getTotalBalance, fetchProfiles } = useProfileStore();
@@ -66,31 +70,31 @@ export function DashboardClient() {
   const largestExpense = currentMonthTxns.filter(t => t.type === "EXPENSE").reduce((max, t) => Math.max(max, t.amount), 0);
   
   const expenseByCategory = currentMonthTxns
-    .filter(t => t.type === "EXPENSE")
-    .reduce((acc, t) => { 
-      acc[t.category] = (acc[t.category] || 0) + t.amount; 
-      return acc; 
-    }, {} as Record<string, number>);
-    
+     .filter(t => t.type === "EXPENSE")
+     .reduce((acc, t) => { 
+       acc[t.category] = (acc[t.category] || 0) + t.amount; 
+       return acc; 
+     }, {} as Record<string, number>);
+     
   const topCategory = Object.entries(expenseByCategory).sort((a,b) => b[1] - a[1])[0]?.[0] || "-";
 
   if (status === "loading" || loading) {
     return (
       <div className="flex w-full h-[60vh] flex-col space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-          <div className="h-[96px] w-full skeleton" />
-          <div className="h-[96px] w-full skeleton" />
-          <div className="h-[96px] w-full skeleton" />
-          <div className="h-[96px] w-full skeleton" />
+          <Skeleton className="h-[96px] w-full" />
+          <Skeleton className="h-[96px] w-full" />
+          <Skeleton className="h-[96px] w-full" />
+          <Skeleton className="h-[96px] w-full" />
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-          <div className="h-[280px] w-full skeleton" />
-          <div className="h-[280px] w-full skeleton" />
-          <div className="h-[280px] w-full skeleton" />
+          <Skeleton className="h-[280px] w-full" />
+          <Skeleton className="h-[280px] w-full" />
+          <Skeleton className="h-[280px] w-full" />
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          <div className="h-[400px] w-full skeleton" />
-          <div className="h-[400px] w-full skeleton" />
+          <Skeleton className="h-[400px] w-full" />
+          <Skeleton className="h-[400px] w-full" />
         </div>
       </div>
     );
@@ -98,22 +102,14 @@ export function DashboardClient() {
 
   if (profiles.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-[60vh] w-full max-w-md mx-auto text-center p-8 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-[var(--radius-xl)] shadow-2xl">
-        <div className="w-16 h-16 bg-[var(--accent-glow)] rounded-full flex items-center justify-center mb-6">
-          <span className="text-3xl text-[var(--accent-light)]">✧</span>
-        </div>
-        <h2 className="text-[18px] font-semibold text-[var(--text-primary)] mb-2">
-          Welcome to ExpenseTracker
-        </h2>
-        <p className="text-[14px] text-[var(--text-muted)] mb-8">
-          Start your financial journey by creating your first wallet profile.
-        </p>
-        <button
-          onClick={() => setProfileModalOpen(true)}
-          className="w-full h-11 bg-[var(--accent)] hover:bg-[#6D28D9] text-white font-medium rounded-[var(--radius-md)] transition-all"
-        >
-          Create Profile
-        </button>
+      <div className="flex flex-col items-center justify-center h-[60vh] w-full">
+        <EmptyState
+          icon={Wallet}
+          title="Welcome to ExpenseTracker"
+          description="Start your financial journey by creating your first wallet profile."
+          actionLabel="Create Profile"
+          onAction={() => setProfileModalOpen(true)}
+        />
         <CreateProfileModal
           open={profileModalOpen}
           onClose={() => setProfileModalOpen(false)}

@@ -1,11 +1,12 @@
 "use client";
 
 import { useTransactionStore } from "@/store/useTransactionStore";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
-import { ChevronDown } from "lucide-react";
+import { PieChart } from "lucide-react";
 import { EXPENSE_CATEGORIES } from "@/lib/categories";
+import { Card } from "@/components/ui/card";
 
 const DONUT_COLORS = ["#7c3aed", "#10b981", "#f43f5e", "#3b82f6", "#f59e0b", "#ec4899", "#06b6d4"];
 
@@ -38,78 +39,91 @@ export function CategoryDonutChart() {
   const totalSpent = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="flex flex-col w-full h-full bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-[16px] py-4 px-4 md:py-5 md:px-6 hover:border-[rgba(139,92,246,0.25)] hover:shadow-[0_0_0_1px_rgba(139,92,246,0.1)] transition-all duration-200">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[11px] font-medium text-[#475569] uppercase tracking-[0.08em]">
+    <Card className="p-4 md:p-6 w-full h-[350px] flex flex-col justify-between hover:shadow-md transition-all duration-200">
+      <div className="flex items-center justify-between mb-2 flex-shrink-0">
+        <h3 className="text-sm font-semibold text-text-primary">
           Spending by Category
-        </h2>
-        <button className="hidden sm:flex items-center gap-1 text-[12px] text-[#94a3b8] hover:text-[#f8fafc] bg-transparent border-none outline-none transition-colors active:scale-[0.97]">
-          This Month <ChevronDown size={12} />
-        </button>
+        </h3>
+        <span className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">
+          This Month
+        </span>
       </div>
 
-      <div className="flex flex-row md:flex-col items-center justify-between md:justify-center w-full gap-4 md:gap-0 h-full min-h-[140px]">
-        {/* Chart Area */}
-        <div className="relative h-[140px] w-[140px] md:h-[160px] md:w-full flex-shrink-0 flex justify-center items-center flex-1 md:flex-none aspect-square md:aspect-auto">
-          {data.length > 0 ? (
-            <>
-              <ResponsiveContainer width="100%" height="100%" className="aspect-square mx-auto max-w-[160px] md:max-w-none">
-                <PieChart>
+      <div className="flex-1 flex flex-row items-center justify-between gap-4 min-h-0 w-full">
+        {data.length > 0 ? (
+          <>
+            {/* Chart Area */}
+            <div className="relative h-[160px] w-[160px] flex-shrink-0 flex justify-center items-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <RechartsPieChart>
                   <Pie
                     data={data}
-                    innerRadius="70%"
+                    innerRadius="68%"
                     outerRadius="100%"
                     dataKey="value"
-                    stroke="none"
+                    stroke="var(--bg-surface)"
+                    strokeWidth={2}
                   >
                     {data.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#1e1b2e", borderColor: "rgba(139,92,246,0.3)", borderRadius: "8px", padding: "8px 12px", color: "#f8fafc", fontSize: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.5)" }}
-                    itemStyle={{ color: "#f8fafc", fontSize: "12px" }}
+                    contentStyle={{
+                      backgroundColor: "var(--bg-surface)",
+                      borderColor: "var(--border-default)",
+                      borderRadius: "12px",
+                      color: "var(--text-primary)",
+                      fontSize: "12px",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                    }}
+                    itemStyle={{ color: "var(--text-primary)", fontSize: "12px" }}
                     formatter={(value: any) => [`${symbol}${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}`, "Amount"]}
                   />
-                </PieChart>
+                </RechartsPieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-[9px] md:text-[10px] uppercase text-[#475569] font-medium tracking-[0.05em] mb-0.5">Spent</span>
-                <span className="text-[14px] md:text-[18px] font-bold text-[#f8fafc]">{symbol}{totalSpent.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                <span className="text-[10px] uppercase text-text-muted font-medium tracking-[0.05em] mb-0.5">Spent</span>
+                <span className="text-base font-bold text-text-primary tracking-tight font-mono">
+                  {symbol}{totalSpent.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                </span>
               </div>
-            </>
-          ) : (
-            <div className="flex flex-col items-center justify-center w-full">
-              <div className="h-[40px] w-[40px] flex items-center justify-center text-[#1e293b] mb-2">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
-              </div>
-              <span className="text-[13px] text-[#334155]">No data yet</span>
             </div>
-          )}
-        </div>
 
-        {/* Legend Area */}
-        {data.length > 0 && (
-          <div className="flex-1 md:w-full md:mt-6 overflow-y-auto max-h-[140px] md:max-h-none hide-scrollbar">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4">
-              {data.slice(0, 6).map((item, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-[8px] h-[8px] rounded-full flex-shrink-0" style={{ backgroundColor: DONUT_COLORS[i % DONUT_COLORS.length] }} />
-                    <span className="text-[11px] text-[#94a3b8] truncate max-w-[80px]" title={item.name}>{item.name}</span>
+            {/* Legend Area */}
+            <div className="flex-1 overflow-y-auto max-h-[180px] hide-scrollbar py-1">
+              <div className="flex flex-col gap-2">
+                {data.slice(0, 5).map((item, i) => (
+                  <div key={i} className="flex items-center justify-between gap-2 border-b border-border/20 pb-1.5 last:border-0 last:pb-0">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: DONUT_COLORS[i % DONUT_COLORS.length] }} />
+                      <span className="text-[11px] text-text-secondary truncate font-medium" title={item.name}>{item.name}</span>
+                    </div>
+                    <span className="text-[11px] font-bold text-text-primary font-mono flex-shrink-0">
+                      {symbol}{item.value.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </span>
                   </div>
-                  <span className="text-[11px] font-bold text-[#f8fafc]">{symbol}{item.value.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                </div>
-              ))}
-            </div>
-            {data.length > 6 && (
-              <div className="mt-2 text-center md:text-left">
-                <button className="text-[11px] text-[#7c3aed] hover:text-[#a78bfa] transition-colors active:scale-[0.97]">+{data.length - 6} more</button>
+                ))}
+                {data.length > 5 && (
+                  <div className="text-right">
+                    <span className="text-[9px] text-text-muted bg-white/[0.02] border border-border/40 px-1.5 py-0.5 rounded font-medium">
+                      +{data.length - 5} more
+                    </span>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center w-full h-full py-8">
+            <div className="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center text-accent mb-3 border border-accent/10">
+              <PieChart size={18} />
+            </div>
+            <span className="text-xs font-semibold text-text-primary">No data yet</span>
+            <span className="text-[10px] text-text-muted mt-0.5">Expenses will appear here</span>
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

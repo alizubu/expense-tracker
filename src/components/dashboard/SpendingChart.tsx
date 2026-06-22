@@ -31,12 +31,12 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
   const symbol = getCurrencySymbol(useUIStore.getState().selectedCurrency);
 
   return (
-    <div className="bg-[#1a1830] border border-[rgba(124,58,237,0.25)] rounded-[8px] px-[10px] py-[6px] text-[12px] shadow-lg">
+    <div className="bg-card border border-border rounded-xl px-3 py-2 text-xs shadow-lg">
       <div className="flex items-center gap-2 mb-1">
         <div className="h-2 w-2 rounded-full" style={{ backgroundColor: data.color }} />
-        <span className="font-medium text-[#f1f5f9]">{data.name}</span>
+        <span className="font-semibold text-text-primary">{data.name}</span>
       </div>
-      <p className="text-[#94a3b8]">
+      <p className="text-text-secondary">
         {symbol}{data.value.toLocaleString("en-US", { maximumFractionDigits: 0 })} ({data.percentage.toFixed(1)}%)
       </p>
     </div>
@@ -92,23 +92,23 @@ export function SpendingChart() {
   const totalSpent = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="flex flex-col w-full h-auto sm:h-full premium-card p-[16px] overflow-visible sm:overflow-hidden">
+    <div className="flex flex-col w-full h-auto sm:h-full border border-border bg-card shadow-sm p-4 rounded-2xl overflow-visible sm:overflow-hidden hover:border-accent/10 hover:shadow-md transition-all duration-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 flex-shrink-0 h-[32px]">
-        <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em]">
+        <h2 className="text-[10px] font-semibold text-text-secondary uppercase tracking-[0.08em]">
           Spending By Category
         </h2>
-        <span className="text-[11px] text-[#64748b] cursor-pointer">
+        <span className="text-[11px] font-semibold text-text-muted cursor-pointer select-none">
           This Month ▾
         </span>
       </div>
 
       {chartData.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <div className="w-[40px] h-[40px] rounded-full bg-[rgba(255,255,255,0.02)] flex items-center justify-center mb-2">
-            <div className="w-[16px] h-[16px] border-2 border-[#1e293b] rounded-full" />
+        <div className="flex-1 flex flex-col items-center justify-center py-6">
+          <div className="w-[40px] h-[40px] rounded-xl bg-card-elevated flex items-center justify-center mb-2">
+            <div className="w-[16px] h-[16px] border border-border rounded-full animate-pulse" />
           </div>
-          <span className="text-[12px] text-[#1e293b]">No data yet</span>
+          <span className="text-xs text-text-muted">No data yet</span>
         </div>
       ) : (
         <div className="flex flex-col sm:flex-1 min-h-0">
@@ -123,7 +123,8 @@ export function SpendingChart() {
                   innerRadius={isMobile ? 54 : 48}
                   outerRadius={isMobile ? 72 : 66}
                   strokeWidth={2}
-                  stroke="#0f0f1a"
+                  stroke="currentColor"
+                  className="text-card"
                   dataKey="value"
                   isAnimationActive={false}
                 >
@@ -136,10 +137,10 @@ export function SpendingChart() {
             </ResponsiveContainer>
             {/* Center Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-[9px] font-medium text-[#475569] uppercase tracking-widest mt-1">
+              <span className="text-[9px] font-semibold text-text-secondary uppercase tracking-widest mt-1">
                 Spent
               </span>
-              <span className="text-[16px] font-bold text-[#f1f5f9] font-mono tracking-tight leading-none">
+              <span className="text-[16px] font-bold text-text-primary font-mono tracking-tight leading-none">
                 {symbol}{totalSpent.toLocaleString("en-US", { maximumFractionDigits: 0 })}
               </span>
             </div>
@@ -151,8 +152,8 @@ export function SpendingChart() {
               {chartData.slice(0, showAllLegend ? undefined : 6).map((item) => (
                 <div key={item.name} className="flex items-center h-[22px]">
                   <span className="w-[8px] h-[8px] rounded-full flex-shrink-0" style={{ background: item.color }} />
-                  <span className="ml-[6px] text-[11px] text-[#94a3b8] truncate flex-1">{item.name}</span>
-                  <span className="ml-[4px] font-mono text-[11px] text-[#f1f5f9] flex-shrink-0 text-right">
+                  <span className="ml-[6px] text-[11px] text-text-secondary truncate flex-1">{item.name}</span>
+                  <span className="ml-[4px] font-mono font-bold text-[11px] text-text-primary flex-shrink-0 text-right">
                     {symbol}{item.value.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </span>
                 </div>
@@ -161,7 +162,7 @@ export function SpendingChart() {
             {!showAllLegend && chartData.length > 6 && (
               <button 
                 onClick={() => setShowAllLegend(true)}
-                className="mt-[6px] text-[10px] text-[#7c3aed] hover:underline bg-transparent border-none outline-none"
+                className="mt-[6px] text-[10px] font-semibold text-accent hover:text-brand-purple-light hover:underline bg-transparent border-none outline-none cursor-pointer"
               >
                 +{chartData.length - 6} more
               </button>

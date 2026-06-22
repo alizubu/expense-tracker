@@ -22,8 +22,8 @@ export function MobileNav() {
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
         {/* Pill nav bar */}
-        <div className="mx-3 mb-2.5 rounded-[24px] border border-white/[0.08]
-                        bg-[rgba(10,10,18,0.97)] backdrop-blur-2xl
+        <div className="mx-3 mb-2.5 rounded-[24px] border border-border
+                        bg-card/95 backdrop-blur-2xl
                         shadow-[0_-1px_0_rgba(255,255,255,0.05)_inset,0_8px_32px_rgba(0,0,0,0.5)]">
           <div className="grid grid-cols-5 h-[62px] px-1 items-center">
             {NAV_ITEMS.map((item, index) => {
@@ -44,7 +44,7 @@ export function MobileNav() {
                       />
                       {/* Pulse ring */}
                       <motion.div
-                        className="absolute inset-[-4px] rounded-full border border-violet-500/50"
+                        className="absolute inset-[-4px] rounded-full border border-accent/50"
                         animate={{ scale: [1, 1.3, 1.3], opacity: [0.8, 0, 0] }}
                         transition={{ duration: 2.5, repeat: Infinity, ease: 'easeOut' }}
                       />
@@ -56,7 +56,7 @@ export function MobileNav() {
                         className="relative z-10 w-[52px] h-[52px] rounded-full
                                    bg-gradient-to-br from-violet-600 via-violet-700 to-indigo-700
                                    border-[2px] border-violet-400/40 flex items-center justify-center
-                                   shadow-[0_0_0_4px_rgba(10,10,18,1),0_0_20px_rgba(124,58,237,0.6),0_4px_16px_rgba(0,0,0,0.5)]"
+                                   shadow-[0_0_0_4px_var(--bg-surface),0_0_20px_rgba(124,58,237,0.6),0_4px_16px_rgba(0,0,0,0.5)] cursor-pointer"
                       >
                         <Plus size={22} strokeWidth={2.5} className="text-white" />
                       </motion.button>
@@ -74,7 +74,7 @@ export function MobileNav() {
                   key={item.href}
                   onClick={() => router.push(item.href!)}
                   className="flex flex-col items-center gap-[3px] py-2 relative
-                             min-h-[44px] justify-center"
+                             min-h-[44px] justify-center cursor-pointer"
                   whileTap={{ scale: 0.88 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                 >
@@ -83,7 +83,7 @@ export function MobileNav() {
                     <motion.div
                       layoutId="nav-bg"
                       className="absolute w-10 h-8 rounded-xl
-                                 bg-violet-500/12 border border-violet-500/20"
+                                 bg-accent-dim border border-accent/20"
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -96,14 +96,14 @@ export function MobileNav() {
                   >
                     <Icon
                       size={20}
-                      className={isActive ? 'text-violet-400' : 'text-[#334155]'}
+                      className={isActive ? 'text-accent' : 'text-text-muted'}
                       strokeWidth={isActive ? 2 : 1.5}
                     />
                   </motion.div>
 
                   {/* Label */}
                   <span className={`text-[10px] relative z-10 transition-colors duration-200
-                    ${isActive ? 'text-violet-400 font-medium' : 'text-[#334155]'}`}>
+                    ${isActive ? 'text-accent font-semibold' : 'text-text-muted'}`}>
                     {item.label}
                   </span>
 
@@ -111,9 +111,9 @@ export function MobileNav() {
                   {isActive && (
                     <motion.div
                       layoutId="nav-dot"
-                      className="absolute bottom-1 w-1 h-1 rounded-full bg-violet-500"
+                      className="absolute bottom-1 w-1 h-1 rounded-full bg-accent"
                       style={{
-                        boxShadow: '0 0 6px rgba(124,58,237,0.9), 0 0 12px rgba(124,58,237,0.5)'
+                        boxShadow: '0 0 6px var(--accent-color), 0 0 12px var(--accent-color)'
                       }}
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
@@ -125,7 +125,7 @@ export function MobileNav() {
         </div>
 
         {/* Safe area fill */}
-        <div className="mx-3 bg-[rgba(10,10,18,0.97)] rounded-b-[20px]"
+        <div className="mx-3 bg-card rounded-b-[20px]"
              style={{ height: 'env(safe-area-inset-bottom)' }} />
       </div>
 

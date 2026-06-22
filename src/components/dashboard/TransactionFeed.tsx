@@ -80,15 +80,15 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
   });
 
   return (
-    <div className="flex flex-col w-full h-auto md:h-full premium-card p-[16px] pb-2 overflow-visible md:overflow-hidden">
+    <div className="flex flex-col w-full h-auto md:h-full border border-border bg-card shadow-sm p-4 pb-2 overflow-visible md:overflow-hidden hover:border-accent/10 hover:shadow-md transition-all duration-200">
       {/* Header */}
       <div className="flex items-center justify-between flex-shrink-0 h-[32px] mb-2">
-        <h2 className="text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em]">
+        <h2 className="text-[10px] font-semibold text-text-secondary uppercase tracking-[0.08em]">
           Recent Transactions
         </h2>
         <Link 
           href="/transactions"
-          className="text-[12px] font-medium text-[#7c3aed] hover:underline transition-colors"
+          className="text-xs font-semibold text-accent hover:text-brand-purple-light transition-colors"
         >
           View all →
         </Link>
@@ -97,41 +97,41 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
       {/* Content Area */}
       <div className="flex flex-col md:flex-1 md:overflow-y-auto hide-scrollbar md:min-h-0 relative -mx-2 px-2 pb-2">
         {transactions.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-[32px] h-[32px] rounded-full bg-[rgba(255,255,255,0.02)] flex items-center justify-center mb-2">
-              <Circle className="h-[16px] w-[16px] text-[#1e293b]" />
+          <div className="flex flex-col items-center justify-center h-full text-center py-6">
+            <div className="w-[32px] h-[32px] rounded-xl bg-card-elevated flex items-center justify-center mb-2">
+              <Circle className="h-[16px] w-[16px] text-text-muted/40 animate-pulse" />
             </div>
-            <span className="text-[12px] text-[#1e293b]">No transactions yet</span>
+            <span className="text-xs text-text-muted">No transactions yet</span>
           </div>
         ) : (
-          Object.entries(groupedByDate).map(([dateStr, txns], groupIndex) => (
+          Object.entries(groupedByDate).map(([dateStr, txns]) => (
             <div key={dateStr}>
               {/* Date Group Header */}
-              <div className="sticky top-0 z-10 h-[24px] bg-[#0f0f1a] flex items-center gap-2 pt-1 mb-1">
-                <span className="text-[10px] font-medium text-[#334155] uppercase tracking-[0.06em] flex-shrink-0">
+              <div className="sticky top-0 z-10 h-[24px] bg-card flex items-center gap-2 pt-1 mb-1">
+                <span className="text-[10px] font-semibold text-text-muted uppercase tracking-[0.06em] flex-shrink-0">
                   {dateStr}
                 </span>
-                <div className="h-[1px] bg-[rgba(255,255,255,0.04)] flex-1" />
+                <div className="h-[1px] bg-border/40 flex-1" />
               </div>
 
               {/* Transactions */}
-              {txns.map((t, index) => {
+              {txns.map((t) => {
                 const categoryDef = getCategoryById(t.category);
                 const categoryLabel = categoryDef?.label || t.category;
                 const catStyle = getCatStyle(t.type === "TRANSFER" ? "Transfer" : categoryLabel);
                 const Icon = catStyle.icon;
                 const profileName = profiles.find(p => p.id === t.profileId)?.name || "Unknown";
                 
-                let amountColor = "text-[#f1f5f9]";
+                let amountColor = "text-text-primary";
                 let prefix = "";
                 if (t.type === "INCOME") {
-                  amountColor = "text-[#10b981]";
+                  amountColor = "text-income";
                   prefix = "+";
                 } else if (t.type === "EXPENSE") {
-                  amountColor = "text-[#f43f5e]";
+                  amountColor = "text-expense";
                   prefix = "−";
                 } else if (t.type === "TRANSFER") {
-                  amountColor = "text-[#3b82f6]";
+                  amountColor = "text-transfer";
                   prefix = "→";
                 }
 
@@ -139,11 +139,11 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                   <div 
                     key={t.id}
                     onClick={() => openModal("addTransaction")}
-                    className="grid grid-cols-[32px_1fr_auto] gap-[12px] items-center py-[10px] px-[4px] rounded-[8px] hover:bg-[rgba(255,255,255,0.02)] cursor-pointer transition-colors group border-b border-[rgba(255,255,255,0.04)] last:border-b-0"
+                    className="grid grid-cols-[32px_1fr_auto] gap-[12px] items-center py-[10px] px-2 rounded-xl hover:bg-card-hover cursor-pointer transition-colors group border-b border-border/40 last:border-b-0"
                   >
                     {/* Icon */}
                     <div 
-                      className="w-[32px] h-[32px] rounded-[10px] flex items-center justify-center flex-shrink-0"
+                      className="w-[32px] h-[32px] rounded-xl flex items-center justify-center flex-shrink-0"
                       style={{ backgroundColor: catStyle.bg }}
                     >
                       <Icon size={14} color={catStyle.color} />
@@ -151,20 +151,20 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
 
                     {/* Title + Sub */}
                     <div className="flex flex-col min-w-0">
-                      <span className="text-[13px] font-medium text-[#f1f5f9] truncate">
+                      <span className="text-[13px] font-semibold text-text-primary truncate">
                         {t.title}
                       </span>
-                      <span className="text-[11px] text-[#475569] truncate mt-[1px]">
+                      <span className="text-[11px] text-text-secondary truncate mt-[1px]">
                         {t.type === "TRANSFER" ? "Transfer" : categoryLabel} · {profileName}
                       </span>
                     </div>
 
                     {/* Amount + Date */}
                     <div className="flex flex-col items-end justify-center flex-shrink-0">
-                      <span className={`text-[13px] font-[600] font-mono-amount ${amountColor}`}>
+                      <span className={`text-[13px] font-bold font-mono-amount ${amountColor}`}>
                         {prefix}{symbol}{Math.abs(t.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                       </span>
-                      <span className="text-[10px] text-[#334155] mt-[2px]">
+                      <span className="text-[10px] text-text-muted mt-[2px]">
                         {format(new Date(t.date), "h:mm a")}
                       </span>
                     </div>
@@ -182,9 +182,9 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
             <div ref={observerTarget} className="hidden md:flex h-[40px] items-center justify-center">
               {isLoadingMore && (
                 <div className="flex gap-1">
-                  <div className="w-[4px] h-[4px] bg-[#334155] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <div className="w-[4px] h-[4px] bg-[#334155] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <div className="w-[4px] h-[4px] bg-[#334155] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                  <div className="w-[4px] h-[4px] bg-text-secondary/40 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <div className="w-[4px] h-[4px] bg-text-secondary/40 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <div className="w-[4px] h-[4px] bg-text-secondary/40 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                 </div>
               )}
             </div>
@@ -193,7 +193,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
             <button 
               onClick={loadMore}
               disabled={isLoadingMore}
-              className="md:hidden w-full h-[40px] rounded-[8px] bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)] text-[12px] font-medium text-[#94a3b8] hover:bg-[rgba(255,255,255,0.04)] hover:text-[#f1f5f9] transition-all"
+              className="md:hidden w-full h-[40px] rounded-xl bg-card-elevated border border-border/80 text-[12px] font-medium text-text-secondary hover:bg-card-hover hover:text-text-primary transition-all cursor-pointer"
             >
               {isLoadingMore ? "Loading..." : "Load More"}
             </button>

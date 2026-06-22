@@ -3,6 +3,7 @@
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { PieChart } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 import AnalyticsStatsRow from "@/components/analytics/AnalyticsStatsRow";
 import MonthlyBarChart from "@/components/analytics/MonthlyBarChart";
 import { CategoryDonutChart } from "@/components/analytics/CategoryDonutChart";
@@ -24,46 +25,47 @@ export default function AnalyticsPage() {
 
       {transactions.length === 0 ? (
         <BlurFade delay={0.1}>
-          <div className="flex flex-col items-center justify-center h-64 border border-white/10 rounded-2xl bg-[#16161E] text-center p-6">
-            <PieChart className="w-12 h-12 text-text-muted mb-4" />
-            <h2 className="text-xl font-semibold text-white mb-2">No data available</h2>
-            <p className="text-slate-400">Add transactions to see your analytics and insights.</p>
+          <div className="flex flex-col items-center justify-center py-12">
+            <EmptyState
+              icon={PieChart}
+              title="No data available"
+              description="Add transactions to see your analytics and insights."
+            />
           </div>
         </BlurFade>
       ) : (
         <>
           <AnalyticsStatsRow />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
-        <BlurFade delay={0.2} className="lg:col-span-2">
-          <MonthlyBarChart />
-        </BlurFade>
-        <BlurFade delay={0.3} className="lg:col-span-1">
-          <CategoryDonutChart />
-        </BlurFade>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
-        <BlurFade delay={0.4}>
-          <DailyLineChart />
-        </BlurFade>
-        <BlurFade delay={0.5}>
-          <ProfileAreaChart />
-        </BlurFade>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6">
-        <BlurFade delay={0.6} className="lg:col-span-1">
-          <TopCategories />
-        </BlurFade>
-        <BlurFade delay={0.7} className="lg:col-span-2">
-          {/* We can use another chart here for Income vs Expense trend if needed, or leave blank/placeholder */}
-          <div className="h-full w-full rounded-xl border border-white/[0.05] bg-white/[0.02] flex items-center justify-center p-6">
-             <p className="text-text-muted text-sm text-center">More insights coming soon...</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+            <BlurFade delay={0.2} className="lg:col-span-2">
+              <MonthlyBarChart />
+            </BlurFade>
+            <BlurFade delay={0.3} className="lg:col-span-1">
+              <CategoryDonutChart />
+            </BlurFade>
           </div>
-        </BlurFade>
-      </div>
-      </>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <BlurFade delay={0.4}>
+              <DailyLineChart />
+            </BlurFade>
+            <BlurFade delay={0.5}>
+              <ProfileAreaChart />
+            </BlurFade>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+            <BlurFade delay={0.6} className="lg:col-span-1">
+              <TopCategories />
+            </BlurFade>
+            <BlurFade delay={0.7} className="lg:col-span-2">
+              <div className="h-full min-h-[200px] w-full rounded-2xl border border-border bg-card/40 flex items-center justify-center p-6 shadow-sm hover:shadow-md transition-all">
+                 <p className="text-text-muted text-xs font-semibold uppercase tracking-wider text-center">More insights coming soon...</p>
+              </div>
+            </BlurFade>
+          </div>
+        </>
       )}
     </div>
   );

@@ -10,11 +10,15 @@ import { getCurrencySymbol } from "@/lib/currencies";
 import { formatGroupDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { 
-  Search, Trash2, X, ArchiveRestore, Menu, Plus, ChevronDown, 
+  Search, Trash2, X, ChevronDown, 
   ArrowDownUp, ReceiptText, Utensils, ShoppingCart, Gamepad2, 
-  Cpu, Car, AlertCircle, ArrowLeftRight, Shirt, Beef, Pill, Plane, Circle
+  Cpu, Car, AlertCircle, ArrowLeftRight, Shirt, Beef, Pill, Plane, Circle, Menu, Plus
 } from "lucide-react";
 import { EditTransactionModal } from "@/components/transactions/EditTransactionModal";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 // 2G - Category Icon Map
 const CATEGORY_MAP: Record<string, { icon: any, color: string, bg: string }> = {
@@ -32,7 +36,7 @@ const CATEGORY_MAP: Record<string, { icon: any, color: string, bg: string }> = {
 };
 
 function getCatStyle(label: string) {
-  return CATEGORY_MAP[label] || { icon: Circle, color: "#64748b", bg: "rgba(100,116,139,0.12)" };
+  return CATEGORY_MAP[label] || { icon: Circle, color: "var(--text-secondary)", bg: "var(--border-subtle)" };
 }
 
 export default function TransactionsPage() {
@@ -73,35 +77,35 @@ export default function TransactionsPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* 2A - Mobile Topbar */}
-      <div className="sticky top-0 z-40 lg:hidden flex items-center justify-between h-[52px] px-[12px] bg-[rgba(8,8,15,0.95)] backdrop-blur-[16px] border-b border-[rgba(255,255,255,0.05)]">
-        <button onClick={openSidebar} className="flex items-center justify-center w-[32px] h-[32px] rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)]">
-          <Menu size={16} color="#64748b" />
+      <div className="sticky top-0 z-40 lg:hidden flex items-center justify-between h-[52px] px-[12px] bg-card/95 backdrop-blur-[16px] border-b border-border/60">
+        <button onClick={openSidebar} className="flex items-center justify-center w-[32px] h-[32px] rounded-xl bg-card-elevated border border-border cursor-pointer">
+          <Menu size={16} className="text-text-secondary" />
         </button>
-        <span className="text-[13px] font-[600] text-[#f1f5f9] flex-1 text-center">Transactions</span>
+        <span className="text-[13px] font-semibold text-text-primary flex-1 text-center">Transactions</span>
         <div className="flex items-center gap-[8px]">
-          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="flex items-center justify-center w-[32px] h-[32px] rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)]">
-            <Search size={15} color="#64748b" />
+          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="flex items-center justify-center w-[32px] h-[32px] rounded-xl bg-card-elevated border border-border cursor-pointer">
+            <Search size={15} className="text-text-secondary" />
           </button>
-          <button onClick={() => openModal("addTransaction")} className="flex items-center justify-center w-[32px] h-[32px] rounded-full bg-[#7c3aed] shadow-[0_0_12px_rgba(124,58,237,0.4)]">
+          <button onClick={() => openModal("addTransaction")} className="flex items-center justify-center w-[32px] h-[32px] rounded-xl bg-accent shadow-md shadow-violet-500/20 cursor-pointer">
             <Plus size={16} color="white" />
           </button>
         </div>
       </div>
 
       {/* 2B - Desktop Search Bar */}
-      <div className="hidden lg:flex px-[20px] pt-[20px]">
-        <div className="relative flex items-center w-full max-w-md h-[40px] rounded-[12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] px-[14px]">
-          <Search size={14} color="#334155" className="absolute left-[14px]" />
+      <div className="hidden lg:flex pt-4">
+        <div className="relative flex items-center w-full max-w-md h-[40px] rounded-xl bg-card-elevated border border-border px-[14px]">
+          <Search size={14} className="text-text-muted absolute left-[14px]" />
           <input
             type="text"
             placeholder="Search by title, amount, category..."
             value={filters.search}
             onChange={(e) => setFilters({ search: e.target.value })}
-            className="flex-1 bg-transparent border-none text-[13px] text-[#f1f5f9] placeholder-[#334155] focus:outline-none pl-[24px]"
+            className="flex-1 bg-transparent border-none text-[13px] text-text-primary placeholder:text-text-muted/60 focus:outline-none pl-[24px]"
           />
           {filters.search.length > 0 && (
-            <button onClick={() => setFilters({ search: "" })} className="p-1">
-              <X size={13} color="#64748b" />
+            <button onClick={() => setFilters({ search: "" })} className="p-1 cursor-pointer">
+              <X size={13} className="text-text-muted hover:text-text-secondary" />
             </button>
           )}
         </div>
@@ -115,21 +119,21 @@ export default function TransactionsPage() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -8, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="sticky top-[52px] z-30 lg:hidden w-full bg-[rgba(8,8,15,0.98)] border-b border-[rgba(255,255,255,0.06)] p-[8px_16px]"
+            className="sticky top-[52px] z-30 lg:hidden w-full bg-card border-b border-border/80 p-2"
           >
-            <div className="relative flex items-center w-full h-[40px] rounded-[12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] px-[12px] focus-within:border-[rgba(124,58,237,0.5)] focus-within:shadow-[0_0_0_3px_rgba(124,58,237,0.10)] focus-within:bg-[rgba(124,58,237,0.04)]">
-              <Search size={14} color="#334155" />
+            <div className="relative flex items-center w-full h-[40px] rounded-xl bg-card-elevated border border-border px-3 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent-dim">
+              <Search size={14} className="text-text-muted" />
               <input
                 autoFocus
                 type="text"
                 placeholder="Search by title, amount, category..."
                 value={filters.search}
                 onChange={(e) => setFilters({ search: e.target.value })}
-                className="flex-1 bg-transparent border-none text-[13px] text-[#f1f5f9] placeholder-[#334155] focus:outline-none ml-[8px]"
+                className="flex-1 bg-transparent border-none text-[13px] text-text-primary placeholder:text-text-muted/60 focus:outline-none ml-2"
               />
               {filters.search.length > 0 && (
-                <button onClick={() => setFilters({ search: "" })} className="p-[4px]">
-                  <X size={13} color="#64748b" />
+                <button onClick={() => setFilters({ search: "" })} className="p-1 cursor-pointer">
+                  <X size={13} className="text-text-muted" />
                 </button>
               )}
             </div>
@@ -138,85 +142,75 @@ export default function TransactionsPage() {
       </AnimatePresence>
 
       {/* 2C - Page Header Section (Desktop only) */}
-      <div className="hidden lg:flex items-center justify-between pt-[20px] px-[20px]">
+      <div className="hidden lg:flex items-center justify-between pt-4">
         <div>
-          <h1 className="text-[22px] font-[700] text-[#f1f5f9] tracking-[-0.03em]">Transactions</h1>
-          <div className="flex items-center gap-3 mt-2">
-            <div className="bg-[rgba(124,58,237,0.12)] border border-[rgba(124,58,237,0.2)] rounded-[20px] px-[10px] py-[2px] text-[11px] text-[#a78bfa]">
+          <h1 className="text-[22px] font-bold text-text-primary tracking-[-0.03em]">Transactions</h1>
+          <div className="flex items-center gap-3 mt-1.5">
+            <Badge variant="secondary">
               {filtered.length} transactions
-            </div>
+            </Badge>
           </div>
         </div>
       </div>
 
       {/* 2D - Filter Tabs */}
-      <div className="flex gap-[6px] pt-[14px] px-[16px] overflow-x-auto hide-scrollbar scroll-touch">
+      <div className="flex gap-2 pt-4 overflow-x-auto hide-scrollbar scroll-touch">
         {(["ALL", "INCOME", "EXPENSE", "TRANSFER"] as const).map((t) => {
           const isActive = filters.type === t;
-          let activeBg = "rgba(124,58,237,0.15)";
-          let activeBorder = "rgba(124,58,237,0.35)";
-          let activeColor = "#a78bfa";
-          if (t === "INCOME") { activeBg = "rgba(16,185,129,0.15)"; activeBorder = "rgba(16,185,129,0.35)"; activeColor = "#10b981"; }
-          if (t === "EXPENSE") { activeBg = "rgba(244,63,94,0.15)"; activeBorder = "rgba(244,63,94,0.35)"; activeColor = "#f43f5e"; }
-          if (t === "TRANSFER") { activeBg = "rgba(59,130,246,0.15)"; activeBorder = "rgba(59,130,246,0.35)"; activeColor = "#3b82f6"; }
+          let activeStyles = "bg-accent-dim text-accent border-accent/20";
+          if (t === "INCOME") { activeStyles = "bg-income/10 text-income border-income/20"; }
+          if (t === "EXPENSE") { activeStyles = "bg-expense/10 text-expense border-expense/20"; }
+          if (t === "TRANSFER") { activeStyles = "bg-transfer/10 text-transfer border-transfer/20"; }
 
           return (
-            <motion.button
+            <button
               key={t}
               onClick={() => setFilters({ type: t })}
               className={cn(
-                "relative flex h-[30px] px-[14px] items-center justify-center rounded-[20px] text-[12px] font-[500] whitespace-nowrap transition-colors duration-150",
-                isActive ? "" : "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#475569] hover:text-[#94a3b8]"
+                "relative flex h-[30px] px-[14px] items-center justify-center rounded-full text-[12px] font-semibold whitespace-nowrap transition-colors duration-150 border cursor-pointer select-none",
+                isActive ? activeStyles : "bg-card-elevated border-border text-text-secondary hover:text-text-primary"
               )}
             >
-              {isActive && (
-                <motion.div
-                  layoutId="filter-bg"
-                  className="absolute inset-0 rounded-[20px] border"
-                  style={{ backgroundColor: activeBg, borderColor: activeBorder }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10" style={{ color: isActive ? activeColor : undefined }}>
+              <span>
                 {t === "ALL" ? "All" : t.charAt(0) + t.slice(1).toLowerCase()}
               </span>
-            </motion.button>
+            </button>
           )
         })}
       </div>
 
       {/* 2I - Summary Stats Bar */}
-      <div className="px-[16px] py-[10px] grid grid-cols-3 gap-[8px]">
+      <div className="py-4 grid grid-cols-3 gap-3">
         {/* Stat 1: Total */}
-        <div className="h-[44px] rounded-[12px] p-[8px_12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] flex flex-col justify-between">
-          <span className="text-[9px] uppercase tracking-[0.08em] text-[#334155]">Total</span>
-          <span className="text-[13px] font-[600] font-mono-amount text-[#f1f5f9] truncate">
+        <Card className="p-3 flex flex-col justify-between h-[52px]">
+          <span className="text-[9px] uppercase tracking-[0.08em] font-semibold text-text-muted">Total</span>
+          <span className="text-[13px] font-bold font-mono-amount text-text-primary truncate">
             {symbol}{filtered.reduce((sum, t) => sum + (t.type === "EXPENSE" ? -t.amount : t.amount), 0).toLocaleString()}
           </span>
-        </div>
+        </Card>
         {/* Stat 2: Count */}
-        <div className="h-[44px] rounded-[12px] p-[8px_12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] flex flex-col justify-between">
-          <span className="text-[9px] uppercase tracking-[0.08em] text-[#334155]">Count</span>
-          <span className="text-[13px] font-[600] font-mono-amount text-[#f1f5f9] truncate">{filtered.length}</span>
-        </div>
+        <Card className="p-3 flex flex-col justify-between h-[52px]">
+          <span className="text-[9px] uppercase tracking-[0.08em] font-semibold text-text-muted">Count</span>
+          <span className="text-[13px] font-bold font-mono-amount text-text-primary truncate">{filtered.length}</span>
+        </Card>
         {/* Stat 3: Largest */}
-        <div className="h-[44px] rounded-[12px] p-[8px_12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] flex flex-col justify-between">
-          <span className="text-[9px] uppercase tracking-[0.08em] text-[#334155]">Largest</span>
-          <span className="text-[13px] font-[600] font-mono-amount text-[#f43f5e] truncate">
+        <Card className="p-3 flex flex-col justify-between h-[52px] border-l-[3px] border-l-expense">
+          <span className="text-[9px] uppercase tracking-[0.08em] font-semibold text-text-muted">Largest</span>
+          <span className="text-[13px] font-bold font-mono-amount text-expense truncate">
             {symbol}{filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)).toLocaleString() : 0}
           </span>
-        </div>
+        </Card>
       </div>
 
       {/* 2E - Sort + Actions Row */}
-      <div className="px-[16px] py-[10px] flex items-center justify-between relative z-20">
+      <div className="pb-3 flex items-center justify-between relative z-20">
         {/* Custom Dropdown */}
         <div className="relative">
           <button 
             onClick={() => setIsSortOpen(!isSortOpen)}
-            className="h-[32px] px-[12px] rounded-[10px] bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[12px] text-[#64748b] flex items-center gap-[6px]"
+            className="h-[32px] px-3 rounded-xl bg-card-elevated border border-border text-[12px] text-text-secondary flex items-center gap-1.5 cursor-pointer select-none"
           >
-            <ArrowDownUp size={13} color="#475569" />
+            <ArrowDownUp size={13} className="text-text-muted" />
             {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort by Date"}
             <ChevronDown size={12} />
           </button>
@@ -230,7 +224,7 @@ export default function TransactionsPage() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.97 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-[calc(100%+4px)] left-0 min-w-[160px] rounded-[12px] bg-[#111120] border border-[rgba(255,255,255,0.08)] shadow-[0_8px_24px_rgba(0,0,0,0.4)] p-[6px]"
+                  className="absolute top-[calc(100%+4px)] left-0 min-w-[160px] rounded-xl bg-card border border-border shadow-[0_8px_24px_rgba(0,0,0,0.4)] p-[6px]"
                 >
                   {sortOptions.map(opt => (
                     <button
@@ -240,10 +234,10 @@ export default function TransactionsPage() {
                         setIsSortOpen(false);
                       }}
                       className={cn(
-                        "w-full text-left flex items-center h-[32px] px-[10px] rounded-[8px] text-[12px] transition-colors",
+                        "w-full text-left flex items-center h-[32px] px-2 rounded-lg text-xs transition-colors cursor-pointer select-none",
                         filters.sortBy === opt.value
-                          ? "text-[#a78bfa] bg-[rgba(124,58,237,0.08)]"
-                          : "text-[#94a3b8] hover:bg-[rgba(255,255,255,0.05)] hover:text-[#f1f5f9]"
+                          ? "text-brand-purple-light bg-brand-purple/10 font-semibold"
+                          : "text-text-secondary hover:bg-card-hover hover:text-text-primary"
                       )}
                     >
                       {opt.label}
@@ -259,10 +253,10 @@ export default function TransactionsPage() {
         <button
           onClick={toggleTrashView}
           className={cn(
-            "h-[30px] px-[12px] rounded-[10px] font-[500] text-[11px] flex items-center transition-all",
+            "h-[32px] px-3 rounded-xl font-semibold text-[11px] flex items-center transition-all cursor-pointer border select-none",
             filters.showDeleted
-              ? "bg-[rgba(244,63,94,0.15)] border border-[rgba(244,63,94,0.3)] text-[#f43f5e]"
-              : "bg-[rgba(243,67,94,0.08)] border border-[rgba(243,67,94,0.15)] text-[#f43f5e] hover:bg-[rgba(243,67,94,0.14)] hover:border-[rgba(243,67,94,0.28)]"
+              ? "bg-rose-500/10 border-rose-500/20 text-rose-500"
+              : "bg-card-elevated border-border text-text-secondary hover:bg-card-hover hover:text-text-primary"
           )}
         >
           <Trash2 size={12} className="mr-1.5" />
@@ -274,49 +268,36 @@ export default function TransactionsPage() {
       <div className="flex-1 pb-safe mb-nav">
         {filtered.length === 0 ? (
           /* Empty State */
-          <div className="flex flex-col items-center py-[60px] px-[24px] text-center">
-            <motion.div
-              animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="relative w-[80px] h-[80px] rounded-full bg-[rgba(124,58,237,0.08)] border border-[rgba(124,58,237,0.15)] flex items-center justify-center mb-[20px]"
-            >
-              <ReceiptText size={32} color="#7c3aed" strokeWidth={1.5} />
-              <div className="absolute top-[10px] right-[10px] w-[3px] h-[3px] rounded-full bg-[#a78bfa] animate-pulse" />
-              <div className="absolute bottom-[20px] left-[15px] w-[4px] h-[4px] rounded-full bg-[#a78bfa] animate-pulse" style={{ animationDelay: '1s' }} />
-            </motion.div>
-            <h3 className="text-[16px] font-[600] text-[#94a3b8] mb-[8px]">No transactions yet</h3>
-            <p className="text-[13px] text-[#334155] leading-[1.6] max-w-[220px]">
-              Add your first transaction using the + button
-            </p>
-            <button
-              onClick={() => openModal("addTransaction")}
-              className="mt-[20px] h-[40px] px-[20px] rounded-[12px] bg-[rgba(124,58,237,0.12)] border border-[rgba(124,58,237,0.25)] text-[13px] text-[#a78bfa] font-[500] flex items-center"
-            >
-              <Plus size={14} className="mr-2" />
-              Add Transaction
-            </button>
+          <div className="py-8">
+            <EmptyState
+              icon={ReceiptText}
+              title="No transactions yet"
+              description="Add your first transaction or clear filters to see your feed."
+              actionLabel="Add Transaction"
+              onAction={() => openModal("addTransaction")}
+            />
           </div>
         ) : (
-          <div className="space-y-[0px]">
+          <div className="space-y-4">
             {Array.from(grouped.entries()).map(([dateLabel, txns]) => (
               <div key={dateLabel}>
                 {/* Sticky Date Header */}
-                <div className="sticky-date-header h-[28px] px-[16px] flex items-center gap-[10px] text-[10px] text-[#334155] uppercase tracking-[0.08em]">
+                <div className="sticky top-0 z-10 h-[28px] bg-page/80 backdrop-blur-md flex items-center gap-[10px] text-[10px] text-text-muted font-bold uppercase tracking-[0.08em]">
                   {dateLabel}
-                  <div className="flex-1 h-[1px] bg-[rgba(255,255,255,0.04)]" />
+                  <div className="flex-1 h-[1px] bg-border/40" />
                 </div>
 
-                <div>
+                <div className="divide-y divide-border/30">
                   {txns.map((transaction, index) => {
                     const profile = getProfile(transaction.profileId);
                     const categoryLabel = getCategoryById(transaction.category)?.label || transaction.category;
-                    const catStyle = getCatStyle(categoryLabel);
+                    const catStyle = getCatStyle(transaction.type === "TRANSFER" ? "Transfer" : categoryLabel);
                     const Icon = catStyle.icon;
 
                     const amountColor =
-                      transaction.type === "INCOME" ? "text-[#10b981]"
-                      : transaction.type === "EXPENSE" ? "text-[#f43f5e]"
-                      : "text-[#3b82f6]";
+                      transaction.type === "INCOME" ? "text-income"
+                      : transaction.type === "EXPENSE" ? "text-expense"
+                      : "text-transfer";
 
                     const sign = transaction.type === "INCOME" ? "+" : transaction.type === "EXPENSE" ? "−" : "→";
 
@@ -327,11 +308,11 @@ export default function TransactionsPage() {
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: Math.min(index * 0.03, 0.5) }}
                         onClick={() => setEditTxnId(transaction.id)}
-                        className="grid grid-cols-[36px_1fr_auto] gap-[12px] items-center px-[16px] py-[12px] border-b border-[rgba(255,255,255,0.04)] min-h-[56px] cursor-pointer hover:bg-[rgba(255,255,255,0.02)] transition-colors duration-150"
+                        className="grid grid-cols-[36px_1fr_auto] gap-[12px] items-center py-3 min-h-[56px] cursor-pointer hover:bg-card-hover rounded-xl px-2 transition-colors duration-150"
                       >
                         {/* Icon */}
                         <div 
-                          className="w-[36px] h-[36px] rounded-[10px] flex items-center justify-center"
+                          className="w-[36px] h-[36px] rounded-xl flex items-center justify-center"
                           style={{ backgroundColor: catStyle.bg }}
                         >
                           <Icon size={16} color={catStyle.color} />
@@ -339,20 +320,20 @@ export default function TransactionsPage() {
 
                         {/* Title & Sub */}
                         <div className="min-w-0">
-                          <p className="text-[13px] font-[500] text-[#f1f5f9] truncate">
+                          <p className="text-[13px] font-semibold text-text-primary truncate">
                             {transaction.title}
                           </p>
-                          <p className="text-[11px] text-[#475569] truncate mt-[2px]">
-                            {categoryLabel} {profile ? `· ${profile.name}` : ''}
+                          <p className="text-[11px] text-text-secondary truncate mt-0.5">
+                            {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel} {profile ? `· ${profile.name}` : ''}
                           </p>
                         </div>
 
                         {/* Amount & Date */}
                         <div className="text-right flex flex-col justify-center">
-                          <span className={cn("text-[13px] font-[600] font-mono-amount", amountColor)}>
+                          <span className={cn("text-[13px] font-bold font-mono-amount", amountColor)}>
                             {sign}{symbol}{Math.abs(transaction.amount).toLocaleString()}
                           </span>
-                          <span className="text-[10px] text-[#334155] mt-[2px]">
+                          <span className="text-[10px] text-text-muted mt-0.5">
                             {new Date(transaction.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         </div>

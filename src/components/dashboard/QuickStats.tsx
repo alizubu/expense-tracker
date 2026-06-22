@@ -73,26 +73,21 @@ export function QuickStats({
   ];
 
   return (
-    <div className="flex flex-col w-full h-auto md:h-full md:premium-card md:p-[16px] md:overflow-hidden">
+    <div className="flex flex-col w-full h-auto md:h-full border border-border bg-card shadow-sm p-4 rounded-2xl md:overflow-hidden hover:border-accent/10 hover:shadow-md transition-all duration-200">
       {/* Header */}
-      <h2 className="hidden md:flex text-[10px] font-medium text-[#475569] uppercase tracking-[0.08em] mb-2 flex-shrink-0 h-[32px] items-center">
+      <h2 className="hidden md:flex text-[10px] font-semibold text-text-secondary uppercase tracking-[0.08em] mb-2 flex-shrink-0 h-[32px] items-center">
         Quick Stats
       </h2>
 
       {/* List */}
       <div className="flex flex-row overflow-x-auto hide-scrollbar gap-[8px] py-[4px] md:flex-col md:overflow-visible md:gap-0 md:py-0 md:flex-1 md:min-h-0 touch-pan-x">
-        {stats.map((stat, i) => {
+        {stats.map((stat) => {
           const Icon = stat.icon;
           return (
             <div 
               key={stat.id}
-              className="flex-shrink-0 w-[130px] h-[62px] rounded-[12px] p-[10px] flex flex-col justify-between border border-white/[0.06] md:border-x-0 md:border-t-0 md:border-b md:border-[rgba(255,255,255,0.04)] md:last:border-0 md:w-auto md:h-[40px] md:rounded-none md:p-0 md:flex-row md:items-center"
-              style={{
-                background: typeof window !== 'undefined' && window.innerWidth < 768 ? "linear-gradient(145deg, #111120, #0d0d18)" : "transparent"
-              }}
+              className="flex-shrink-0 w-[130px] h-[62px] rounded-2xl p-3 flex flex-col justify-between border border-border bg-card-elevated/50 md:bg-transparent md:border-x-0 md:border-t-0 md:border-b md:border-border/40 md:last:border-0 md:w-auto md:h-[40px] md:rounded-none md:p-0 md:flex-row md:items-center"
             >
-              <div className="md:hidden absolute inset-0 bg-[linear-gradient(145deg,#111120_0%,#0d0d18_100%)] rounded-[12px] -z-10" />
-              
               {/* Top / Left */}
               <div className="flex items-center gap-[6px] md:gap-[10px] md:flex-1">
                 <div 
@@ -101,7 +96,7 @@ export function QuickStats({
                 >
                   <Icon className="w-[10px] h-[10px] md:w-[13px] md:h-[13px]" color={stat.iconColor} />
                 </div>
-                <span className="text-[10px] md:text-[12px] text-[#64748b] truncate">
+                <span className="text-[10px] md:text-[12px] text-text-secondary truncate font-medium">
                   {stat.label}
                 </span>
               </div>
@@ -109,8 +104,8 @@ export function QuickStats({
               {/* Bottom / Right */}
               <div className="flex-shrink-0 text-left md:text-right md:w-[80px]">
                 <span 
-                  className={`text-[13px] font-semibold ${stat.isCurrency ? 'font-mono' : ''} ${stat.isCapitalize ? 'capitalize' : ''}`}
-                  style={{ color: stat.textColor || '#f1f5f9' }}
+                  className={`text-[13px] font-bold ${stat.isCurrency ? 'font-mono' : ''} ${stat.isCapitalize ? 'capitalize' : ''} text-text-primary`}
+                  style={stat.textColor ? { color: stat.textColor } : undefined}
                 >
                   {stat.value}
                 </span>

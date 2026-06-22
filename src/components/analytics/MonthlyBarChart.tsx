@@ -3,7 +3,7 @@
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useUIStore } from "@/store/useUIStore";
 import { getCurrencySymbol } from "@/lib/currencies";
-import { MagicCard } from "@/components/magicui/magic-card";
+import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 export default function MonthlyBarChart() {
@@ -31,26 +31,26 @@ export default function MonthlyBarChart() {
   }).reverse();
 
   return (
-    <MagicCard className="p-4 md:p-6 w-full h-[350px]">
-      <h3 className="text-sm font-semibold text-text-primary mb-4">Monthly Overview</h3>
+    <Card className="p-4 md:p-6 w-full h-[350px] flex flex-col justify-between">
+      <h3 className="text-sm font-semibold text-text-primary mb-4 flex-shrink-0">Monthly Overview</h3>
       <div className="flex-1 min-h-0 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-            <XAxis dataKey="name" stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${symbol}${val}`} />
+        <ResponsiveContainer width="100%" height="90%">
+          <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+            <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
+            <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(val) => `${symbol}${val}`} />
             <Tooltip
-              cursor={{ fill: "rgba(255,255,255,0.05)" }}
-              contentStyle={{ backgroundColor: "rgba(22, 22, 30, 0.8)", backdropFilter: "blur(8px)", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px", color: "#F8FAFC" }}
-              itemStyle={{ color: "#F8FAFC" }}
+              cursor={{ fill: "var(--bg-hover)", opacity: 0.2 }}
+              contentStyle={{ backgroundColor: "var(--bg-surface)", borderColor: "var(--border-default)", borderRadius: "12px", color: "var(--text-primary)" }}
+              itemStyle={{ color: "var(--text-primary)" }}
               formatter={(value: any) => [`${symbol}${value.toLocaleString()}`, ""]}
             />
-            <Legend wrapperStyle={{ fontSize: "12px" }} />
-            <Bar dataKey="Income" fill="#10B981" radius={[4, 4, 0, 0]} maxBarSize={40} />
-            <Bar dataKey="Expense" fill="#EF4444" radius={[4, 4, 0, 0]} maxBarSize={40} />
+            <Legend wrapperStyle={{ fontSize: "11px" }} />
+            <Bar dataKey="Income" fill="var(--green)" radius={[4, 4, 0, 0]} maxBarSize={32} />
+            <Bar dataKey="Expense" fill="var(--red)" radius={[4, 4, 0, 0]} maxBarSize={32} />
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </MagicCard>
+    </Card>
   );
 }

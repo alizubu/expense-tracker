@@ -69,15 +69,15 @@ export function CategoryGrid({ categories, selectedCategory, onSelect }: Categor
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onSelect(cat)}
                 className={cn(
-                  "relative flex flex-col items-center justify-center p-[10px_8px] rounded-[12px] transition-all duration-150 ease-in-out group",
+                  "relative flex flex-col items-center justify-center p-[10px_8px] rounded-2xl transition-all duration-150 ease-in-out group border cursor-pointer",
                   isSelected
-                    ? "bg-[rgba(109,40,217,0.2)] border-[1.5px] border-[rgba(139,92,246,0.7)] shadow-[inset_0_0_12px_rgba(139,92,246,0.15)]"
-                    : "bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)] hover:bg-[rgba(139,92,246,0.1)] hover:border-[rgba(139,92,246,0.3)]"
+                    ? "bg-accent-dim border-[1.5px] border-accent/80 shadow-[inset_0_0_12px_var(--accent-glow)]"
+                    : "bg-card-elevated border-border hover:bg-accent-dim hover:border-accent/30"
                 )}
               >
                 {/* Selected Checkmark Badge */}
                 {isSelected && (
-                  <div className="absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-[#7c3aed] flex items-center justify-center shadow-sm">
+                  <div className="absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-accent flex items-center justify-center shadow-sm">
                     <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
                   </div>
                 )}
@@ -85,7 +85,7 @@ export function CategoryGrid({ categories, selectedCategory, onSelect }: Categor
                 <Icon 
                   className={cn(
                     "w-[22px] h-[22px] mb-1.5 transition-colors duration-150",
-                    isSelected ? "text-[#c4b5fd]" : "group-hover:text-[#a78bfa]"
+                    isSelected ? "text-accent" : "group-hover:text-accent"
                   )} 
                   style={!isSelected ? { color: cat.color } : undefined}
                   strokeWidth={2}
@@ -93,8 +93,8 @@ export function CategoryGrid({ categories, selectedCategory, onSelect }: Categor
                 
                 <span 
                   className={cn(
-                    "text-[11px] font-medium text-center leading-tight",
-                    isSelected ? "text-[#c4b5fd]" : "text-[var(--text-secondary)] group-hover:text-[#a78bfa]"
+                    "text-[11px] font-semibold text-center leading-tight",
+                    isSelected ? "text-accent" : "text-text-secondary group-hover:text-accent"
                   )}
                 >
                   {cat.label}
@@ -110,7 +110,7 @@ export function CategoryGrid({ categories, selectedCategory, onSelect }: Categor
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[12px] font-medium text-[var(--text-muted)] hover:text-[#a78bfa] hover:bg-[rgba(139,92,246,0.08)] transition-all"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[12px] font-semibold text-text-muted hover:text-accent hover:bg-accent-dim transition-all cursor-pointer"
           >
             {isExpanded ? (
               <>Less <ChevronUp className="w-3.5 h-3.5" /></>

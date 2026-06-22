@@ -42,22 +42,7 @@ export function AccountSelector({ profiles, selectedId, onChange, label }: Accou
 
   return (
     <div className="flex flex-col w-full" ref={containerRef}>
-      <style>{`
-        @keyframes accountGlow {
-          0%, 100% { box-shadow: 0 0 8px 2px rgba(139,92,246,0.4) }
-          50%      { box-shadow: 0 0 18px 6px rgba(167,139,250,0.7) }
-        }
-        .account-glow-active {
-          animation: accountGlow 2s ease-in-out infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .account-glow-active {
-            animation: none !important;
-          }
-        }
-      `}</style>
-      
-      <label className="mb-1.5 block text-[12px] font-medium text-[var(--text-secondary)]">
+      <label className="mb-1.5 block text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
         {label}
       </label>
 
@@ -69,18 +54,18 @@ export function AccountSelector({ profiles, selectedId, onChange, label }: Accou
             onClick={() => setIsOpen(!isOpen)}
             whileTap={{ scale: 0.98 }}
             className={cn(
-              "w-full h-10 flex items-center justify-between px-3 rounded-[var(--radius-sm)] transition-all text-[13px] font-medium text-left",
-              "bg-[rgba(109,40,217,0.15)] border border-[rgba(139,92,246,0.8)] account-glow-active"
+              "w-full h-10 flex items-center justify-between px-3 rounded-xl transition-all text-xs font-semibold text-left cursor-pointer",
+              "bg-card-elevated border border-border hover:bg-card-hover text-text-primary focus:border-accent focus:ring-2 focus:ring-accent-dim"
             )}
           >
             <div className="flex items-center gap-2 overflow-hidden">
               {(() => {
                 const Icon = getIcon(selectedProfile.icon);
-                return <Icon className="w-4 h-4 text-[#c4b5fd] flex-shrink-0" />;
+                return <Icon className="w-4 h-4 flex-shrink-0" style={{ color: selectedProfile.color }} />;
               })()}
-              <span className="text-[#c4b5fd] truncate">{selectedProfile.name}</span>
+              <span className="truncate">{selectedProfile.name}</span>
             </div>
-            <ChevronDown className={cn("w-4 h-4 text-[#c4b5fd] transition-transform", isOpen && "rotate-180")} />
+            <ChevronDown className={cn("w-4 h-4 text-text-muted transition-transform", isOpen && "rotate-180")} />
           </motion.button>
         )}
 
@@ -91,8 +76,8 @@ export function AccountSelector({ profiles, selectedId, onChange, label }: Accou
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute z-50 top-full left-0 right-0 mt-2 p-1.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-[12px] shadow-xl max-h-48 overflow-y-auto no-scrollbar"
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="absolute z-50 top-full left-0 right-0 mt-1.5 p-1.5 bg-[#0f0f1a] border border-border rounded-xl shadow-xl max-h-48 overflow-y-auto no-scrollbar"
             >
               <div className="flex flex-col gap-1">
                 {profiles.map((p) => {
@@ -100,24 +85,23 @@ export function AccountSelector({ profiles, selectedId, onChange, label }: Accou
                   const isSelected = p.id === selectedId;
 
                   return (
-                    <motion.button
+                    <button
                       key={p.id}
                       type="button"
                       onClick={() => handleSelect(p.id)}
-                      whileTap={{ scale: 1.04, transition: { type: "spring", stiffness: 400, damping: 10 } }}
                       className={cn(
-                        "w-full flex items-center gap-2 px-3 py-2 rounded-[8px] text-[13px] transition-colors text-left",
+                        "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors text-left cursor-pointer select-none",
                         isSelected
-                          ? "bg-[rgba(109,40,217,0.15)] border border-[rgba(139,92,246,0.8)] text-[#c4b5fd]"
-                          : "bg-[rgba(255,255,255,0.02)] border border-transparent text-[var(--text-primary)] hover:bg-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.1)]"
+                          ? "bg-accent-dim text-accent"
+                          : "text-text-secondary hover:bg-card-hover hover:text-text-primary"
                       )}
                     >
                       <Icon 
                         className="w-4 h-4 flex-shrink-0" 
-                        style={!isSelected ? { color: p.color } : { color: "#c4b5fd" }} 
+                        style={{ color: p.color }} 
                       />
                       <span className="truncate">{p.name}</span>
-                    </motion.button>
+                    </button>
                   );
                 })}
               </div>

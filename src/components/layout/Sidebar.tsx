@@ -17,6 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/store/useUIStore";
 import { getCurrencySymbol } from "@/lib/currencies";
+import { Avatar } from "@/components/ui/avatar";
 
 const navGroups = [
   {
@@ -80,12 +81,12 @@ export function Sidebar() {
   const SidebarContent = (
     <>
       {/* Logo Area */}
-      <div className="flex h-[52px] items-center px-[14px] border-b border-white/[0.05] flex-shrink-0">
+      <div className="flex h-[52px] items-center px-[14px] border-b border-border/80 flex-shrink-0">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="h-[26px] w-[26px] rounded-[7px] bg-[#7c3aed] flex items-center justify-center">
+          <div className="h-[26px] w-[26px] rounded-[7px] bg-accent flex items-center justify-center">
             <div className="w-2 h-2 bg-white rounded-sm" />
           </div>
-          <span className="text-[13px] font-semibold text-[#f1f5f9]">
+          <span className="text-[13px] font-semibold text-text-primary">
             ExpenseTracker
           </span>
         </Link>
@@ -95,7 +96,7 @@ export function Sidebar() {
       <nav className="flex-1 overflow-y-auto hide-scrollbar p-2">
         {navGroups.map((group) => (
           <div key={group.label}>
-            <div className="px-2 pt-4 pb-1 text-[10px] font-medium uppercase tracking-[0.1em] text-[#1e293b]">
+            <div className="px-2 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-text-secondary/60">
               {group.label}
             </div>
             <ul className="space-y-[1px]">
@@ -113,8 +114,8 @@ export function Sidebar() {
                       className={cn(
                         "flex h-[34px] items-center rounded-lg px-[10px] text-[13px] font-normal transition-colors",
                         isActive
-                          ? "bg-[rgba(124,58,237,0.10)] text-[#a78bfa] font-medium border-l-[2px] border-[#7c3aed] pl-[8px] shadow-[inset_1px_0_0_rgba(124,58,237,0.2)]"
-                          : "bg-transparent text-[#475569] hover:bg-white/[0.04] hover:text-[#94a3b8]"
+                          ? "bg-accent-dim text-accent font-medium border-l-[2px] border-accent pl-[8px] shadow-[inset_1px_0_0_rgba(124,58,237,0.2)]"
+                          : "bg-transparent text-text-secondary hover:bg-card-hover hover:text-text-primary"
                       )}
                     >
                       <Icon className="h-[15px] w-[15px] mr-2 flex-shrink-0" strokeWidth={2} />
@@ -129,22 +130,20 @@ export function Sidebar() {
       </nav>
 
       {/* User Card */}
-      <div className="sticky bottom-0 bg-[#0a0a12] border-t border-white/[0.05] px-[10px] h-[52px] flex items-center gap-[10px] flex-shrink-0">
-        <div className="flex h-[28px] w-[28px] flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#7c3aed] to-[#4f46e5] text-white text-[11px] font-semibold">
-          {session?.user?.name ? session.user.name.substring(0, 2).toUpperCase() : "U"}
-        </div>
+      <div className="sticky bottom-0 bg-card border-t border-border/80 px-[10px] h-[52px] flex items-center gap-[10px] flex-shrink-0">
+        <Avatar name={session?.user?.name || "User"} size="sm" />
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-[12px] font-medium text-[#f1f5f9] truncate max-w-[110px]">
+          <span className="text-[12px] font-semibold text-text-primary truncate max-w-[110px]">
             {session?.user?.name || "User"}
           </span>
-          <span className="text-[10px] text-[#334155] truncate max-w-[110px]">
+          <span className="text-[10px] text-text-secondary truncate max-w-[110px]">
             {session?.user?.email || "user@example.com"}
           </span>
         </div>
         {mounted && (
           <div className="flex-shrink-0 flex items-center gap-2">
-            <div className="bg-white/[0.05] rounded-full px-2 py-0.5 h-[18px] flex items-center">
-              <span className="text-[10px] text-[#475569]">
+            <div className="bg-card-elevated border border-border/50 rounded-full px-2 py-0.5 h-[18px] flex items-center">
+              <span className="text-[10px] font-semibold text-text-secondary">
                 {getCurrencySymbol(selectedCurrency)}
               </span>
             </div>
@@ -152,7 +151,7 @@ export function Sidebar() {
               onClick={() => {
                 import("next-auth/react").then(({ signOut }) => signOut({ callbackUrl: "/sign-in" }));
               }}
-              className="flex h-[24px] w-[24px] items-center justify-center rounded-md bg-white/[0.04] border border-white/[0.07] text-[#475569] hover:text-[#f43f5e] hover:border-[rgba(243,67,94,0.3)] transition-all lg:hidden"
+              className="flex h-[24px] w-[24px] items-center justify-center rounded-md bg-card-elevated border border-border text-text-secondary hover:text-expense hover:border-expense/30 transition-all lg:hidden cursor-pointer"
               title="Sign out"
             >
               <LogOut size={12} className="lucide-log-out" />
@@ -176,7 +175,7 @@ export function Sidebar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={closeSidebar}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-45 bg-black/60 backdrop-blur-sm lg:hidden"
             />
             <motion.aside
               key="drawer"
@@ -184,11 +183,11 @@ export function Sidebar() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed top-0 left-0 h-full w-[240px] z-50 bg-[#0a0a12] border-r border-white/5 flex flex-col lg:hidden"
+              className="fixed top-0 left-0 h-full w-[240px] z-50 bg-card border-r border-border/80 flex flex-col lg:hidden"
             >
               <button
                 onClick={closeSidebar}
-                className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-lg bg-white/5 text-slate-400 hover:text-white"
+                className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-lg bg-card-elevated border border-border text-text-muted hover:text-text-primary cursor-pointer"
               >
                 <X size={14} />
               </button>
@@ -199,7 +198,7 @@ export function Sidebar() {
       </AnimatePresence>
 
       {/* DESKTOP SIDEBAR (lg+) */}
-      <aside className="hidden lg:flex w-[200px] h-screen flex-shrink-0 flex-col bg-[#0a0a12] border-r border-white/[0.05]">
+      <aside className="hidden lg:flex w-[200px] h-screen flex-shrink-0 flex-col bg-card border-r border-border/80">
         {SidebarContent}
       </aside>
     </>

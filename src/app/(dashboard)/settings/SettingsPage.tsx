@@ -1,13 +1,15 @@
 "use client";
 
 import { BlurFade } from "@/components/magicui/blur-fade";
-import { MagicCard } from "@/components/magicui/magic-card";
-import { ShimmerButton } from "@/components/magicui/shimmer-button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/store/useUIStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { CURRENCIES } from "@/lib/currencies";
 import { EXPENSE_CATEGORIES } from "@/lib/categories";
-import { Moon, Sun, Download, Globe, Palette, LogOut, Shield, User, Save, Loader2 } from "lucide-react";
+import { Moon, Sun, Download, Globe, Palette, LogOut, Shield, User, Save } from "lucide-react";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
@@ -20,6 +22,7 @@ export default function SettingsPage() {
   const { data: session, update: updateSession } = useSession();
   const [name, setName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [timezone, setTimezone] = useState("Asia/Dhaka");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -90,8 +93,19 @@ export default function SettingsPage() {
     toast.success("Transactions exported successfully");
   };
 
+  const currencyOptions = CURRENCIES.map((c: any) => ({
+    value: c.code,
+    label: `${c.code} (${c.symbol}) - ${c.name}`
+  }));
+
+  const timezoneOptions = [
+    { value: "Asia/Dhaka", label: "Asia/Dhaka (GMT+6)" },
+    { value: "UTC", label: "UTC (GMT+0)" },
+    { value: "America/New_York", label: "Eastern Time (GMT-4)" }
+  ];
+
   return (
-    <div className="mx-auto max-w-3xl px-3 py-3 pb-20 md:px-5 md:py-5 md:pb-6 space-y-6">
+    <div className="mx-auto max-w-[1000px] w-full px-3 py-3 pb-20 md:px-5 md:py-5 md:pb-6 space-y-4 md:space-y-6">
       <BlurFade delay={0}>
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-text-primary tracking-heading">Settings</h1>
@@ -100,162 +114,167 @@ export default function SettingsPage() {
       </BlurFade>
 
       <div className="space-y-6">
+        {/* Profile Information */}
         <BlurFade delay={0.05}>
-          <MagicCard className="p-6">
-            <h2 className="text-lg font-semibold text-text-primary flex items-center gap-2 mb-4">
+          <Card className="p-5 md:p-6 bg-card border border-border">
+            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
               <User className="h-5 w-5 text-brand-purple" />
               Profile Information
             </h2>
-            <div className="space-y-4">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 border-b border-white/[0.05]">
-                <div>
-                  <p className="font-medium text-text-primary">Full Name</p>
-                  <p className="text-sm text-text-muted">Your display name</p>
+            <div className="space-y-5">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5 border-b border-border/20 pb-4 last:border-0 last:pb-0">
+                <div className="max-w-md">
+                  <p className="text-sm font-semibold text-text-primary">Full Name</p>
+                  <p className="text-xs text-text-muted mt-1 leading-relaxed">Your display name across the application.</p>
                 </div>
-                <input
-                  type="text"
+                <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="rounded-xl border border-white/[0.1] bg-white/[0.02] px-4 py-2 text-text-primary outline-none focus:border-brand-purple w-full md:w-64"
+                  containerClassName="w-full md:w-64"
+                  disabled={isSaving}
                 />
               </div>
 
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 border-b border-white/[0.05]">
-                <div>
-                  <p className="font-medium text-text-primary">Email Address</p>
-                  <p className="text-sm text-text-muted">Used for login (cannot be changed)</p>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5 border-b border-border/20 pb-4 last:border-0 last:pb-0">
+                <div className="max-w-md">
+                  <p className="text-sm font-semibold text-text-primary">Email Address</p>
+                  <p className="text-xs text-text-muted mt-1 leading-relaxed">Used for login and notifications (cannot be changed).</p>
                 </div>
-                <input
+                <Input
                   type="email"
                   value={session?.user?.email || ""}
                   disabled
-                  className="rounded-xl border border-white/[0.1] bg-white/[0.02] px-4 py-2 text-text-muted outline-none cursor-not-allowed w-full md:w-64"
+                  containerClassName="w-full md:w-64"
                 />
               </div>
 
-              <div className="flex justify-end pt-2">
-                <button
+              <div className="flex justify-end pt-3">
+                <Button
                   onClick={handleSaveProfile}
-                  disabled={isSaving}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-purple/20 text-brand-purple-light hover:bg-brand-purple/30 transition-colors text-sm font-medium disabled:opacity-50"
+                  isLoading={isSaving}
+                  disabled={!name}
+                  variant="primary"
+                  className="gap-2"
                 >
-                  {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                  {isSaving ? "Saving..." : "Save Profile"}
-                </button>
+                  <Save className="h-4 w-4" />
+                  Save Profile
+                </Button>
               </div>
             </div>
-          </MagicCard>
+          </Card>
         </BlurFade>
 
+        {/* Preferences */}
         <BlurFade delay={0.1}>
-          <MagicCard className="p-6">
-            <h2 className="text-lg font-semibold text-text-primary flex items-center gap-2 mb-4">
+          <Card className="p-5 md:p-6 bg-card border border-border">
+            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
               <Globe className="h-5 w-5 text-brand-purple" />
               Preferences
             </h2>
-            <div className="space-y-4">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 border-b border-white/[0.05]">
-                <div>
-                  <p className="font-medium text-text-primary">Base Currency</p>
-                  <p className="text-sm text-text-muted">Used for all calculations and displays</p>
+            <div className="space-y-5">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5 border-b border-border/20 pb-4 last:border-0 last:pb-0">
+                <div className="max-w-md">
+                  <p className="text-sm font-semibold text-text-primary">Base Currency</p>
+                  <p className="text-xs text-text-muted mt-1 leading-relaxed">Used for all calculations, reports, and displays.</p>
                 </div>
-                <select 
+                <Select 
                   value={selectedCurrency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                  className="rounded-xl border border-white/[0.1] bg-white/[0.02] px-4 py-2 text-text-primary outline-none focus:border-brand-purple"
-                >
-                  {CURRENCIES.map((c: any) => (
-                    <option key={c.code} value={c.code} className="bg-background-card">
-                      {c.code} ({c.symbol}) - {c.name}
-                    </option>
-                  ))}
-                </select>
+                  onChange={setCurrency}
+                  options={currencyOptions}
+                  containerClassName="w-full md:w-64"
+                />
               </div>
 
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3">
-                <div>
-                  <p className="font-medium text-text-primary">Timezone</p>
-                  <p className="text-sm text-text-muted">For transaction dates and reminders</p>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5 last:border-0 last:pb-0">
+                <div className="max-w-md">
+                  <p className="text-sm font-semibold text-text-primary">Timezone</p>
+                  <p className="text-xs text-text-muted mt-1 leading-relaxed">For transaction dates and monthly reports sync.</p>
                 </div>
-                <select 
-                  className="rounded-xl border border-white/[0.1] bg-white/[0.02] px-4 py-2 text-text-primary outline-none focus:border-brand-purple"
-                  defaultValue="Asia/Dhaka"
-                >
-                  <option value="Asia/Dhaka" className="bg-background-card">Asia/Dhaka (GMT+6)</option>
-                  <option value="UTC" className="bg-background-card">UTC (GMT+0)</option>
-                  <option value="America/New_York" className="bg-background-card">Eastern Time (GMT-4)</option>
-                </select>
+                <Select 
+                  value={timezone}
+                  onChange={setTimezone}
+                  options={timezoneOptions}
+                  containerClassName="w-full md:w-64"
+                />
               </div>
             </div>
-          </MagicCard>
+          </Card>
         </BlurFade>
 
+        {/* Appearance */}
         <BlurFade delay={0.2}>
-          <MagicCard className="p-6">
-            <h2 className="text-lg font-semibold text-text-primary flex items-center gap-2 mb-4">
+          <Card className="p-5 md:p-6 bg-card border border-border">
+            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
               <Palette className="h-5 w-5 text-brand-purple" />
               Appearance
             </h2>
-            <div className="flex items-center justify-between py-3">
+            <div className="flex items-center justify-between py-1.5">
               <div>
-                <p className="font-medium text-text-primary">Theme</p>
-                <p className="text-sm text-text-muted">Choose between light and dark mode</p>
+                <p className="text-sm font-semibold text-text-primary">Theme</p>
+                <p className="text-xs text-text-muted mt-1 leading-relaxed">Choose between light and dark mode styling.</p>
               </div>
-              <div className="flex bg-white/[0.05] rounded-xl p-1">
+              <div className="flex bg-card-elevated border border-border/60 rounded-xl p-1">
                 <button 
                   onClick={() => setTheme("light")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${theme === "light" ? "bg-white text-black" : "text-text-muted hover:text-text-primary"}`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${theme === "light" ? "bg-white dark:bg-zinc-800 text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary"}`}
                 >
                   <Sun className="h-4 w-4" /> Light
                 </button>
                 <button 
                   onClick={() => setTheme("dark")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${theme === "dark" ? "bg-[#1C1C27] text-white shadow-sm" : "text-text-muted hover:text-text-primary"}`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${theme === "dark" ? "bg-zinc-800 dark:bg-white/[0.08] text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary"}`}
                 >
                   <Moon className="h-4 w-4" /> Dark
                 </button>
               </div>
             </div>
-          </MagicCard>
+          </Card>
         </BlurFade>
 
+        {/* Data Export */}
         <BlurFade delay={0.3}>
-          <MagicCard className="p-6">
-            <h2 className="text-lg font-semibold text-text-primary flex items-center gap-2 mb-4">
+          <Card className="p-5 md:p-6 bg-card border border-border">
+            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
               <Download className="h-5 w-5 text-brand-purple" />
               Data Export
             </h2>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5">
               <div>
-                <p className="font-medium text-text-primary">Export Transactions</p>
-                <p className="text-sm text-text-muted">Download all your data as a CSV file</p>
+                <p className="text-sm font-semibold text-text-primary">Export Transactions</p>
+                <p className="text-xs text-text-muted mt-1 leading-relaxed">Download all your transaction records as a standard CSV file.</p>
               </div>
-              <button 
+              <Button 
                 onClick={handleExportCSV}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/[0.1] hover:bg-white/[0.05] text-text-primary transition-colors text-sm font-medium"
+                variant="secondary"
+                className="gap-2"
               >
                 <Download className="h-4 w-4" /> Export CSV
-              </button>
+              </Button>
             </div>
-          </MagicCard>
+          </Card>
         </BlurFade>
 
+        {/* Account */}
         <BlurFade delay={0.4}>
-          <MagicCard className="p-6">
-            <h2 className="text-lg font-semibold text-text-primary flex items-center gap-2 mb-4">
+          <Card className="p-5 md:p-6 bg-card border border-border">
+            <h2 className="text-base font-bold text-text-primary flex items-center gap-2 mb-6 border-b border-border/20 pb-4">
               <Shield className="h-5 w-5 text-expense" />
               Account
             </h2>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1.5">
               <div>
-                <p className="font-medium text-text-primary">Sign Out</p>
-                <p className="text-sm text-text-muted">Log out of your current session</p>
+                <p className="text-sm font-semibold text-text-primary">Sign Out</p>
+                <p className="text-xs text-text-muted mt-1 leading-relaxed">Log out of your current session safely.</p>
               </div>
-              <button onClick={() => import("next-auth/react").then(({ signOut }) => signOut())} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-expense/10 text-expense hover:bg-expense/20 transition-colors text-sm font-medium">
+              <Button 
+                onClick={() => import("next-auth/react").then(({ signOut }) => signOut())} 
+                variant="destructive"
+                className="gap-2 font-semibold"
+              >
                 <LogOut className="h-4 w-4" /> Sign Out
-              </button>
+              </Button>
             </div>
-          </MagicCard>
+          </Card>
         </BlurFade>
       </div>
     </div>
