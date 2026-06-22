@@ -1,8 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -15,11 +19,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "ExpenseTracker — Personal Finance Dashboard",
+    default: "ExpenseTracker — The Vault Ledger",
     template: "%s | ExpenseTracker",
   },
   description:
-    "A premium personal expense tracking SaaS. Track income, expenses, transfers across multiple profiles with beautiful analytics and budget management.",
+    "A precision personal finance dashboard.",
   keywords: [
     "expense tracker",
     "personal finance",
@@ -46,6 +50,7 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { HeroUIProvider } from "@/components/providers/HeroUIProvider";
 import { PageTransitionProvider } from "@/components/providers/PageTransitionProvider";
 import { GlobalModals } from "@/components/providers/GlobalModals";
 
@@ -59,9 +64,9 @@ export default function RootLayout({
   const nonce = headers().get("X-Nonce") ?? "";
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <body
-        className={`${GeistSans.className} antialiased min-h-screen flex flex-col no-select`}
+        className={`${inter.className} antialiased min-h-screen flex flex-col no-select`}
       >
         <script
           nonce={nonce}
@@ -108,18 +113,20 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            <PageTransitionProvider>
-              {children}
-            </PageTransitionProvider>
-            <GlobalModals />
-            <Toaster
-              position="bottom-right"
-              toastOptions={{
-                className: "dark:bg-[#1C1C27] dark:text-[#F8FAFC] dark:border-white/10 bg-white text-slate-900 border-slate-200",
-              }}
-            />
-          </AuthProvider>
+          <HeroUIProvider>
+            <AuthProvider>
+              <PageTransitionProvider>
+                {children}
+              </PageTransitionProvider>
+              <GlobalModals />
+              <Toaster
+                position="bottom-right"
+                toastOptions={{
+                  className: "dark:bg-[var(--bg-surface)] dark:text-[var(--text-primary)] dark:border-white/10 bg-white text-slate-900 border-slate-200",
+                }}
+              />
+            </AuthProvider>
+          </HeroUIProvider>
         </ThemeProvider>
       </body>
     </html>

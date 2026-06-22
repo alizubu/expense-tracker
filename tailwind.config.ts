@@ -1,10 +1,12 @@
 import type { Config } from "tailwindcss";
+import { heroui } from "@heroui/react";
 
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: "class",
   theme: {
@@ -19,41 +21,43 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
-        mono: ["GeistMono", "monospace"],
+        hero: ["var(--font-geist)", "sans-serif"],
+        mono: ["var(--font-jetbrains)", "monospace"],
+        ui: ["var(--font-inter)", "sans-serif"],
+        sans: ["var(--font-inter)", "sans-serif"],
       },
       colors: {
-        page: "#07070e",
-        card: "#0e0e1c",
-        accent: "#7c3aed",
-        "accent-light": "#a78bfa",
-        "accent-dim": "rgba(124,58,237,0.12)",
-        "card-2": "#111120",
-        "dark-base": "#0a0a0f",
-        "dark-card": "#111118",
-        "dark-border": "rgba(255,255,255,0.06)",
+        page: "var(--bg-base)",
+        card: "var(--bg-surface)",
+        accent: "var(--accent-brass)",
+        "accent-light": "#E0BE53",
+        "accent-dim": "rgba(201,162,39,0.12)",
+        "card-2": "var(--bg-raised)",
+        "dark-base": "var(--bg-base)",
+        "dark-card": "var(--bg-surface)",
+        "dark-border": "var(--border-hair)",
         background: {
-          DEFAULT: "#0A0A0F",
-          primary: "#0A0A0F",
-          secondary: "#111118",
-          card: "#16161E",
-          elevated: "#1C1C27",
+          DEFAULT: "var(--bg-base)",
+          primary: "var(--bg-base)",
+          secondary: "var(--bg-surface)",
+          card: "var(--bg-surface)",
+          elevated: "var(--bg-raised)",
         },
         border: {
-          DEFAULT: "rgba(255,255,255,0.08)",
+          DEFAULT: "var(--border-hair)",
           hover: "rgba(255,255,255,0.15)",
         },
         brand: {
-          purple: "#7C3AED",
-          "purple-light": "#A78BFA",
+          purple: "var(--accent-brass)",
+          "purple-light": "#E0BE53",
         },
-        income: "#10B981",
-        expense: "#EF4444",
-        transfer: "#3B82F6",
+        income: "var(--accent-teal)",
+        expense: "var(--accent-clay)",
+        transfer: "var(--text-muted)",
         text: {
-          primary: "#F8FAFC",
-          secondary: "#94A3B8",
-          muted: "#475569",
+          primary: "var(--text-primary)",
+          secondary: "var(--text-muted)",
+          muted: "var(--text-muted)",
         },
       },
       letterSpacing: {
@@ -68,7 +72,7 @@ const config: Config = {
       },
       boxShadow: {
         card: "0 1px 0 rgba(255,255,255,0.04) inset, 0 -1px 0 rgba(0,0,0,0.3) inset",
-        "card-hover": "0 0 0 1px rgba(124,58,237,0.10) inset",
+        "card-hover": "0 0 0 1px rgba(201,162,39,0.10) inset",
       },
       keyframes: {
         gradient: {
@@ -142,6 +146,22 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    heroui({
+      themes: {
+        dark: {
+          colors: {
+            background: "#13161D",
+            foreground: "#EDEAE2",
+            primary: {
+              DEFAULT: "#C9A227",
+              foreground: "#13161D",
+            },
+            focus: "#C9A227",
+          },
+        },
+      },
+    }),
+  ],
 };
 export default config;
