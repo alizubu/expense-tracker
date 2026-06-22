@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select } from "@/components/ui/select";
 
 export function UsersClient() {
   const { users, isLoading, fetchUsers, addUser, updateUser, deleteUser } = useUserManagementStore();
@@ -117,26 +117,28 @@ export function UsersClient() {
             />
           </div>
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-[130px] h-10 bg-surface-2 border-white/[0.04]">
-                <SelectValue placeholder="Role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">All Roles</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
-                <SelectItem value="USER">User</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[130px] h-10 bg-surface-2 border-white/[0.04]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">All Status</SelectItem>
-                <SelectItem value="ACTIVE">Active</SelectItem>
-                <SelectItem value="INACTIVE">Inactive</SelectItem>
-              </SelectContent>
-            </Select>
+            <Select 
+              value={roleFilter} 
+              onChange={setRoleFilter}
+              options={[
+                { value: "ALL", label: "All Roles" },
+                { value: "ADMIN", label: "Admin" },
+                { value: "USER", label: "User" }
+              ]}
+              containerClassName="w-[130px] h-10"
+              className="bg-surface-2 border-white/[0.04] h-10"
+            />
+            <Select 
+              value={statusFilter} 
+              onChange={setStatusFilter}
+              options={[
+                { value: "ALL", label: "All Status" },
+                { value: "ACTIVE", label: "Active" },
+                { value: "INACTIVE", label: "Inactive" }
+              ]}
+              containerClassName="w-[130px] h-10"
+              className="bg-surface-2 border-white/[0.04] h-10"
+            />
           </div>
         </div>
 
@@ -191,10 +193,8 @@ export function UsersClient() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
+                        <DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" />}>
+                          <MoreHorizontal className="h-4 w-4" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40 border-white/[0.04] bg-surface-1/95 backdrop-blur-xl">
                           <DropdownMenuItem onClick={() => openEditModal(user)} className="gap-2 cursor-pointer">
@@ -239,23 +239,25 @@ export function UsersClient() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Role</label>
-                <Select value={role} onValueChange={setRole}>
-                  <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USER">User</SelectItem>
-                    <SelectItem value="ADMIN">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select 
+                  value={role} 
+                  onChange={setRole}
+                  options={[
+                    { value: "USER", label: "User" },
+                    { value: "ADMIN", label: "Admin" }
+                  ]}
+                />
               </div>
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Status</label>
-                <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger><SelectValue placeholder="Status" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ACTIVE">Active</SelectItem>
-                    <SelectItem value="INACTIVE">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select 
+                  value={status} 
+                  onChange={setStatus}
+                  options={[
+                    { value: "ACTIVE", label: "Active" },
+                    { value: "INACTIVE", label: "Inactive" }
+                  ]}
+                />
               </div>
             </div>
           </div>
