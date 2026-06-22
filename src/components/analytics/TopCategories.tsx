@@ -79,37 +79,20 @@ export function TopCategories() {
             return (
               <div 
                 key={cat.id} 
-                className="flex flex-col justify-center py-2.5 px-3 rounded-xl hover:bg-surface-2 transition-colors border border-transparent hover:border-white/[0.04] group"
+                className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-surface-2 transition-colors border border-transparent hover:border-white/[0.04] group"
               >
-                <div className="flex items-center gap-3 mb-1.5">
-                  <div 
-                    className="flex h-8 w-8 rounded-lg items-center justify-center flex-shrink-0 shadow-sm transition-transform group-hover:scale-105"
-                    style={{ backgroundColor: `${cat.color}1a`, color: cat.color }} // 1a is ~10% opacity
-                  >
-                    <Icon size={14} />
-                  </div>
-                  <span className="text-[13px] font-semibold text-foreground flex-1 truncate group-hover:text-primary transition-colors">
-                    {name}
-                  </span>
-                  <span className="text-[13px] font-bold text-foreground font-mono flex-shrink-0 tabular-money">
-                    {symbol}{cat.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                  </span>
+                <div 
+                  className="flex h-8 w-8 rounded-lg items-center justify-center flex-shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                  style={{ backgroundColor: `${cat.color}1a`, color: cat.color }} 
+                >
+                  <Icon size={14} />
                 </div>
-                
-                <div className="flex items-center gap-3 pl-[44px]">
-                  <div className="flex-1 h-1.5 bg-surface-3 border border-white/[0.02] rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${cat.fillRatio}%` }}
-                      transition={{ duration: 0.8, ease: "easeOut", delay: index * 0.05 }}
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: cat.color }}
-                    />
-                  </div>
-                  <span className="text-[10px] text-muted-foreground w-10 text-right font-medium font-mono tabular-money">
-                    {cat.percentage.toFixed(1)}%
-                  </span>
-                </div>
+                <span className="text-[13px] font-semibold text-foreground flex-1 truncate group-hover:text-primary transition-colors">
+                  {name}
+                </span>
+                <span className="text-[13px] font-bold text-foreground font-mono flex-shrink-0 tabular-money">
+                  {symbol}{cat.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                </span>
               </div>
             );
           })

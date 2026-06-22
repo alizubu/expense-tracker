@@ -37,7 +37,7 @@ export function Topbar() {
           <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
-        <Button onClick={() => openModal("add-transaction")} className="shadow-sm h-9 rounded-lg font-medium">
+        <Button onClick={() => openModal("addTransaction")} className="shadow-sm h-9 rounded-lg font-medium">
           <Plus className="w-4 h-4 mr-1.5" />
           <span className="hidden sm:inline">Add Transaction</span>
           <span className="inline sm:hidden">Add</span>

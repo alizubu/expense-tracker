@@ -13,6 +13,8 @@ model User {
   name         String
   email        String        @unique
   currency     String        @default("BDT")
+  role         String        @default("USER") // "ADMIN" or "USER"
+  status       String        @default("ACTIVE") // "ACTIVE" or "INACTIVE"
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   profiles     Profile[]

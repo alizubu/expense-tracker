@@ -118,18 +118,21 @@ export default function TransactionsPage() {
       </AnimatePresence>
 
       {/* Desktop Header */}
-      <div className="hidden lg:flex items-end justify-between mb-8">
-        <div>
+      <div className="hidden lg:flex items-center justify-between mb-8 relative">
+        <div className="flex-1">
           <h1 className="text-3xl font-bold text-foreground tracking-tight">Transactions</h1>
           <p className="text-sm text-muted-foreground mt-1">Manage and view your financial history.</p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex-1 flex justify-center absolute left-1/2 -translate-x-1/2">
           <AnimatedSearch
             value={filters.search}
             onChange={(val) => setFilters({ search: val })}
-            placeholder="Search transactions..."
+            placeholders={["Search transactions...", "Search amounts...", "Search categories..."]}
           />
+        </div>
+
+        <div className="flex-1 flex justify-end">
           <Button onClick={() => openModal("addTransaction")}>
             <Plus size={16} className="mr-2" />
             Add Transaction

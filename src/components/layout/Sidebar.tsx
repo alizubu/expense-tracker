@@ -18,7 +18,9 @@ import {
   TrendingUp,
   Moon,
   Sun,
-  Monitor
+  Monitor,
+  Shield,
+  User
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -39,6 +41,7 @@ const routes = [
   { label: "Transactions", icon: ArrowRightLeft, href: "/transactions", activePaths: ["/transactions"] },
   { label: "Profiles", icon: Users, href: "/profiles", activePaths: ["/profiles"] },
   { label: "Analytics", icon: BarChart3, href: "/analytics", activePaths: ["/analytics"] },
+  { label: "Users", icon: Shield, href: "/users", activePaths: ["/users"] },
   { label: "Settings", icon: Settings, href: "/settings", activePaths: ["/settings"] },
 ];
 
@@ -145,9 +148,13 @@ export function Sidebar() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-white/[0.04]" />
-            <DropdownMenuItem onClick={() => router.push("/profiles")} className="cursor-pointer rounded-lg px-2 py-1.5 focus:bg-surface-2">
-              <Users className="w-4 h-4 mr-2 text-muted-foreground" />
-              Profiles
+            <DropdownMenuItem onClick={() => router.push("/profile")} className="cursor-pointer rounded-lg px-2 py-1.5 focus:bg-surface-2">
+              <User className="w-4 h-4 mr-2 text-muted-foreground" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/profile?edit=true")} className="cursor-pointer rounded-lg px-2 py-1.5 focus:bg-surface-2">
+              <Settings className="w-4 h-4 mr-2 text-muted-foreground" />
+              Edit Profile
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/settings")} className="cursor-pointer rounded-lg px-2 py-1.5 focus:bg-surface-2">
               <Settings className="w-4 h-4 mr-2 text-muted-foreground" />
