@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useUIStore } from "@/store/useUIStore";
 import { cn } from "@/lib/utils";
-import { Button, Input } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 export function Topbar() {
   const pathname = usePathname();
@@ -37,21 +37,21 @@ export function Topbar() {
         )}
       >
         <div className="relative flex-1 flex items-center gap-2">
-          <Input
-            autoFocus={isSearchExpanded}
-            placeholder="Search transactions..."
-            startContent={<Search className="text-[var(--text-muted)] w-4 h-4" />}
-            classNames={{
-              inputWrapper: "bg-[var(--bg-surface)] border border-[var(--border-hair)] hover:bg-[var(--bg-raised)] focus-within:!bg-[var(--bg-raised)] focus-within:!border-[var(--accent-brass)]",
-              input: "text-[var(--text-primary)] placeholder:text-[var(--text-muted)]",
-            }}
-            fullWidth
-          />
+          <div className="relative flex-1">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <Search className="text-[var(--text-muted)] w-4 h-4" />
+            </div>
+            <input
+              type="text"
+              autoFocus={isSearchExpanded}
+              placeholder="Search transactions..."
+              className="w-full h-[40px] bg-[var(--bg-surface)] border border-[var(--border-hair)] hover:bg-[var(--bg-raised)] focus:bg-[var(--bg-raised)] focus:border-[var(--accent-brass)] focus:outline-none rounded-xl pl-10 pr-4 text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition-all"
+            />
+          </div>
           <Button 
-            isIconOnly 
-            variant="light" 
+            variant="ghost" 
             onPress={() => setIsSearchExpanded(false)}
-            className="text-[var(--text-muted)]"
+            className="text-[var(--text-muted)] border-none min-w-0 px-3"
           >
             Cancel
           </Button>
@@ -71,18 +71,20 @@ export function Topbar() {
         </h1>
       </div>
 
-      {/* Center: Search (Desktop) */}
       <div className="hidden lg:flex flex-1 justify-center max-w-[320px] mx-auto">
-        <Input
-          placeholder="Search transactions..."
-          startContent={<Search className="text-[var(--text-muted)] w-4 h-4" />}
-          endContent={<kbd className="bg-[var(--bg-base)] border border-[var(--border-hair)] rounded-[4px] px-[6px] py-[2px] text-[10px] font-medium text-[var(--text-muted)]">⌘K</kbd>}
-          classNames={{
-            inputWrapper: "bg-[var(--bg-surface)] border border-[var(--border-hair)] hover:bg-[var(--bg-raised)] focus-within:!bg-[var(--bg-raised)] focus-within:!border-[var(--accent-brass)] shadow-sm",
-            input: "text-[13px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)]",
-          }}
-          size="sm"
-        />
+        <div className="relative w-full">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+            <Search className="text-[var(--text-muted)] w-4 h-4" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search transactions..."
+            className="w-full h-[32px] bg-[var(--bg-surface)] border border-[var(--border-hair)] hover:bg-[var(--bg-raised)] focus:bg-[var(--bg-raised)] focus:border-[var(--accent-brass)] focus:outline-none rounded-lg pl-9 pr-10 text-[13px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition-all shadow-sm"
+          />
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+            <kbd className="bg-[var(--bg-base)] border border-[var(--border-hair)] rounded-[4px] px-[6px] py-[2px] text-[10px] font-medium text-[var(--text-muted)]">⌘K</kbd>
+          </div>
+        </div>
       </div>
 
       {/* Right: Actions */}
@@ -103,14 +105,12 @@ export function Topbar() {
             {resolvedTheme === "dark" ? <Sun className="h-[16px] w-[16px]" /> : <Moon className="h-[16px] w-[16px]" />}
           </button>
         )}
-        
         <Button
-          color="primary"
           onPress={() => openModal("addTransaction")}
-          startContent={<Plus className="w-4 h-4" />}
-          className="font-medium shadow-md shadow-[var(--accent-dim)]"
+          className="font-medium shadow-md shadow-[var(--accent-dim)] flex items-center gap-2 bg-[var(--accent-brass)] text-[#13161D]"
           size="md"
         >
+          <Plus className="w-4 h-4" />
           <span className="hidden lg:inline">Add Transaction</span>
         </Button>
       </div>

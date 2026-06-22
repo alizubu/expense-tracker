@@ -5,7 +5,7 @@ import * as LucideIcons from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { useRouter } from "next/navigation";
-import { Progress, Button } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 function getIcon(iconName: string) {
   const Icon = (LucideIcons as Record<string, any>)[iconName];
@@ -32,12 +32,11 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
         </h2>
         <Button 
           size="sm"
-          variant="light"
+          variant="ghost"
           onPress={onAdd}
-          className="text-[12px] font-medium text-[var(--accent-brass)]"
-          startContent={<LucideIcons.Plus size={12} />}
+          className="text-[12px] font-medium text-[var(--accent-brass)] flex items-center gap-2"
         >
-          Add New
+          <LucideIcons.Plus size={12} /> Add New
         </Button>
       </div>
 
@@ -87,15 +86,14 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
                 </div>
 
                 {/* Bottom Progress Bar */}
-                <Progress 
-                  size="sm" 
-                  color="primary" 
-                  value={percentage} 
-                  classNames={{
-                    track: "bg-[var(--bg-base)] h-[2px]",
-                    indicator: "bg-[var(--accent-brass)]"
-                  }}
-                />
+                <div className="h-[2px] w-full bg-[var(--bg-base)] rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${percentage}%` }}
+                    transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.1 }}
+                    className="h-full bg-[var(--accent-brass)] rounded-full"
+                  />
+                </div>
               </div>
             );
           })

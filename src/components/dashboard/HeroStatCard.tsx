@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Card } from "@heroui/react";
 import { ResponsiveContainer, LineChart, Line } from "recharts";
 import { NumberTicker } from "@/components/magicui/number-ticker";
 import { getCurrencySymbol } from "@/lib/currencies";
@@ -71,11 +70,7 @@ export function HeroStatCard({
   const symbol = getCurrencySymbol(selectedCurrency);
 
   return (
-    <Card 
-      className="p-5 bg-[var(--bg-surface)] border border-[var(--border-hair)] hover:border-[var(--border-hair)] transition-colors overflow-visible"
-      shadow="none"
-      radius="lg"
-    >
+    <div className="p-5 bg-[var(--bg-surface)] border border-[var(--border-hair)] hover:border-[var(--border-hair)] transition-colors overflow-visible rounded-[12px] shadow-none flex flex-col">
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
@@ -123,6 +118,6 @@ export function HeroStatCard({
           </ResponsiveContainer>
         </div>
       )}
-    </Card>
+    </div>
   );
 }
