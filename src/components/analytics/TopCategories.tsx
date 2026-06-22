@@ -70,8 +70,8 @@ export function TopCategories() {
   }, [transactions, selectedMonth, selectedYear]);
 
   return (
-    <Card className="flex flex-col w-full h-auto min-h-[350px] p-4 rounded-xl shadow-sm border-border">
-      <div className="flex items-center justify-between mb-4 flex-shrink-0 h-8">
+    <Card className="flex flex-col w-full h-auto min-h-[350px] p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
+      <div className="flex items-center justify-between mb-4 flex-shrink-0 h-[32px]">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           Top Spending
         </h3>
@@ -80,7 +80,7 @@ export function TopCategories() {
         </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 flex flex-col justify-start pb-2">
+      <div className="flex-1 overflow-y-auto hide-scrollbar min-h-0 flex flex-col justify-start pb-2 space-y-2">
         {categoryData.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-8">
             <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-3">
@@ -98,11 +98,11 @@ export function TopCategories() {
             return (
               <div 
                 key={cat.id} 
-                className="flex flex-col justify-center py-3 px-3 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50"
+                className="flex flex-col justify-center py-3 px-3 rounded-xl hover:bg-muted/50 transition-colors border border-transparent hover:border-white/[0.04]"
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`flex h-8 w-8 rounded-md items-center justify-center flex-shrink-0 ${bg}`}>
-                    <Icon size={14} className={accent} />
+                <div className="flex items-center gap-4 mb-3">
+                  <div className={`flex h-10 w-10 rounded-lg items-center justify-center flex-shrink-0 ${bg}`}>
+                    <Icon size={18} className={accent} />
                   </div>
                   <span className="text-sm font-semibold text-foreground flex-1 truncate">
                     {name}
@@ -112,7 +112,7 @@ export function TopCategories() {
                   </span>
                 </div>
                 
-                <div className="flex items-center gap-3 pl-11">
+                <div className="flex items-center gap-3 pl-[52px]">
                   <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
@@ -121,7 +121,7 @@ export function TopCategories() {
                       className={`h-full rounded-full bg-current ${accent}`}
                     />
                   </div>
-                  <span className="text-xs text-muted-foreground w-10 text-right font-medium">
+                  <span className="text-xs text-muted-foreground w-10 text-right font-medium font-mono">
                     {cat.percentage.toFixed(1)}%
                   </span>
                 </div>

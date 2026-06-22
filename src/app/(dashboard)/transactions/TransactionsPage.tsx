@@ -224,26 +224,26 @@ export default function TransactionsPage() {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <Card className="p-4 flex flex-col justify-center">
+        <Card className="p-6 rounded-2xl border-white/[0.06] bg-card flex flex-col justify-center shadow-sm">
           <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wider mb-1">Total</span>
-          <span className="text-xl font-bold font-mono text-foreground truncate">
-            {symbol}{filtered.reduce((sum, t) => sum + (t.type === "EXPENSE" ? -t.amount : t.amount), 0).toLocaleString()}
+          <span className="text-xl font-bold font-mono tracking-tight text-foreground truncate">
+            {symbol}{filtered.reduce((sum, t) => sum + (t.type === "EXPENSE" ? -t.amount : t.amount), 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}
           </span>
         </Card>
-        <Card className="p-4 flex flex-col justify-center">
+        <Card className="p-6 rounded-2xl border-white/[0.06] bg-card flex flex-col justify-center shadow-sm">
           <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wider mb-1">Count</span>
-          <span className="text-xl font-bold font-mono text-foreground truncate">{filtered.length}</span>
+          <span className="text-xl font-bold font-mono tracking-tight text-foreground truncate">{filtered.length}</span>
         </Card>
-        <Card className="p-4 flex flex-col justify-center">
+        <Card className="p-6 rounded-2xl border-white/[0.06] bg-card flex flex-col justify-center shadow-sm">
           <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wider mb-1">Largest</span>
-          <span className="text-xl font-bold font-mono text-destructive truncate">
-            {symbol}{filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)).toLocaleString() : 0}
+          <span className="text-xl font-bold font-mono tracking-tight text-destructive truncate">
+            {symbol}{filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)).toLocaleString(undefined, { maximumFractionDigits: 0 }) : 0}
           </span>
         </Card>
       </div>
 
       {/* Transactions List */}
-      <Card className="flex-1 overflow-hidden flex flex-col border-border shadow-sm">
+      <Card className="flex-1 overflow-hidden flex flex-col rounded-2xl border border-white/[0.06] bg-card shadow-sm">
         {filtered.length === 0 ? (
           <div className="py-16">
             <EmptyState
@@ -258,20 +258,20 @@ export default function TransactionsPage() {
           <div className="overflow-x-auto hide-scrollbar">
             <Table>
               <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[60px]"></TableHead>
-                  <TableHead>Transaction</TableHead>
-                  <TableHead className="hidden md:table-cell">Category</TableHead>
-                  <TableHead className="hidden sm:table-cell">Profile</TableHead>
-                  <TableHead className="hidden lg:table-cell">Date</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+                <TableRow className="hover:bg-transparent border-b border-white/[0.06]">
+                  <TableHead className="w-[88px] pl-6"></TableHead>
+                  <TableHead className="text-left font-semibold">Transaction</TableHead>
+                  <TableHead className="hidden md:table-cell text-left font-semibold">Category</TableHead>
+                  <TableHead className="hidden sm:table-cell text-left font-semibold">Profile</TableHead>
+                  <TableHead className="hidden lg:table-cell text-center font-semibold">Date</TableHead>
+                  <TableHead className="text-right font-semibold pr-6">Amount</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {Array.from(grouped.entries()).map(([dateLabel, txns]) => (
                   <React.Fragment key={dateLabel}>
-                    <TableRow className="bg-muted/50 hover:bg-muted/50">
-                      <TableCell colSpan={6} className="py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    <TableRow className="bg-transparent hover:bg-transparent border-b border-white/[0.04]">
+                      <TableCell colSpan={6} className="py-3 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-widest bg-background/30">
                         {dateLabel}
                       </TableCell>
                     </TableRow>
@@ -292,31 +292,31 @@ export default function TransactionsPage() {
                         <TableRow 
                           key={transaction.id}
                           onClick={() => setEditTxnId(transaction.id)}
-                          className="cursor-pointer transition-colors hover:bg-muted/50"
+                          className="cursor-pointer transition-colors hover:bg-muted/40 border-b border-white/[0.04]"
                         >
-                          <TableCell>
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${catStyle.bg}`}>
-                              <Icon size={14} className={catStyle.color} />
+                          <TableCell className="pl-6">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${catStyle.bg}`}>
+                              <Icon size={18} className={catStyle.color} />
                             </div>
                           </TableCell>
-                          <TableCell>
-                            <div className="font-medium text-foreground">{transaction.title}</div>
-                            <div className="text-xs text-muted-foreground sm:hidden mt-1">
+                          <TableCell className="text-left">
+                            <div className="font-semibold text-foreground text-sm">{transaction.title}</div>
+                            <div className="text-xs text-muted-foreground sm:hidden mt-0.5">
                               {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel} • {profile?.name}
                             </div>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
+                          <TableCell className="hidden md:table-cell text-muted-foreground text-sm text-left font-medium">
                             {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel}
                           </TableCell>
-                          <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">
+                          <TableCell className="hidden sm:table-cell text-muted-foreground text-sm text-left font-medium">
                             {profile?.name || "Unknown"}
                           </TableCell>
-                          <TableCell className="hidden lg:table-cell text-muted-foreground text-sm">
+                          <TableCell className="hidden lg:table-cell text-muted-foreground text-xs text-center font-medium">
                             {new Date(transaction.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </TableCell>
-                          <TableCell className="text-right font-mono font-bold">
-                            <span className={amountColor}>
-                              {sign}{symbol}{Math.abs(transaction.amount).toLocaleString()}
+                          <TableCell className="text-right pr-6">
+                            <span className={`font-mono font-bold tracking-tight ${amountColor}`}>
+                              {sign}{symbol}{Math.abs(transaction.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                             </span>
                           </TableCell>
                         </TableRow>

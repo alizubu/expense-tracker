@@ -114,8 +114,8 @@ export default function SettingsPage() {
       <div className="space-y-6">
         {/* Profile Information */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05, duration: 0.3 }}>
-          <Card className="p-6 bg-card border-border shadow-sm">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
+            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
               <User className="h-5 w-5 text-primary" />
               Profile Information
             </h2>
@@ -128,12 +128,12 @@ export default function SettingsPage() {
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full md:w-64"
+                  className="w-full md:w-64 focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:shadow-[0_0_15px_hsl(var(--primary)/0.1)] transition-shadow"
                   disabled={isSaving}
                 />
               </div>
 
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-t border-border/50">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-t border-white/[0.04]">
                 <div className="max-w-md">
                   <p className="text-sm font-semibold text-foreground">Email Address</p>
                   <p className="text-xs text-muted-foreground mt-1">Used for login and notifications (cannot be changed).</p>
@@ -142,11 +142,11 @@ export default function SettingsPage() {
                   type="email"
                   value={session?.user?.email || ""}
                   disabled
-                  className="w-full md:w-64 bg-muted/50"
+                  className="w-full md:w-64 bg-muted/50 focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:shadow-[0_0_15px_hsl(var(--primary)/0.1)] transition-shadow"
                 />
               </div>
 
-              <div className="flex justify-end pt-6 border-t border-border/50">
+              <div className="flex justify-end pt-6 mt-6 border-t border-white/[0.04]">
                 <Button
                   onClick={handleSaveProfile}
                   disabled={!name || isSaving}
@@ -162,8 +162,8 @@ export default function SettingsPage() {
 
         {/* Preferences */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.3 }}>
-          <Card className="p-6 bg-card border-border shadow-sm">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
+            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
               <Globe className="h-5 w-5 text-primary" />
               Preferences
             </h2>
@@ -182,7 +182,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-t border-border/50">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-t border-white/[0.04]">
                 <div className="max-w-md">
                   <p className="text-sm font-semibold text-foreground">Timezone</p>
                   <p className="text-xs text-muted-foreground mt-1">For transaction dates and monthly reports sync.</p>
@@ -201,8 +201,8 @@ export default function SettingsPage() {
 
         {/* Appearance */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15, duration: 0.3 }}>
-          <Card className="p-6 bg-card border-border shadow-sm">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
+            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
               <Palette className="h-5 w-5 text-primary" />
               Appearance
             </h2>
@@ -231,8 +231,8 @@ export default function SettingsPage() {
 
         {/* Data Export */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.3 }}>
-          <Card className="p-6 bg-card border-border shadow-sm">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
+            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
               <Download className="h-5 w-5 text-primary" />
               Data Export
             </h2>
@@ -254,8 +254,8 @@ export default function SettingsPage() {
 
         {/* Account */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.25, duration: 0.3 }}>
-          <Card className="p-6 bg-card border-destructive/20 shadow-sm">
-            <h2 className="text-lg font-bold text-destructive flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+          <Card className="p-6 rounded-2xl shadow-sm border border-destructive/20 bg-card">
+            <h2 className="text-lg font-bold text-destructive flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
               <Shield className="h-5 w-5" />
               Account Security
             </h2>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { 
@@ -39,38 +38,9 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
   const { selectedCurrency, openModal } = useUIStore();
   const { profiles } = useProfileStore();
   const symbol = getCurrencySymbol(selectedCurrency);
-  
-  const [displayCount, setDisplayCount] = useState(30);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const observerTarget = useRef<HTMLDivElement>(null);
 
   const sortedTransactions = [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  const displayedTransactions = sortedTransactions.slice(0, displayCount);
-  const hasMore = displayCount < sortedTransactions.length;
-
-  const loadMore = useCallback(() => {
-    if (!hasMore || isLoadingMore) return;
-    setIsLoadingMore(true);
-    setTimeout(() => {
-      setDisplayCount(prev => prev + 30);
-      setIsLoadingMore(false);
-    }, 400);
-  }, [hasMore, isLoadingMore]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting) {
-          loadMore();
-        }
-      },
-      { threshold: 0.5 }
-    );
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-    return () => observer.disconnect();
-  }, [loadMore]);
+  const displayedTransactions = sortedTransactions.slice(0, 5);
 
   const groupedByDate: Record<string, any[]> = {};
   displayedTransactions.forEach(t => {
@@ -81,8 +51,8 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
   });
 
   return (
-    <Card className="flex flex-col w-full h-auto md:h-full p-4 pb-2 border-border rounded-xl shadow-sm overflow-visible md:overflow-hidden">
-      <div className="flex items-center justify-between flex-shrink-0 h-8 mb-2">
+    <Card className="flex flex-col w-full h-auto md:h-full p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card overflow-hidden">
+      <div className="flex items-center justify-between flex-shrink-0 h-[32px] mb-4">
         <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           Recent Transactions
         </h2>
@@ -94,7 +64,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
         </Link>
       </div>
 
-      <div className="flex flex-col md:flex-1 md:overflow-y-auto hide-scrollbar md:min-h-0 relative px-2 pb-2">
+      <div className="flex flex-col flex-1 space-y-4">
         {transactions.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-6">
             <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-3">
@@ -104,15 +74,15 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
           </div>
         ) : (
           Object.entries(groupedByDate).map(([dateStr, txns]) => (
-            <div key={dateStr} className="mb-4">
-              <div className="sticky top-0 z-10 h-6 bg-card/95 backdrop-blur-sm flex items-center gap-2 mb-2">
+            <div key={dateStr}>
+              <div className="flex items-center gap-2 mb-3">
                 <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest flex-shrink-0">
                   {dateStr}
                 </span>
                 <div className="h-px bg-border flex-1" />
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {txns.map((t) => {
                   const categoryDef = getCategoryById(t.category);
                   const categoryLabel = categoryDef?.label || t.category;
@@ -137,26 +107,26 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                     <div 
                       key={t.id}
                       onClick={() => openModal("addTransaction")}
-                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
+                      className="flex items-center gap-4 p-3 rounded-xl hover:bg-muted/50 cursor-pointer transition-colors group border border-transparent hover:border-white/[0.04]"
                     >
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${catStyle.bg}`}>
-                        <Icon size={18} className={catStyle.color} />
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${catStyle.bg}`}>
+                        <Icon size={20} className={catStyle.color} />
                       </div>
 
                       <div className="flex flex-col min-w-0 flex-1">
                         <span className="text-sm font-semibold text-foreground truncate">
                           {t.title}
                         </span>
-                        <span className="text-xs text-muted-foreground truncate">
+                        <span className="text-xs text-muted-foreground truncate mt-0.5">
                           {t.type === "TRANSFER" ? "Transfer" : categoryLabel} · {profileName}
                         </span>
                       </div>
 
-                      <div className="flex flex-col items-end flex-shrink-0">
+                      <div className="flex flex-col items-end flex-shrink-0 text-right">
                         <span className={`text-sm font-bold font-mono ${amountColor}`}>
                           {prefix}{symbol}{Math.abs(t.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </span>
-                        <span className="text-[10px] text-muted-foreground">
+                        <span className="text-[10px] text-muted-foreground font-medium mt-0.5">
                           {format(new Date(t.date), "h:mm a")}
                         </span>
                       </div>
@@ -166,28 +136,6 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
               </div>
             </div>
           ))
-        )}
-        
-        {hasMore && (
-          <div className="mt-2 pb-2">
-            <div ref={observerTarget} className="hidden md:flex h-10 items-center justify-center">
-              {isLoadingMore && (
-                <div className="flex gap-1">
-                  <div className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <div className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <div className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-                </div>
-              )}
-            </div>
-
-            <button 
-              onClick={loadMore}
-              disabled={isLoadingMore}
-              className="md:hidden w-full h-10 rounded-lg bg-muted text-xs font-medium text-muted-foreground hover:bg-muted/80 hover:text-foreground transition-all"
-            >
-              {isLoadingMore ? "Loading..." : "Load More"}
-            </button>
-          </div>
         )}
       </div>
     </Card>

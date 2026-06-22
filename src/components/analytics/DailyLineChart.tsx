@@ -37,7 +37,7 @@ export default function DailyLineChart() {
   const hasData = currentMonthTxns.length > 0;
 
   return (
-    <Card className="p-4 md:p-6 w-full h-[350px] flex flex-col justify-between hover:shadow-md transition-all duration-200">
+    <Card className="p-6 w-full h-[350px] flex flex-col justify-between rounded-2xl shadow-sm border border-white/[0.06] bg-card hover:shadow-md transition-all duration-200">
       <div className="flex items-center justify-between mb-4 flex-shrink-0">
         <h3 className="text-sm font-semibold text-text-primary">Daily Spending</h3>
         <span className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">

@@ -31,10 +31,10 @@ export default function MonthlyBarChart() {
   }).reverse();
 
   return (
-    <Card className="p-4 md:p-6 w-full h-[350px] flex flex-col justify-between">
+    <Card className="p-6 w-full h-[350px] flex flex-col justify-between rounded-2xl shadow-sm border border-white/[0.06] bg-card">
       <h3 className="text-sm font-semibold text-text-primary mb-4 flex-shrink-0">Monthly Overview</h3>
       <div className="flex-1 min-h-0 w-full">
-        <ResponsiveContainer width="100%" height="90%">
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
             <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />

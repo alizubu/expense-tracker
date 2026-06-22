@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
+import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useUIStore } from "@/store/useUIStore";
@@ -70,57 +71,60 @@ export default function ProfilesPage() {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.05 + index * 0.05, duration: 0.3 }}
+              className="h-full"
             >
-              <Card className={`relative p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 h-full border ${profile.isDefault ? 'border-primary/50 bg-primary/[0.02]' : 'border-border bg-card'}`}>
-                {profile.isDefault && (
-                  <div className="absolute top-4 right-4 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary">
-                    Default
-                  </div>
-                )}
-                
-                <div>
-                  <div className="flex items-start gap-4 mb-5">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0" style={{ backgroundColor: profile.color + "15" }}>
-                      <Icon className="h-6 w-6" style={{ color: profile.color }} />
-                    </div>
-                    <div className="min-w-0 flex-1 mt-1">
-                      <h3 className="text-base font-bold text-foreground truncate">{profile.name}</h3>
-                      <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground mt-1">
-                        {profileType?.label || "General"}
-                      </span>
-                    </div>
+              <CardContainer className="inter-var w-full h-full" containerClassName="py-0 h-full">
+                <CardBody className={`relative group/card p-6 flex flex-col justify-between hover:shadow-2xl hover:shadow-primary/[0.1] transition-all duration-200 h-full min-h-[260px] border rounded-2xl ${profile.isDefault ? 'border-primary/50 bg-primary/[0.02]' : 'border-white/[0.06] bg-card shadow-[inset_0_0_20px_rgba(255,255,255,0.02)]'}`}>
+                  {profile.isDefault && (
+                    <CardItem translateZ={20} className="absolute top-4 right-4 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+                      Default
+                    </CardItem>
+                  )}
+                  
+                  <div>
+                    <CardItem translateZ={30} className="flex items-start gap-4 mb-5">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0" style={{ backgroundColor: profile.color + "15" }}>
+                        <Icon className="h-6 w-6" style={{ color: profile.color }} />
+                      </div>
+                      <div className="min-w-0 flex-1 mt-1">
+                        <h3 className="text-base font-bold text-foreground truncate">{profile.name}</h3>
+                        <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground mt-1">
+                          {profileType?.label || "General"}
+                        </span>
+                      </div>
+                    </CardItem>
+
+                    <CardItem translateZ={40} className="text-3xl font-bold text-foreground tracking-tight font-mono mb-6">
+                      {symbol}{profile.balance.toLocaleString("en-US", { minimumFractionDigits: 0 })}
+                    </CardItem>
+
+                    <CardItem translateZ={20} className="flex items-center gap-6 mb-6 border-t border-border/50 pt-4">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <TrendingUp className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        <span className="text-xs text-muted-foreground font-semibold font-mono truncate">{symbol}{monthIncome.toLocaleString()}</span>
+                      </div>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <TrendingDown className="h-4 w-4 text-destructive flex-shrink-0" />
+                        <span className="text-xs text-muted-foreground font-semibold font-mono truncate">{symbol}{monthExpense.toLocaleString()}</span>
+                      </div>
+                    </CardItem>
                   </div>
 
-                  <p className="text-3xl font-bold text-foreground tracking-tight font-mono mb-6">
-                    {symbol}{profile.balance.toLocaleString("en-US", { minimumFractionDigits: 0 })}
-                  </p>
-
-                  <div className="flex items-center gap-6 mb-6 border-t border-border/50 pt-4">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <TrendingUp className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                      <span className="text-xs text-muted-foreground font-semibold font-mono truncate">{symbol}{monthIncome.toLocaleString()}</span>
-                    </div>
-                    <div className="flex items-center gap-2 min-w-0">
-                      <TrendingDown className="h-4 w-4 text-destructive flex-shrink-0" />
-                      <span className="text-xs text-muted-foreground font-semibold font-mono truncate">{symbol}{monthExpense.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2 pt-4 border-t border-border/50 mt-auto">
-                  <Link href={`/profiles/${profile.id}`} className="flex-1">
-                    <Button variant="outline" className="w-full h-9">
-                      <Eye className="h-4 w-4 mr-2" /> Details
+                  <CardItem translateZ={20} className="grid grid-cols-[1fr_auto_auto] gap-2 pt-4 border-t border-border/50 mt-auto w-full">
+                    <Link href={`/profiles/${profile.id}`} className="w-full">
+                      <Button variant="outline" className="w-full h-9 border-white/[0.06] bg-background/50 hover:bg-muted/80">
+                        <Eye className="h-4 w-4 mr-2" /> Details
+                      </Button>
+                    </Link>
+                    <Button variant="outline" size="icon" className="h-9 w-9 border-white/[0.06] bg-background/50 hover:bg-muted/80" onClick={() => setEditProfileId(profile.id)}>
+                      <Edit2 className="h-4 w-4 text-muted-foreground" />
                     </Button>
-                  </Link>
-                  <Button variant="outline" size="icon" className="h-9 w-9 flex-shrink-0" onClick={() => setEditProfileId(profile.id)}>
-                    <Edit2 className="h-4 w-4 text-muted-foreground" />
-                  </Button>
-                  <Button variant="outline" size="icon" className="h-9 w-9 flex-shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30" onClick={() => triggerDeleteConfirm(profile.id, profile.name)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </Card>
+                    <Button variant="outline" size="icon" className="h-9 w-9 border-white/[0.06] bg-background/50 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30" onClick={() => triggerDeleteConfirm(profile.id, profile.name)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </CardItem>
+                </CardBody>
+              </CardContainer>
             </motion.div>
           );
         })}
@@ -130,13 +134,23 @@ export default function ProfilesPage() {
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.05 + profiles.length * 0.05, duration: 0.3 }}
+          className="h-full"
         >
-          <button onClick={() => setShowCreateModal(true)} className="group flex h-full min-h-[260px] w-full items-center justify-center rounded-xl border-2 border-dashed border-border/60 bg-muted/30 transition-all duration-200 hover:border-primary/50 hover:bg-primary/5 cursor-pointer">
-            <div className="flex flex-col items-center gap-3 text-muted-foreground group-hover:text-primary">
-              <Plus className="h-8 w-8 transition-transform group-hover:scale-110" />
-              <span className="text-sm font-semibold">Add New Profile</span>
-            </div>
-          </button>
+          <CardContainer className="inter-var w-full h-full" containerClassName="py-0 h-full">
+            <CardBody 
+              className="relative group/card p-6 flex flex-col items-center justify-center hover:shadow-2xl hover:shadow-primary/[0.1] transition-all duration-200 h-full min-h-[260px] border-2 border-dashed border-border/60 bg-muted/30 hover:border-primary/50 hover:bg-primary/5 rounded-2xl"
+            >
+              <CardItem 
+                as="button" 
+                onClick={() => setShowCreateModal(true)} 
+                translateZ={30} 
+                className="flex flex-col items-center justify-center gap-3 text-muted-foreground group-hover/card:text-primary w-full h-full cursor-pointer"
+              >
+                <Plus className="h-8 w-8 transition-transform group-hover/card:scale-110" />
+                <span className="text-sm font-semibold">Add New Profile</span>
+              </CardItem>
+            </CardBody>
+          </CardContainer>
         </motion.div>
       </div>
 

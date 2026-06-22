@@ -93,12 +93,12 @@ export function SpendingChart() {
   const totalSpent = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <Card className="flex flex-col w-full h-auto sm:h-full p-4 rounded-xl shadow-sm border-border">
+    <Card className="flex flex-col w-full h-auto sm:h-full p-6 rounded-2xl shadow-sm border border-white/[0.06] bg-card">
       <div className="flex items-center justify-between mb-4 flex-shrink-0 h-[32px]">
         <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           Spending By Category
         </h2>
-        <span className="text-[11px] font-medium text-muted-foreground cursor-pointer hover:text-foreground">
+        <span className="text-[11px] font-medium text-muted-foreground cursor-pointer hover:text-foreground bg-muted px-2 py-1 rounded-md">
           This Month ▾
         </span>
       </div>
@@ -112,15 +112,15 @@ export function SpendingChart() {
         </div>
       ) : (
         <div className="flex flex-col sm:flex-1 min-h-0">
-          <div className="relative h-[160px] flex-shrink-0">
+          <div className="relative h-[200px] flex-shrink-0 mt-2">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={isMobile ? 54 : 60}
-                  outerRadius={isMobile ? 72 : 80}
+                  innerRadius={isMobile ? 64 : 76}
+                  outerRadius={isMobile ? 80 : 96}
                   strokeWidth={2}
                   stroke="hsl(var(--card))"
                   dataKey="value"
@@ -137,18 +137,18 @@ export function SpendingChart() {
               <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mt-1">
                 Spent
               </span>
-              <span className="text-xl font-bold text-foreground font-mono tracking-tight leading-none mt-1">
+              <span className="text-2xl font-bold text-foreground font-mono tracking-tight leading-none mt-1">
                 {symbol}{totalSpent.toLocaleString("en-US", { maximumFractionDigits: 0 })}
               </span>
             </div>
           </div>
 
-          <div className="overflow-visible sm:flex-1 sm:overflow-y-auto hide-scrollbar mt-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+          <div className="overflow-visible sm:flex-1 sm:overflow-y-auto hide-scrollbar mt-6 pt-2 border-t border-white/[0.04]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 pt-2">
               {chartData.slice(0, showAllLegend ? undefined : 6).map((item) => (
                 <div key={item.name} className="flex items-center">
                   <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: item.color }} />
-                  <span className="ml-2 text-xs text-muted-foreground truncate flex-1">{item.name}</span>
+                  <span className="ml-2 text-xs font-medium text-muted-foreground truncate flex-1">{item.name}</span>
                   <span className="ml-2 font-mono font-bold text-xs text-foreground flex-shrink-0 text-right">
                     {symbol}{item.value.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                   </span>
@@ -158,9 +158,9 @@ export function SpendingChart() {
             {!showAllLegend && chartData.length > 6 && (
               <button 
                 onClick={() => setShowAllLegend(true)}
-                className="mt-3 text-xs font-medium text-primary hover:text-primary/80"
+                className="mt-4 text-xs font-medium text-primary hover:text-primary/80"
               >
-                +{chartData.length - 6} more
+                +{chartData.length - 6} more categories
               </button>
             )}
           </div>

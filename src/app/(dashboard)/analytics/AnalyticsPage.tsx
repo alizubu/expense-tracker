@@ -56,13 +56,8 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }} className="lg:col-span-1">
+            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }} className="lg:col-span-3">
               <TopCategories />
-            </motion.div>
-            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.7 }} className="lg:col-span-2">
-              <div className="h-full min-h-[200px] w-full rounded-xl border border-border bg-card flex items-center justify-center p-6 shadow-sm hover:shadow-md transition-all">
-                 <p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider text-center">More insights coming soon...</p>
-              </div>
             </motion.div>
           </div>
         </>
