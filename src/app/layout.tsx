@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -58,9 +59,9 @@ export default function RootLayout({
   const nonce = headers().get("X-Nonce") ?? "";
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} font-sans`}>
       <body
-        className={`${GeistSans.className} antialiased min-h-screen flex flex-col no-select`}
+        className={`${inter.className} antialiased min-h-screen flex flex-col no-select`}
       >
         <script
           nonce={nonce}

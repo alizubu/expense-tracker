@@ -47,7 +47,7 @@ export function AnimatedSearch({
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className={cn(
         "relative flex items-center h-12 rounded-full bg-surface-1 border transition-colors overflow-hidden mx-auto shadow-sm",
-        isFocused ? "border-primary/50 shadow-[0_0_20px_var(--primary-glow)] ring-2 ring-primary/20" : "border-white/[0.06] hover:border-white/[0.1]",
+        isFocused ? "border-primary/50 shadow-[0_0_20px_hsl(var(--primary)/0.3)] ring-2 ring-primary/20" : "border-white/[0.06] hover:border-white/[0.1]",
         className
       )}
     >
