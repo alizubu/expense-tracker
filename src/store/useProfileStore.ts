@@ -9,7 +9,7 @@ interface ProfileState {
   isLoading: boolean;
   // Actions
   fetchProfiles: () => Promise<void>;
-  addProfile: (profile: Omit<Profile, "id" | "createdAt" | "updatedAt" | "userId">) => Promise<void>;
+  addProfile: (profile: Omit<Profile, "id" | "createdAt" | "updatedAt" | "userId">) => Promise<Profile>;
   updateProfile: (id: string, updates: Partial<Profile>) => Promise<void>;
   deleteProfile: (id: string) => Promise<void>;
   setActiveProfile: (id: string | null) => void;
@@ -56,6 +56,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
       
       const newProfile = await res.json();
       set((state) => ({ profiles: [...state.profiles, newProfile] }));
+      return newProfile;
     } catch (error) {
       console.error("[useProfileStore] AddProfile Exception:", error);
       throw error;

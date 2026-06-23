@@ -125,24 +125,30 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
     onClose();
   };
 
-  const handleAddAccount = () => {
+  const handleAddAccount = async () => {
     if (!newAccountName.trim()) {
       toast.error("Give the new account a name");
       return;
     }
-    const newProfile = {
-      id: makeId(),
+    const newProfileData = {
       name: newAccountName.trim(),
       icon: "Wallet",
       color: newAccountColor,
       balance: 0,
       isDefault: profiles.length === 0,
+      type: "CASH" as const,
+      sortOrder: profiles.length,
+      description: "",
     };
-    addProfile(newProfile);
-    setProfileId(newProfile.id);
-    setNewAccountName("");
-    setShowAddAccount(false);
-    toast.success(`Account "${newProfile.name}" created`);
+    try {
+      const newProfile = await addProfile(newProfileData);
+      setProfileId(newProfile.id);
+      setNewAccountName("");
+      setShowAddAccount(false);
+      toast.success(`Account "${newProfile.name}" created`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to create account");
+    }
   };
 
   const availableCategories = type === "INCOME"
