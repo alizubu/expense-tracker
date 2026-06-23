@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Trash2, Calendar as CalendarIcon, X } from "lucide-react";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
@@ -31,13 +31,13 @@ const makeId = () =>
     : `acc_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
 
 // Staggered entrance for the modal's form sections
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.05, delayChildren: 0.04 } },
 };
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.28, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.28, ease: "easeOut" as const } },
 };
 
 export function EditTransactionModal({ transaction, onClose }: EditTransactionModalProps) {
