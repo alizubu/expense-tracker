@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, Check } from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Category } from "@/lib/categories";
@@ -46,7 +46,7 @@ interface CategoryGridProps {
 
 export function CategoryGrid({ categories, selectedCategory, onSelect }: CategoryGridProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  
+
   const visibleCategories = isExpanded ? categories : categories.slice(0, 9);
   const hasMore = categories.length > 9;
 
@@ -66,6 +66,7 @@ export function CategoryGrid({ categories, selectedCategory, onSelect }: Categor
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
+                whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onSelect(cat)}
                 className={cn(
@@ -77,21 +78,26 @@ export function CategoryGrid({ categories, selectedCategory, onSelect }: Categor
               >
                 {/* Selected Checkmark Badge */}
                 {isSelected && (
-                  <div className="absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-accent flex items-center justify-center shadow-sm">
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                    className="absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-accent flex items-center justify-center shadow-sm"
+                  >
                     <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
-                  </div>
+                  </motion.div>
                 )}
 
-                <Icon 
+                <Icon
                   className={cn(
                     "w-[22px] h-[22px] mb-1.5 transition-colors duration-150",
                     isSelected ? "text-accent" : "group-hover:text-accent"
-                  )} 
+                  )}
                   style={!isSelected ? { color: cat.color } : undefined}
                   strokeWidth={2}
                 />
-                
-                <span 
+
+                <span
                   className={cn(
                     "text-[11px] font-semibold text-center leading-tight",
                     isSelected ? "text-accent" : "text-text-secondary group-hover:text-accent"
@@ -112,11 +118,14 @@ export function CategoryGrid({ categories, selectedCategory, onSelect }: Categor
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[12px] font-semibold text-text-muted hover:text-accent hover:bg-accent-dim transition-all cursor-pointer"
           >
-            {isExpanded ? (
-              <>Less <ChevronUp className="w-3.5 h-3.5" /></>
-            ) : (
-              <>More <ChevronDown className="w-3.5 h-3.5" /></>
-            )}
+            {isExpanded ? "Less" : "More"}
+            <motion.span
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="flex"
+            >
+              <ChevronDown className="w-3.5 h-3.5" />
+            </motion.span>
           </button>
         </div>
       )}

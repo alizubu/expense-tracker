@@ -52,8 +52,8 @@ export function ConfirmButton({ onClick, disabled, label = "Confirm Transaction"
         whileTap={disabled ? {} : { scale: 0.97, transition: { type: "spring", stiffness: 400, damping: 10 } }}
         className={cn(
           "w-full h-[52px] rounded-[14px] flex items-center justify-center gap-2 text-white text-[14px] font-semibold transition-all",
-          disabled 
-            ? "shimmer-btn-disabled opacity-40 cursor-not-allowed" 
+          disabled
+            ? "shimmer-btn-disabled opacity-40 cursor-not-allowed"
             : "shimmer-btn cursor-pointer"
         )}
       >

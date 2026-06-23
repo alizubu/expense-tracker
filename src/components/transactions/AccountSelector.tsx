@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Plus } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Profile } from "@/lib/types";
@@ -17,9 +17,10 @@ interface AccountSelectorProps {
   selectedId: string;
   onChange: (id: string) => void;
   label: string;
+  onAddNew?: () => void;
 }
 
-export function AccountSelector({ profiles, selectedId, onChange, label }: AccountSelectorProps) {
+export function AccountSelector({ profiles, selectedId, onChange, label, onAddNew }: AccountSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +41,11 @@ export function AccountSelector({ profiles, selectedId, onChange, label }: Accou
     setIsOpen(false);
   };
 
+  const handleAddNew = () => {
+    setIsOpen(false);
+    onAddNew?.();
+  };
+
   return (
     <div className="flex flex-col w-full" ref={containerRef}>
       <label className="mb-1.5 block text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
@@ -48,26 +54,30 @@ export function AccountSelector({ profiles, selectedId, onChange, label }: Accou
 
       <div className="relative">
         {/* Trigger Button */}
-        {selectedProfile && (
-          <motion.button
-            type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            whileTap={{ scale: 0.98 }}
-            className={cn(
-              "w-full h-10 flex items-center justify-between px-3 rounded-xl transition-all text-xs font-semibold text-left cursor-pointer",
-              "bg-card-elevated border border-border hover:bg-card-hover text-text-primary focus:border-accent focus:ring-2 focus:ring-accent-dim"
+        <motion.button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          whileTap={{ scale: 0.98 }}
+          className={cn(
+            "w-full h-10 flex items-center justify-between px-3 rounded-xl transition-all text-xs font-semibold text-left cursor-pointer",
+            "bg-card-elevated border border-border hover:bg-card-hover text-text-primary focus:border-accent focus:ring-2 focus:ring-accent-dim"
+          )}
+        >
+          <div className="flex items-center gap-2 overflow-hidden">
+            {selectedProfile ? (
+              <>
+                {(() => {
+                  const Icon = getIcon(selectedProfile.icon);
+                  return <Icon className="w-4 h-4 flex-shrink-0" style={{ color: selectedProfile.color }} />;
+                })()}
+                <span className="truncate">{selectedProfile.name}</span>
+              </>
+            ) : (
+              <span className="truncate text-text-muted">No accounts yet</span>
             )}
-          >
-            <div className="flex items-center gap-2 overflow-hidden">
-              {(() => {
-                const Icon = getIcon(selectedProfile.icon);
-                return <Icon className="w-4 h-4 flex-shrink-0" style={{ color: selectedProfile.color }} />;
-              })()}
-              <span className="truncate">{selectedProfile.name}</span>
-            </div>
-            <ChevronDown className={cn("w-4 h-4 text-text-muted transition-transform", isOpen && "rotate-180")} />
-          </motion.button>
-        )}
+          </div>
+          <ChevronDown className={cn("w-4 h-4 text-text-muted transition-transform", isOpen && "rotate-180")} />
+        </motion.button>
 
         {/* Dropdown Panel */}
         <AnimatePresence>
@@ -96,14 +106,29 @@ export function AccountSelector({ profiles, selectedId, onChange, label }: Accou
                           : "text-text-secondary hover:bg-card-hover hover:text-text-primary"
                       )}
                     >
-                      <Icon 
-                        className="w-4 h-4 flex-shrink-0" 
-                        style={{ color: p.color }} 
+                      <Icon
+                        className="w-4 h-4 flex-shrink-0"
+                        style={{ color: p.color }}
                       />
                       <span className="truncate">{p.name}</span>
                     </button>
                   );
                 })}
+
+                {onAddNew && (
+                  <>
+                    <div className="my-1 h-px bg-border" />
+                    <motion.button
+                      type="button"
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleAddNew}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-accent hover:bg-accent-dim transition-colors text-left cursor-pointer select-none"
+                    >
+                      <Plus className="w-4 h-4 flex-shrink-0" />
+                      <span>Add new account</span>
+                    </motion.button>
+                  </>
+                )}
               </div>
             </motion.div>
           )}
