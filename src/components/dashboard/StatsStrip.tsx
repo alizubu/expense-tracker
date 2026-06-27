@@ -22,11 +22,11 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
 
   return (
     <>
-      <Card className="col-span-2 md:col-span-2 xl:col-span-2 min-h-[160px] rounded-2xl p-5 flex flex-col justify-between border-white/[0.04] bg-surface-1 relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow duration-300">
+      <Card className="col-span-2 md:col-span-2 xl:col-span-2 min-h-[160px] rounded-2xl p-4 flex flex-col justify-between border-white/[0.04] bg-surface-1 relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow duration-300">
         <div className="absolute right-0 top-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10 translate-x-1/2 -translate-y-1/2 group-hover:bg-primary/10 transition-all duration-500 pointer-events-none" />
         
         <div className="flex justify-between items-start relative z-10 mb-4">
-          <div className="space-y-2">
+          <div className="space-y-1">
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
               Total Net Balance
               <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
@@ -85,8 +85,8 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
         )}
       </Card>
 
-      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-5 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div className="space-y-2">
+      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-4 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="space-y-1">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Income</h3>
           <div className="flex items-baseline gap-1 text-emerald-500">
             <span className="text-xl font-medium opacity-80">{symbol}</span>
@@ -95,7 +95,7 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2 mt-4">
+        <div className="flex items-center gap-2 mt-3">
           <div className="flex items-center gap-1.5 text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full text-xs font-semibold">
             <TrendingUp className="h-3.5 w-3.5" />
             <span>This month</span>
@@ -103,8 +103,8 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
         </div>
       </Card>
 
-      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-5 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div className="space-y-2">
+      <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-4 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="space-y-1">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Expenses</h3>
           <div className="flex items-baseline gap-1 text-destructive">
             <span className="text-xl font-medium opacity-80">{symbol}</span>
@@ -113,7 +113,7 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2 mt-4">
+        <div className="flex items-center gap-2 mt-3">
           <div className="flex items-center gap-1.5 text-destructive bg-destructive/10 px-2.5 py-1 rounded-full text-xs font-semibold">
             <TrendingDown className="h-3.5 w-3.5" />
             <span>This month</span>

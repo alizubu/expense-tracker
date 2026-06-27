@@ -50,7 +50,7 @@ export function TopCategories() {
   }, [transactions, selectedMonth, selectedYear]);
 
   return (
-    <Card className="flex flex-col w-full h-full p-5 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+    <Card className="flex flex-col w-full h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between mb-3 flex-shrink-0 h-[32px]">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Top Spending
@@ -79,7 +79,7 @@ export function TopCategories() {
             return (
               <div 
                 key={cat.id} 
-                className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-surface-2 transition-colors border border-transparent hover:border-white/[0.04] group"
+                className="flex items-center gap-2.5 py-2.5 px-3 rounded-xl hover:bg-surface-2 transition-colors border border-transparent hover:border-white/[0.04] group"
               >
                 <div 
                   className="flex h-8 w-8 rounded-lg items-center justify-center flex-shrink-0 shadow-sm transition-transform group-hover:scale-105"

@@ -89,8 +89,8 @@ export function SpendingChart() {
   const totalSpent = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <Card className="flex flex-col w-full h-auto sm:h-full p-6 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
-      <div className="flex items-center justify-between mb-4 flex-shrink-0 h-[32px]">
+    <Card className="flex flex-col w-full h-auto sm:h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+      <div className="flex items-center justify-between mb-3 flex-shrink-0 h-[32px]">
         <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Spending By Category
         </h2>
@@ -140,10 +140,10 @@ export function SpendingChart() {
             </div>
           </div>
 
-          <div className="overflow-visible sm:flex-1 sm:overflow-y-auto hide-scrollbar mt-6 pt-4 border-t border-white/[0.04]">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+          <div className="overflow-visible sm:flex-1 sm:overflow-y-auto hide-scrollbar mt-3 pt-3 border-t border-white/[0.04]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
               {chartData.slice(0, showAllLegend ? undefined : 6).map((item) => (
-                <div key={item.name} className="flex items-center group">
+                <div key={item.name} className="flex items-center group py-1">
                   <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-sm" style={{ background: item.color }} />
                   <span className="ml-3 text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate flex-1">{item.name}</span>
                   <span className="ml-2 font-mono font-semibold text-xs text-foreground flex-shrink-0 text-right">

@@ -139,10 +139,10 @@ export function DashboardClient() {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="p-5 lg:p-6 space-y-5 max-w-[1600px] mx-auto"
+      className="p-4 space-y-3 lg:space-y-4 max-w-[1600px] mx-auto"
     >
       {/* ROW 1: Hero Stats (Bento Grid) */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 lg:gap-4">
         <StatsStrip 
           netBalance={netBalance}
           income={income}
@@ -152,7 +152,7 @@ export function DashboardClient() {
       </motion.div>
 
       {/* ROW 2: Profiles, Quick Stats, Spending Chart */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-stretch">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4 items-stretch">
         <div className="h-auto md:h-full">
           <ProfileCard 
             profiles={profiles} 
@@ -175,7 +175,7 @@ export function DashboardClient() {
       </motion.div>
 
       {/* ROW 3: Transactions Feed & Top Categories */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 xl:grid-cols-3 gap-3 lg:gap-4 items-stretch">
         <div className="xl:col-span-2 h-auto lg:h-[500px]">
           <TransactionFeed transactions={transactions} />
         </div>

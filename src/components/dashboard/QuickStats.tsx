@@ -79,7 +79,7 @@ export function QuickStats({
   ];
 
   return (
-    <Card className="flex flex-col w-full h-auto md:h-full p-5 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+    <Card className="flex flex-col w-full h-auto md:h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
       <h2 className="hidden md:flex text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3 flex-shrink-0 h-[32px] items-center">
         Quick Stats
       </h2>

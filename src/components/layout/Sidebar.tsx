@@ -20,7 +20,8 @@ import {
   Sun,
   Monitor,
   Shield,
-  User
+  User,
+  UserCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -41,7 +42,7 @@ const routes = [
   { label: "Transactions", icon: ArrowRightLeft, href: "/transactions", activePaths: ["/transactions"] },
   { label: "Profiles", icon: Users, href: "/profiles", activePaths: ["/profiles"] },
   { label: "Analytics", icon: BarChart3, href: "/analytics", activePaths: ["/analytics"] },
-  { label: "Users", icon: Shield, href: "/users", activePaths: ["/users"] },
+  { label: "Profile", icon: UserCircle, href: "/profile", activePaths: ["/profile"] },
   { label: "Settings", icon: Settings, href: "/settings", activePaths: ["/settings"] },
 ];
 

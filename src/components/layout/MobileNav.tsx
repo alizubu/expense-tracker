@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, ArrowRightLeft, Users, BarChart3, Settings } from "lucide-react";
+import { LayoutDashboard, ArrowRightLeft, Users, BarChart3, Settings, UserCircle } from "lucide-react";
 
 const routes = [
   { icon: LayoutDashboard, href: "/", label: "Dash" },
   { icon: ArrowRightLeft, href: "/transactions", label: "Transact" },
   { icon: Users, href: "/profiles", label: "Profiles" },
   { icon: BarChart3, href: "/analytics", label: "Stats" },
+  { icon: UserCircle, href: "/profile", label: "Profile" },
   { icon: Settings, href: "/settings", label: "Settings" },
 ];
 

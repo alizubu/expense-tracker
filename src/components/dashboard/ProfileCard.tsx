@@ -44,7 +44,7 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
   const router = useRouter();
 
   return (
-    <Card className="flex flex-col w-full h-auto lg:h-full p-5 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
+    <Card className="flex flex-col w-full h-auto lg:h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between h-[32px] mb-3 flex-shrink-0">
         <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Your Profiles
@@ -79,10 +79,10 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
                 onClick={() => router.push(`/profiles/${profile.id}`)}
-                className="group flex flex-col justify-center p-3 rounded-xl hover:bg-surface-2 cursor-pointer transition-colors relative border border-white/[0.02] bg-surface-1/50 flex-shrink-0"
+                className="group flex flex-col justify-center py-2.5 px-3 rounded-xl hover:bg-surface-2 cursor-pointer transition-colors relative border border-white/[0.02] bg-surface-1/50 flex-shrink-0"
               >
-                <div className="flex items-center gap-3.5">
-                  <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl shadow-sm ${colors.bg}`}>
+                <div className="flex items-center gap-2.5">
+                  <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl shadow-sm ${colors.bg}`}>
                     <Icon size={18} className={colors.icon} />
                   </div>
 
