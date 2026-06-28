@@ -133,9 +133,12 @@ export default function TransactionsPage() {
         </div>
 
         <div className="flex-1 flex justify-end">
-          <Button onClick={() => openModal("addTransaction")}>
-            <Plus size={16} className="mr-2" />
-            Add Transaction
+          <Button 
+            onClick={() => openModal("addTransaction")}
+            className="shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_25px_rgba(124,58,237,0.5)] h-9 rounded-lg font-medium bg-gradient-to-r from-primary to-indigo-500 text-white border-0 transition-all"
+          >
+            <Plus size={16} className="mr-1.5" />
+            Add Txn
           </Button>
         </div>
       </div>
@@ -166,12 +169,14 @@ export default function TransactionsPage() {
           })}
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end bg-surface-2/30 p-1 rounded-xl border border-white/[0.04] shadow-sm backdrop-blur-md">
           <DropdownMenu>
-            <DropdownMenuTrigger render={<Button variant="outline" size="sm" className="h-8 bg-surface-1 border-white/[0.04]" />}>
-              <ArrowDownUp size={14} className="mr-2 text-muted-foreground" />
-              {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort by Date"}
-              <ChevronDown size={14} className="ml-2 text-muted-foreground" />
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 rounded-lg hover:bg-surface-2/50 font-medium text-muted-foreground hover:text-foreground">
+                <ArrowDownUp size={14} className="mr-2" />
+                {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort"}
+                <ChevronDown size={14} className="ml-2 opacity-50" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {sortOptions.map(opt => (
@@ -187,11 +192,13 @@ export default function TransactionsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
 
+          <div className="w-px h-4 bg-white/[0.08]" />
+
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={toggleTrashView}
-            className={cn("h-8 bg-surface-1 border-white/[0.04]", filters.showDeleted && "border-destructive text-destructive hover:bg-destructive/10")}
+            className={cn("h-8 rounded-lg font-medium transition-colors", filters.showDeleted ? "bg-destructive/10 text-destructive hover:bg-destructive/20" : "text-muted-foreground hover:text-foreground hover:bg-surface-2/50")}
           >
             <Trash2 size={14} className="mr-2" />
             {filters.showDeleted ? "Exit Trash" : "View Trash"}

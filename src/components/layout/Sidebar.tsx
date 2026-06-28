@@ -117,8 +117,12 @@ export function Sidebar() {
       {/* User Card */}
       <div className={cn("p-4", sidebarCollapsed && "px-2 flex justify-center mt-auto")}>
         <DropdownMenu>
-          <DropdownMenuTrigger className={cn(
-              "flex items-center gap-3 p-2 rounded-2xl border border-white/[0.04] bg-surface-1 hover:bg-surface-2 transition-colors shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-primary",
+          <DropdownMenuTrigger asChild>
+            <div 
+              role="button" 
+              tabIndex={0}
+              className={cn(
+              "flex items-center gap-3 p-2 rounded-2xl border border-white/[0.04] bg-surface-1 hover:bg-surface-2 transition-colors shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer",
               sidebarCollapsed ? "justify-center w-12 h-12" : "w-full justify-between"
             )}>
               <div className="flex items-center gap-3 truncate">
@@ -140,7 +144,8 @@ export function Sidebar() {
               {!sidebarCollapsed && (
                 <MoreVertical className="w-4 h-4 text-muted-foreground flex-shrink-0 mr-1" />
               )}
-            </DropdownMenuTrigger>
+            </div>
+          </DropdownMenuTrigger>
           <DropdownMenuContent align="start" side="right" sideOffset={12} className="w-56 mb-2 rounded-xl border border-white/[0.04] bg-surface-1/90 backdrop-blur-xl shadow-xl p-1.5">
             <DropdownMenuLabel className="font-semibold px-2 py-1.5">
               <div className="flex flex-col space-y-1">
