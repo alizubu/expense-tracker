@@ -20,8 +20,6 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { transactions } = useTransactionStore();
   const { data: session, update: updateSession } = useSession();
-  const [name, setName] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
   const [timezone, setTimezone] = useState("Asia/Dhaka");
 
   useEffect(() => {
@@ -30,7 +28,6 @@ export default function SettingsPage() {
         const res = await fetch("/api/user");
         if (res.ok) {
           const data = await res.json();
-          setName(data.name || "");
           if (data.currency) setCurrency(data.currency);
         }
       } catch (error) {
@@ -41,25 +38,6 @@ export default function SettingsPage() {
       fetchUser();
     }
   }, [session, setCurrency]);
-
-  const handleSaveProfile = async () => {
-    if (!name) { toast.error("Name is required"); return; }
-    setIsSaving(true);
-    try {
-      const res = await fetch("/api/user", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, currency: selectedCurrency }),
-      });
-      if (!res.ok) throw new Error("Failed to update settings");
-      await updateSession({ name });
-      toast.success("Settings updated successfully!");
-    } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleExportCSV = () => {
     if (transactions.length === 0) {
@@ -112,54 +90,6 @@ export default function SettingsPage() {
       </div>
 
       <div className="space-y-6">
-        {/* Profile Information */}
-        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05, duration: 0.3 }}>
-          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
-              <User className="h-4 w-4 text-primary" />
-              Profile Information
-            </h2>
-            <div className="space-y-6">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="max-w-md">
-                  <p className="text-sm font-semibold text-foreground">Full Name</p>
-                  <p className="text-xs text-muted-foreground mt-1">Your display name across the application.</p>
-                </div>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full md:w-64 bg-surface-2 focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:shadow-[0_0_15px_hsl(var(--primary)/0.1)] transition-shadow"
-                  disabled={isSaving}
-                />
-              </div>
-
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-t border-white/[0.04]">
-                <div className="max-w-md">
-                  <p className="text-sm font-semibold text-foreground">Email Address</p>
-                  <p className="text-xs text-muted-foreground mt-1">Used for login and notifications (cannot be changed).</p>
-                </div>
-                <Input
-                  type="email"
-                  value={session?.user?.email || ""}
-                  disabled
-                  className="w-full md:w-64 bg-surface-1 focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:shadow-[0_0_15px_hsl(var(--primary)/0.1)] transition-shadow"
-                />
-              </div>
-
-              <div className="flex justify-end pt-6 mt-6 border-t border-white/[0.04]">
-                <Button
-                  onClick={handleSaveProfile}
-                  disabled={!name || isSaving}
-                  className="gap-2"
-                >
-                  <Save className="h-4 w-4" />
-                  {isSaving ? "Saving..." : "Save Profile"}
-                </Button>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
-
         {/* Preferences */}
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.3 }}>
           <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
