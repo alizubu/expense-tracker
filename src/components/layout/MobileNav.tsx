@@ -10,7 +10,6 @@ const routes = [
   { icon: ArrowRightLeft, href: "/transactions", label: "Transact" },
   { icon: Users, href: "/profiles", label: "Profiles" },
   { icon: BarChart3, href: "/analytics", label: "Stats" },
-  { icon: UserCircle, href: "/profile", label: "Profile" },
   { icon: Settings, href: "/settings", label: "Settings" },
 ];
 

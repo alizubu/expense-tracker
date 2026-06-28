@@ -49,7 +49,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
   const [profileId, setProfileId] = useState(transaction.profileId);
   const [toProfileId, setToProfileId] = useState(transaction.toProfileId || "");
   const [date, setDate] = useState(new Date(transaction.date).toISOString().split("T")[0]);
-  const [tags, setTags] = useState(transaction.tags.join(", "));
+  const [tags, setTags] = useState((transaction.tags || []).join(", "));
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Inline "add account" panel

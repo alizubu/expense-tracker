@@ -16,8 +16,8 @@ export function Topbar() {
         ExpenseTracker
       </div>
 
-      <div className="hidden lg:flex items-center flex-1 max-w-md relative group">
-        <div className="relative w-full flex items-center">
+      <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center w-full max-w-md px-4">
+        <div className="relative w-full flex items-center group">
           <Search className="absolute left-3 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors pointer-events-none" />
           <Input 
             placeholder="Search transactions (⌘K)..." 
