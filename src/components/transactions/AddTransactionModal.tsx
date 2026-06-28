@@ -314,7 +314,6 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                         setDate(localDate.toISOString().split("T")[0]);
                       }
                     }}
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
