@@ -171,13 +171,13 @@ export default function TransactionsPage() {
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end bg-surface-2/30 p-1 rounded-xl border border-white/[0.04] shadow-sm backdrop-blur-md">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger render={
               <Button variant="ghost" size="sm" className="h-8 rounded-lg hover:bg-surface-2/50 font-medium text-muted-foreground hover:text-foreground">
                 <ArrowDownUp size={14} className="mr-2" />
                 {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort"}
                 <ChevronDown size={14} className="ml-2 opacity-50" />
               </Button>
-            </DropdownMenuTrigger>
+            } />
             <DropdownMenuContent align="end">
               {sortOptions.map(opt => (
                 <DropdownMenuItem 
