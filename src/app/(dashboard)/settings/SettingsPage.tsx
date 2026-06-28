@@ -10,14 +10,12 @@ import { useUIStore } from "@/store/useUIStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { CURRENCIES } from "@/lib/currencies";
 import { EXPENSE_CATEGORIES } from "@/lib/categories";
-import { Moon, Sun, Download, Globe, Palette, LogOut, Shield, User, Save, Wallet } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Globe, LogOut, Shield, User, Save, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 
 export default function SettingsPage() {
   const { selectedCurrency, setCurrency } = useUIStore();
-  const { theme, setTheme } = useTheme();
   const { transactions } = useTransactionStore();
   const { data: session, update: updateSession } = useSession();
   const [timezone, setTimezone] = useState("Asia/Dhaka");
@@ -38,38 +36,6 @@ export default function SettingsPage() {
       fetchUser();
     }
   }, [session, setCurrency]);
-
-  const handleExportCSV = () => {
-    if (transactions.length === 0) {
-      toast.error("No transactions to export");
-      return;
-    }
-
-    const headers = ["ID", "Date", "Type", "Category", "Amount", "Title", "Note"];
-    const rows = transactions.map(t => {
-      const cat = EXPENSE_CATEGORIES.find(c => c.id === t.category);
-      return [
-        t.id,
-        new Date(t.date).toISOString().split('T')[0],
-        t.type,
-        cat?.label || t.category,
-        t.amount,
-        `"${t.title.replace(/"/g, '""')}"`,
-        `"${t.note ? t.note.replace(/"/g, '""') : ''}"`
-      ].join(",");
-    });
-
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows].join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `transactions_export_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    toast.success("Transactions exported successfully");
-  };
 
   const currencyOptions = CURRENCIES.map((c: any) => ({
     value: c.code,
@@ -125,59 +91,6 @@ export default function SettingsPage() {
                   />
                 </div>
               </div>
-            </div>
-          </Card>
-        </motion.div>
-
-        {/* Appearance */}
-        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15, duration: 0.3 }}>
-          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
-              <Palette className="h-4 w-4 text-primary" />
-              Appearance
-            </h2>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="max-w-md">
-                <p className="text-sm font-semibold text-foreground">Theme</p>
-                <p className="text-xs text-muted-foreground mt-1">Choose between light and dark mode styling.</p>
-              </div>
-              <div className="flex bg-surface-2 rounded-lg p-1 w-full md:w-auto border border-white/[0.04]">
-                <button 
-                  onClick={() => setTheme("light")}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${theme === "light" ? "bg-surface-1 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
-                >
-                  <Sun className="h-4 w-4" /> Light
-                </button>
-                <button 
-                  onClick={() => setTheme("dark")}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${theme === "dark" ? "bg-surface-1 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
-                >
-                  <Moon className="h-4 w-4" /> Dark
-                </button>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
-
-        {/* Data Export */}
-        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.3 }}>
-          <Card className="p-6 rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-6 border-b border-white/[0.04] pb-4">
-              <Download className="h-4 w-4 text-primary" />
-              Data Export
-            </h2>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="max-w-md">
-                <p className="text-sm font-semibold text-foreground">Export Transactions</p>
-                <p className="text-xs text-muted-foreground mt-1">Download all your transaction records as a standard CSV file.</p>
-              </div>
-              <Button 
-                onClick={handleExportCSV}
-                variant="outline"
-                className="gap-2 w-full md:w-auto bg-surface-2 hover:bg-surface-3 border-white/[0.04]"
-              >
-                <Download className="h-4 w-4" /> Export CSV
-              </Button>
             </div>
           </Card>
         </motion.div>
