@@ -37,10 +37,10 @@ export function AccountSelector({ profiles, selectedId, onChange, label, onAddNe
               type="button"
               onClick={() => onChange(p.id)}
               className={cn(
-                "flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap flex-shrink-0 border",
+                "flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap flex-shrink-0 border",
                 isSelected
-                  ? "bg-primary text-primary-foreground border-primary shadow-[0_0_15px_rgba(124,58,237,0.3)]"
-                  : "bg-surface-1 border-white/[0.04] text-text-secondary hover:bg-surface-2 hover:text-text-primary"
+                  ? "bg-primary/15 text-white border-primary/50 shadow-[0_0_20px_rgba(124,58,237,0.3)]"
+                  : "bg-surface-1 border-white/[0.04] text-text-secondary hover:bg-surface-2 hover:text-white hover:border-white/[0.1]"
               )}
             >
               <Icon
@@ -56,7 +56,7 @@ export function AccountSelector({ profiles, selectedId, onChange, label, onAddNe
           <button
             type="button"
             onClick={onAddNew}
-            className="flex items-center justify-center w-9 h-9 rounded-xl border border-dashed border-white/[0.2] text-text-muted hover:text-text-primary hover:bg-surface-2 hover:border-white/[0.4] transition-all cursor-pointer flex-shrink-0"
+            className="flex items-center justify-center w-9 h-9 rounded-2xl border border-dashed border-white/[0.2] text-text-muted hover:text-white hover:bg-surface-2 hover:border-white/[0.4] transition-all duration-300 cursor-pointer flex-shrink-0"
           >
             <Plus className="w-4 h-4" />
           </button>

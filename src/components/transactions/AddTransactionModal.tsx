@@ -388,9 +388,9 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="space-y-1.5"
+                className="space-y-2 flex flex-col items-center w-full mt-2"
               >
-                <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
+                <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none text-center">
                   Category
                 </label>
                 <CategoryGrid

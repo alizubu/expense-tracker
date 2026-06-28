@@ -70,10 +70,10 @@ export function CategoryGrid({ categories, selectedCategory, onSelect }: Categor
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onSelect(cat)}
                 className={cn(
-                  "relative flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-150 ease-in-out group border cursor-pointer",
+                  "relative flex flex-col items-center justify-center p-2.5 rounded-2xl transition-all duration-300 ease-in-out group border cursor-pointer",
                   isSelected
-                    ? "bg-accent-dim border-[1.5px] border-accent shadow-[0_0_15px_rgba(124,58,237,0.3)]"
-                    : "bg-card-elevated border-border hover:bg-accent-dim hover:border-accent/30"
+                    ? "bg-accent/15 border-accent/50 shadow-[0_0_20px_rgba(124,58,237,0.3)]"
+                    : "bg-surface-1 border-white/[0.04] hover:bg-surface-2 hover:border-white/[0.1]"
                 )}
               >
                 {/* Selected Checkmark Badge */}
