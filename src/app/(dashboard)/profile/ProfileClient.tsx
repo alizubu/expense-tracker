@@ -25,7 +25,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { getCategoryById } from "@/lib/categories";
-import ExcelJS from "exceljs";
+
 
 const profileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -83,6 +83,7 @@ export function ProfileClient() {
   const handleExport = async (isTemplate = false) => {
     setIsExporting(!isTemplate);
     try {
+      const ExcelJS = (await import("exceljs")).default;
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet("Transactions");
       
@@ -154,6 +155,7 @@ export function ProfileClient() {
 
     try {
       const buffer = await file.arrayBuffer();
+      const ExcelJS = (await import("exceljs")).default;
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(buffer);
       

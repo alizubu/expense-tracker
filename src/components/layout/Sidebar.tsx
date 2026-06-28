@@ -60,9 +60,9 @@ export function Sidebar() {
       )}
     >
       {/* Brand Header */}
-      <div className="flex h-20 items-center px-6">
-        <div className="flex items-center gap-3 text-foreground font-bold text-lg tracking-tight">
-          <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
+      <div className={cn("flex h-20 items-center", sidebarCollapsed ? "justify-center px-0" : "px-6")}>
+        <div className={cn("flex items-center text-foreground font-bold text-lg tracking-tight", sidebarCollapsed ? "justify-center w-full" : "gap-3")}>
+          <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm shrink-0">
             <Wallet className="w-5 h-5" />
           </div>
           {!sidebarCollapsed && <span>ExpenseTracker</span>}
@@ -70,15 +70,16 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 py-4 px-4 flex flex-col gap-1 overflow-y-auto hide-scrollbar">
+      <div className={cn("flex-1 py-4 flex flex-col gap-1 overflow-y-auto hide-scrollbar", sidebarCollapsed ? "px-2" : "px-4")}>
         {routes.map((route) => {
           const isActive = route.activePaths.some(p => pathname === p || pathname.startsWith(p + "/"));
           
           return (
-            <Link key={route.href} href={route.href}>
+            <Link key={route.href} href={route.href} title={sidebarCollapsed ? route.label : undefined}>
               <div
                 className={cn(
-                  "relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group",
+                  "relative flex items-center rounded-xl transition-all duration-200 group",
+                  sidebarCollapsed ? "justify-center py-3" : "gap-3 px-3 py-2.5",
                   isActive
                     ? "bg-primary/10 text-primary font-medium"
                     : "text-muted-foreground hover:bg-surface-2 hover:text-foreground"
@@ -114,14 +115,14 @@ export function Sidebar() {
       )}
 
       {/* User Card */}
-      <div className="p-4">
+      <div className={cn("p-4", sidebarCollapsed && "px-2 flex justify-center mt-auto")}>
         <DropdownMenu>
           <DropdownMenuTrigger className={cn(
-              "w-full flex items-center gap-3 p-2 rounded-2xl border border-white/[0.04] bg-surface-1 hover:bg-surface-2 transition-colors shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-primary",
-              sidebarCollapsed ? "justify-center" : "justify-between"
+              "flex items-center gap-3 p-2 rounded-2xl border border-white/[0.04] bg-surface-1 hover:bg-surface-2 transition-colors shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-primary",
+              sidebarCollapsed ? "justify-center w-12 h-12" : "w-full justify-between"
             )}>
               <div className="flex items-center gap-3 truncate">
-                <div className="relative">
+                <div className="relative shrink-0">
                   <Avatar className="w-9 h-9 shrink-0 border border-border">
                     <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
                       {session?.user?.name?.charAt(0) || "U"}
