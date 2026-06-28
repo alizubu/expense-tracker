@@ -201,19 +201,28 @@ export default function TransactionsPage() {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <Card className="p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm">
-          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-widest mb-1">Total</span>
-          <span className="text-xl font-bold tabular-money tracking-tight text-foreground truncate">
+        <Card className="p-4 sm:p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm relative overflow-hidden group">
+          <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
+            <ArrowDownUp className="w-20 h-20" />
+          </div>
+          <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Total</span>
+          <span className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-foreground truncate">
             {symbol}{filtered.reduce((sum, t) => sum + (t.type === "EXPENSE" ? -t.amount : t.amount), 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}
           </span>
         </Card>
-        <Card className="p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm">
-          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-widest mb-1">Count</span>
-          <span className="text-xl font-bold tabular-money tracking-tight text-foreground truncate">{filtered.length}</span>
+        <Card className="p-4 sm:p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm relative overflow-hidden group">
+          <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
+            <ReceiptText className="w-20 h-20" />
+          </div>
+          <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Count</span>
+          <span className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-foreground truncate">{filtered.length}</span>
         </Card>
-        <Card className="p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm">
-          <span className="text-xs uppercase font-semibold text-muted-foreground tracking-widest mb-1">Largest</span>
-          <span className="text-xl font-bold tabular-money tracking-tight text-destructive truncate">
+        <Card className="p-4 sm:p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm relative overflow-hidden group">
+          <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
+            <ArrowDownUp className="w-20 h-20 text-destructive" />
+          </div>
+          <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Largest</span>
+          <span className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-destructive truncate">
             {symbol}{filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)).toLocaleString(undefined, { maximumFractionDigits: 0 }) : 0}
           </span>
         </Card>
@@ -236,20 +245,23 @@ export default function TransactionsPage() {
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-b border-white/[0.04]">
-                  <TableHead className="w-[88px] pl-6"></TableHead>
-                  <TableHead className="text-left font-semibold">Transaction</TableHead>
-                  <TableHead className="hidden md:table-cell text-left font-semibold">Category</TableHead>
-                  <TableHead className="hidden sm:table-cell text-left font-semibold">Profile</TableHead>
-                  <TableHead className="hidden lg:table-cell text-center font-semibold">Date</TableHead>
-                  <TableHead className="text-right font-semibold pr-6">Amount</TableHead>
+                  <TableHead className="w-[60px] pl-4"></TableHead>
+                  <TableHead className="text-left text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Transaction</TableHead>
+                  <TableHead className="hidden md:table-cell text-left text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Category</TableHead>
+                  <TableHead className="hidden sm:table-cell text-left text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Profile</TableHead>
+                  <TableHead className="hidden lg:table-cell text-center text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Date</TableHead>
+                  <TableHead className="text-right text-[10px] uppercase tracking-widest text-muted-foreground font-semibold pr-4">Amount</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {Array.from(grouped.entries()).map(([dateLabel, txns]) => (
                   <React.Fragment key={dateLabel}>
-                    <TableRow className="bg-transparent hover:bg-transparent border-b border-white/[0.02]">
-                      <TableCell colSpan={6} className="py-3 px-6 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest bg-surface-1/30">
-                        {dateLabel}
+                    <TableRow className="bg-transparent hover:bg-transparent border-none">
+                      <TableCell colSpan={6} className="py-2 px-4">
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest shrink-0">{dateLabel}</span>
+                          <div className="h-px bg-white/[0.04] w-full" />
+                        </div>
                       </TableCell>
                     </TableRow>
                     {txns.map((transaction) => {
@@ -278,33 +290,38 @@ export default function TransactionsPage() {
                         <TableRow 
                           key={transaction.id}
                           onClick={() => setEditTxnId(transaction.id)}
-                          className="cursor-pointer transition-colors hover:bg-surface-2 border-b border-white/[0.02] group"
+                          className="cursor-pointer transition-colors hover:bg-surface-2/50 border-b border-white/[0.02] group"
                         >
-                          <TableCell className="pl-6">
+                          <TableCell className="pl-4 py-2">
                             <div 
-                              className="w-10 h-10 rounded-lg flex items-center justify-center shadow-sm transition-transform group-hover:scale-105"
-                              style={{ backgroundColor: `${catColor}1a`, color: catColor }}
+                              className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm transition-transform group-hover:scale-110"
+                              style={{ backgroundColor: `${catColor}15`, color: catColor, boxShadow: `0 0 10px ${catColor}10` }}
                             >
-                              <Icon size={18} />
+                              <Icon size={14} />
                             </div>
                           </TableCell>
-                          <TableCell className="text-left">
-                            <div className="font-semibold text-foreground text-sm group-hover:text-primary transition-colors">{transaction.title}</div>
-                            <div className="text-xs text-muted-foreground sm:hidden mt-0.5">
+                          <TableCell className="text-left py-2">
+                            <div className="font-medium text-foreground text-[13px] group-hover:text-primary transition-colors">{transaction.title}</div>
+                            <div className="text-[11px] text-muted-foreground sm:hidden mt-0.5">
                               {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel} • {profile?.name}
                             </div>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell text-muted-foreground text-sm text-left font-medium">
+                          <TableCell className="hidden md:table-cell text-muted-foreground text-[13px] text-left py-2">
                             {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel}
                           </TableCell>
-                          <TableCell className="hidden sm:table-cell text-muted-foreground text-sm text-left font-medium">
+                          <TableCell className="hidden sm:table-cell text-muted-foreground text-[13px] text-left py-2">
                             {profile?.name || "Unknown"}
                           </TableCell>
-                          <TableCell className="hidden lg:table-cell text-muted-foreground text-xs text-center font-medium">
+                          <TableCell className="hidden lg:table-cell text-muted-foreground text-[11px] text-center py-2">
                             {new Date(transaction.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </TableCell>
-                          <TableCell className="text-right pr-6">
-                            <span className={`tabular-money font-semibold tracking-tight ${amountColor}`}>
+                          <TableCell className="text-right pr-4 py-2">
+                            <span className={cn(
+                              "inline-flex items-center px-2 py-0.5 rounded-md text-[13px] tabular-money font-semibold tracking-tight",
+                              transaction.type === "INCOME" ? "bg-emerald-500/10 text-emerald-500" :
+                              transaction.type === "EXPENSE" ? "bg-surface-2 text-foreground" :
+                              "bg-slate-500/10 text-slate-500"
+                            )}>
                               {sign}{symbol}{Math.abs(transaction.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                             </span>
                           </TableCell>
