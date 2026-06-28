@@ -206,6 +206,10 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
           <motion.div variants={itemVariants} className="flex p-1 rounded-xl bg-card-elevated border border-border">
             {tabs.map((tab) => {
               const isActive = type === tab.type;
+              const activeColor = tab.type === "INCOME" ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" 
+                                : tab.type === "EXPENSE" ? "bg-rose-500/10 text-rose-500 border-rose-500/20" 
+                                : "bg-blue-500/10 text-blue-500 border-blue-500/20";
+              
               return (
                 <button
                   key={tab.type}
@@ -215,15 +219,15 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                     setCategory("");
                   }}
                   className={cn(
-                    "flex-1 relative rounded-lg py-2 text-xs font-semibold transition-colors z-10 cursor-pointer select-none",
-                    isActive ? "text-text-primary" : "text-text-muted hover:text-text-primary"
+                    "flex-1 relative rounded-lg py-2.5 text-xs font-semibold transition-colors z-10 cursor-pointer select-none border border-transparent",
+                    isActive ? activeColor : "text-text-muted hover:text-text-primary hover:bg-white/[0.02]"
                   )}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="add-txn-tab"
-                      className="absolute inset-0 rounded-lg bg-card-hover shadow-sm"
-                      transition={{ type: "spring", bounce: 0.18, duration: 0.5 }}
+                      className="absolute inset-0 rounded-lg shadow-sm"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
                   <span className="relative z-20">{tab.label}</span>
@@ -253,9 +257,9 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
             </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
+          <motion.div variants={itemVariants} className="flex flex-col items-center gap-6">
             {/* Profile Selector */}
-            <div className="col-span-2 sm:col-span-1">
+            <div className="w-full max-w-sm">
               <AccountSelector
                 label={type === "TRANSFER" ? "From Account" : "Account"}
                 profiles={profiles}
@@ -272,9 +276,9 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                   key="to-account"
                   initial={{ opacity: 0, x: 8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 8 }}
+                  exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
-                  className="col-span-2 sm:col-span-1"
+                  className="w-full max-w-sm mt-[-10px]"
                 >
                   <AccountSelector
                     label="To Account"
@@ -287,8 +291,8 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
             </AnimatePresence>
 
             {/* Date */}
-            <div className="col-span-2 sm:col-span-1 space-y-1.5 flex flex-col justify-end">
-              <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
+            <div className="w-full max-w-[200px] flex flex-col items-center space-y-2 mt-2">
+              <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none text-center">
                 Date
               </label>
               <Popover>
@@ -296,7 +300,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                   <button
                     type="button"
                     className={cn(
-                      "w-full h-10 flex items-center gap-2 rounded-xl border border-border bg-card-elevated px-3 text-xs font-semibold text-text-primary hover:bg-card-hover transition-all cursor-pointer outline-none focus:border-accent focus:ring-1 focus:ring-accent",
+                      "w-full h-11 flex items-center justify-center gap-2 rounded-xl border border-border bg-card-elevated px-4 text-sm font-semibold text-text-primary hover:bg-card-hover transition-all cursor-pointer outline-none focus:border-accent focus:ring-1 focus:ring-accent",
                       !date && "text-muted-foreground"
                     )}
                   >
@@ -328,7 +332,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.25, ease: "easeInOut" }}
-                  className="col-span-2 overflow-hidden"
+                  className="w-full max-w-sm overflow-hidden"
                 >
                   <div className="rounded-xl border border-border bg-card-elevated p-3 space-y-3 mt-1">
                     <div className="flex items-center justify-between">

@@ -21,12 +21,12 @@ interface AccountSelectorProps {
 
 export function AccountSelector({ profiles, selectedId, onChange, label, onAddNew }: AccountSelectorProps) {
   return (
-    <div className="flex flex-col w-full">
-      <label className="mb-2 block text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
+    <div className="flex flex-col items-center w-full">
+      <label className="mb-2 block text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none text-center">
         {label}
       </label>
 
-      <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 -mx-1 px-1">
+      <div className="flex items-center justify-center gap-2 flex-wrap pb-1">
         {profiles.map((p) => {
           const Icon = getIcon(p.icon);
           const isSelected = p.id === selectedId;
