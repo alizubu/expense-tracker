@@ -15,8 +15,11 @@ import { TransactionType } from "@/lib/types";
 import { AccountSelector } from "./AccountSelector";
 import { CategoryGrid } from "./CategoryGrid";
 import { ConfirmButton } from "./ConfirmButton";
+import { format } from "date-fns";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 interface AddTransactionModalProps {
   onClose: () => void;
@@ -232,8 +235,8 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
           {/* Amount Input */}
           <motion.div variants={itemVariants} className="flex flex-col items-center justify-center py-2 select-none">
             <p className="text-[10px] font-bold tracking-wider text-text-muted uppercase mb-1">Amount</p>
-            <div className="flex items-center justify-center gap-1.5">
-              <span className={cn("text-2xl font-bold font-mono transition-colors duration-300", typeAccent)}>
+            <div className={cn("flex items-center justify-center gap-1.5 transition-all duration-300 rounded-2xl px-6 py-2", type === "INCOME" ? "shadow-[0_0_30px_rgba(16,185,129,0.15)]" : type === "EXPENSE" ? "shadow-[0_0_30px_rgba(244,63,94,0.15)]" : "shadow-[0_0_30px_rgba(59,130,246,0.15)]")}>
+              <span className={cn("text-3xl font-bold font-mono transition-colors duration-300", typeAccent)}>
                 {symbol}
               </span>
               <NumericFormat
@@ -243,7 +246,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                 decimalScale={2}
                 placeholder="0.00"
                 className={cn(
-                  "w-[180px] bg-transparent text-center font-mono text-[36px] font-bold outline-none placeholder:text-text-muted/40 transition-colors duration-300",
+                  "w-[180px] bg-transparent text-center font-mono text-[42px] font-bold outline-none placeholder:text-text-muted/40 transition-colors duration-300 drop-shadow-sm",
                   typeAccent
                 )}
               />
@@ -284,55 +287,37 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
             </AnimatePresence>
 
             {/* Date */}
-            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+            <div className="col-span-2 sm:col-span-1 space-y-1.5 flex flex-col justify-end">
               <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
                 Date
               </label>
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={openDatePicker}
-                  className="w-full h-10 flex items-center gap-2 rounded-xl border border-border bg-card-elevated px-3 text-xs font-semibold text-text-primary hover:bg-card-hover transition-all cursor-pointer"
-                >
-                  <CalendarIcon className="h-4 w-4 text-text-muted flex-shrink-0" />
-                  <AnimatePresence mode="wait">
-                    <motion.span
-                      key={formattedDate}
-                      initial={{ opacity: 0, y: -4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 4 }}
-                      transition={{ duration: 0.15 }}
-                      className="truncate"
-                    >
-                      {formattedDate}
-                    </motion.span>
-                  </AnimatePresence>
-                </button>
-                <input
-                  ref={dateInputRef}
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  tabIndex={-1}
-                  aria-hidden="true"
-                  className="absolute inset-0 h-full w-full opacity-0 pointer-events-none [color-scheme:dark]"
-                />
-              </div>
-              <div className="flex gap-1.5">
-                {[
-                  { label: "Today", offset: 0 },
-                  { label: "Yesterday", offset: -1 },
-                ].map((q) => (
+              <Popover>
+                <PopoverTrigger asChild>
                   <button
-                    key={q.label}
                     type="button"
-                    onClick={() => setQuickDate(q.offset)}
-                    className="rounded-full border border-border bg-card-elevated px-2.5 py-1 text-[11px] font-medium text-text-muted hover:text-accent hover:bg-accent-dim hover:border-accent/30 transition-all cursor-pointer"
+                    className={cn(
+                      "w-full h-10 flex items-center gap-2 rounded-xl border border-border bg-card-elevated px-3 text-xs font-semibold text-text-primary hover:bg-card-hover transition-all cursor-pointer outline-none focus:border-accent focus:ring-1 focus:ring-accent",
+                      !date && "text-muted-foreground"
+                    )}
                   >
-                    {q.label}
+                    <CalendarIcon className="h-4 w-4 text-text-muted flex-shrink-0" />
+                    {date ? format(new Date(date), "PPP") : <span>Pick a date</span>}
                   </button>
-                ))}
-              </div>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date ? new Date(date) : undefined}
+                    onSelect={(newDate) => {
+                      if (newDate) {
+                        const localDate = new Date(newDate.getTime() - newDate.getTimezoneOffset() * 60000);
+                        setDate(localDate.toISOString().split("T")[0]);
+                      }
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             {/* Inline "Add account" panel */}
@@ -425,27 +410,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
             />
           </motion.div>
 
-          {/* Note & Tags */}
-          <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Note (optional)</label>
-              <Input
-                type="text"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Additional details"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Tags</label>
-              <Input
-                type="text"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-                placeholder="food, work..."
-              />
-            </div>
-          </motion.div>
+
         </motion.div>
 
         {/* Submit Button */}
@@ -455,11 +420,14 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
           transition={{ duration: 0.3, delay: 0.15 }}
           className="p-5 flex-shrink-0 border-t border-border/50 bg-background/50 backdrop-blur-md"
         >
-          <ConfirmButton
+          <button
+            type="button"
             onClick={handleSubmit}
             disabled={amount === 0 || (!category && type !== "TRANSFER") || !profileId}
-            label="Save Transaction"
-          />
+            className="w-full shadow-[0_0_20px_rgba(124,58,237,0.35)] hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] h-12 rounded-xl font-semibold bg-gradient-to-r from-primary to-indigo-500 text-white border-0 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Save Transaction
+          </button>
         </motion.div>
       </DialogContent>
     </Dialog>

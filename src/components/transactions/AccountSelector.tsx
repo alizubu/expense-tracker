@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Plus } from "lucide-react";
+import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Profile } from "@/lib/types";
@@ -21,118 +20,47 @@ interface AccountSelectorProps {
 }
 
 export function AccountSelector({ profiles, selectedId, onChange, label, onAddNew }: AccountSelectorProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const selectedProfile = profiles.find((p) => p.id === selectedId) || profiles[0];
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleSelect = (id: string) => {
-    onChange(id);
-    setIsOpen(false);
-  };
-
-  const handleAddNew = () => {
-    setIsOpen(false);
-    onAddNew?.();
-  };
-
   return (
-    <div className="flex flex-col w-full" ref={containerRef}>
-      <label className="mb-1.5 block text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
+    <div className="flex flex-col w-full">
+      <label className="mb-2 block text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
         {label}
       </label>
 
-      <div className="relative">
-        {/* Trigger Button */}
-        <motion.button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          whileTap={{ scale: 0.98 }}
-          className={cn(
-            "w-full h-10 flex items-center justify-between px-3 rounded-xl transition-all text-xs font-semibold text-left cursor-pointer",
-            "bg-card-elevated border border-border hover:bg-card-hover text-text-primary focus:border-accent focus:ring-2 focus:ring-accent-dim"
-          )}
-        >
-          <div className="flex items-center gap-2 overflow-hidden">
-            {selectedProfile ? (
-              <>
-                {(() => {
-                  const Icon = getIcon(selectedProfile.icon);
-                  return <Icon className="w-4 h-4 flex-shrink-0" style={{ color: selectedProfile.color }} />;
-                })()}
-                <span className="truncate">{selectedProfile.name}</span>
-              </>
-            ) : (
-              <span className="truncate text-text-muted">No accounts yet</span>
-            )}
-          </div>
-          <ChevronDown className={cn("w-4 h-4 text-text-muted transition-transform", isOpen && "rotate-180")} />
-        </motion.button>
+      <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 -mx-1 px-1">
+        {profiles.map((p) => {
+          const Icon = getIcon(p.icon);
+          const isSelected = p.id === selectedId;
 
-        {/* Dropdown Panel */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
-              className="absolute z-50 top-full left-0 right-0 mt-1.5 p-1.5 bg-[#0f0f1a] border border-border rounded-xl shadow-xl max-h-48 overflow-y-auto no-scrollbar"
+          return (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => onChange(p.id)}
+              className={cn(
+                "flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap flex-shrink-0 border",
+                isSelected
+                  ? "bg-primary text-primary-foreground border-primary shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+                  : "bg-surface-1 border-white/[0.04] text-text-secondary hover:bg-surface-2 hover:text-text-primary"
+              )}
             >
-              <div className="flex flex-col gap-1">
-                {profiles.map((p) => {
-                  const Icon = getIcon(p.icon);
-                  const isSelected = p.id === selectedId;
+              <Icon
+                className="w-4 h-4 flex-shrink-0"
+                style={{ color: isSelected ? "inherit" : p.color }}
+              />
+              <span>{p.name}</span>
+            </button>
+          );
+        })}
 
-                  return (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => handleSelect(p.id)}
-                      className={cn(
-                        "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors text-left cursor-pointer select-none",
-                        isSelected
-                          ? "bg-accent-dim text-accent"
-                          : "text-text-secondary hover:bg-card-hover hover:text-text-primary"
-                      )}
-                    >
-                      <Icon
-                        className="w-4 h-4 flex-shrink-0"
-                        style={{ color: p.color }}
-                      />
-                      <span className="truncate">{p.name}</span>
-                    </button>
-                  );
-                })}
-
-                {onAddNew && (
-                  <>
-                    <div className="my-1 h-px bg-border" />
-                    <motion.button
-                      type="button"
-                      whileTap={{ scale: 0.98 }}
-                      onClick={handleAddNew}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-accent hover:bg-accent-dim transition-colors text-left cursor-pointer select-none"
-                    >
-                      <Plus className="w-4 h-4 flex-shrink-0" />
-                      <span>Add new account</span>
-                    </motion.button>
-                  </>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {onAddNew && (
+          <button
+            type="button"
+            onClick={onAddNew}
+            className="flex items-center justify-center w-9 h-9 rounded-xl border border-dashed border-white/[0.2] text-text-muted hover:text-text-primary hover:bg-surface-2 hover:border-white/[0.4] transition-all cursor-pointer flex-shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+        )}
       </div>
     </div>
   );
