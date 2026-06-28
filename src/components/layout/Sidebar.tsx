@@ -145,12 +145,12 @@ export function Sidebar() {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" side="right" sideOffset={12} className="w-56 mb-2 rounded-xl border border-white/[0.04] bg-surface-1/90 backdrop-blur-xl shadow-xl p-1.5">
-            <DropdownMenuLabel className="font-semibold px-2 py-1.5">
+            <div className="font-semibold px-2 py-1.5">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{session?.user?.name || "User"}</p>
+                <p className="text-sm font-medium leading-none text-foreground">{session?.user?.name || "User"}</p>
                 <p className="text-[11px] leading-none text-muted-foreground">{session?.user?.email || "Pro Plan"}</p>
               </div>
-            </DropdownMenuLabel>
+            </div>
             <DropdownMenuSeparator className="bg-white/[0.04]" />
             <DropdownMenuItem onClick={() => router.push("/profile")} className="cursor-pointer rounded-lg px-2 py-1.5 focus:bg-surface-2">
               <User className="w-4 h-4 mr-2 text-muted-foreground" />
@@ -166,7 +166,7 @@ export function Sidebar() {
             </DropdownMenuItem>
             
             <DropdownMenuSeparator className="bg-white/[0.04]" />
-            <DropdownMenuLabel className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest px-2 pt-1.5 pb-1">Theme</DropdownMenuLabel>
+            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest px-2 pt-1.5 pb-1">Theme</div>
             <div className="flex px-1.5 pb-1.5 gap-1">
               <button 
                 onClick={(e) => { e.preventDefault(); setTheme('light'); }} 
