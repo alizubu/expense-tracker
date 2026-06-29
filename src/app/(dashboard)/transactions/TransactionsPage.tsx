@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH1, TypographyP } from "@/components/ui/typography";
 
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,6 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -77,7 +79,7 @@ export default function TransactionsPage() {
         <button onClick={openSidebar} className="flex items-center justify-center w-8 h-8 rounded-md bg-surface-2 border border-border">
           <Menu size={16} className="text-muted-foreground" />
         </button>
-        <span className="text-sm font-semibold text-foreground flex-1 text-center">Transactions</span>
+        <TypographySpan className="text-sm font-semibold text-foreground flex-1 text-center">Transactions</TypographySpan>
         <div className="flex items-center gap-2">
           <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="flex items-center justify-center w-8 h-8 rounded-md bg-surface-2 border border-border">
             <Search size={15} className="text-muted-foreground" />
@@ -120,8 +122,8 @@ export default function TransactionsPage() {
       {/* Desktop Header */}
       <div className="hidden lg:flex items-center justify-between mb-8 relative">
         <div className="flex-1">
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Transactions</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage and view your financial history.</p>
+          <TypographyH1 className="text-3xl font-bold text-foreground tracking-tight">Transactions</TypographyH1>
+          <TypographyP className="text-sm text-muted-foreground mt-1">Manage and view your financial history.</TypographyP>
         </div>
         
         <div className="flex-1 flex justify-center absolute left-1/2 -translate-x-1/2">
@@ -212,26 +214,26 @@ export default function TransactionsPage() {
           <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
             <ArrowDownUp className="w-20 h-20" />
           </div>
-          <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Total</span>
-          <span className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-foreground truncate">
+          <TypographySpan className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Total</TypographySpan>
+          <TypographySpan className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-foreground truncate">
             {symbol}{filtered.reduce((sum, t) => sum + (t.type === "EXPENSE" ? -t.amount : t.amount), 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}
-          </span>
+          </TypographySpan>
         </Card>
         <Card className="p-4 sm:p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm relative overflow-hidden group">
           <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
             <ReceiptText className="w-20 h-20" />
           </div>
-          <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Count</span>
-          <span className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-foreground truncate">{filtered.length}</span>
+          <TypographySpan className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Count</TypographySpan>
+          <TypographySpan className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-foreground truncate">{filtered.length}</TypographySpan>
         </Card>
         <Card className="p-4 sm:p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm relative overflow-hidden group">
           <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
             <ArrowDownUp className="w-20 h-20 text-destructive" />
           </div>
-          <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Largest</span>
-          <span className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-destructive truncate">
+          <TypographySpan className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Largest</TypographySpan>
+          <TypographySpan className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-destructive truncate">
             {symbol}{filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)).toLocaleString(undefined, { maximumFractionDigits: 0 }) : 0}
-          </span>
+          </TypographySpan>
         </Card>
       </div>
 
@@ -266,7 +268,7 @@ export default function TransactionsPage() {
                     <TableRow className="bg-transparent hover:bg-transparent border-none">
                       <TableCell colSpan={6} className="py-2 px-4">
                         <div className="flex items-center gap-3">
-                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest shrink-0">{dateLabel}</span>
+                          <TypographySpan className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest shrink-0">{dateLabel}</TypographySpan>
                           <div className="h-px bg-white/[0.04] w-full" />
                         </div>
                       </TableCell>
@@ -323,14 +325,14 @@ export default function TransactionsPage() {
                             {new Date(transaction.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </TableCell>
                           <TableCell className="text-right pr-4 py-2">
-                            <span className={cn(
+                            <TypographySpan className={cn(
                               "inline-flex items-center px-2 py-0.5 rounded-md text-[13px] tabular-money font-semibold tracking-tight",
                               transaction.type === "INCOME" ? "bg-emerald-500/10 text-emerald-500" :
                               transaction.type === "EXPENSE" ? "bg-surface-2 text-foreground" :
                               "bg-slate-500/10 text-slate-500"
                             )}>
                               {sign}{symbol}{Math.abs(transaction.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                            </span>
+                            </TypographySpan>
                           </TableCell>
                         </TableRow>
                       );

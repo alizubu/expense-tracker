@@ -1,4 +1,5 @@
 "use client";
+import { TypographyLabel, TypographySpan, TypographyH1, TypographyP } from "@/components/ui/typography";
 
 import { signIn } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
@@ -13,6 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
 
 const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -159,16 +161,16 @@ export default function SignUpPage() {
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg mb-4">
             <Wallet className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Create an account</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <TypographyH1 className="text-2xl font-semibold tracking-tight text-foreground">Create an account</TypographyH1>
+          <TypographyP className="mt-2 text-sm text-muted-foreground">
             Start tracking your expenses today
-          </p>
+          </TypographyP>
         </div>
 
         <Card className="p-6 glass border-border/50">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2 relative">
-              <label className="text-sm font-medium text-foreground">Full Name</label>
+              <TypographyLabel className="text-sm font-medium text-foreground">Full Name</TypographyLabel>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -178,11 +180,11 @@ export default function SignUpPage() {
                   {...register("name")}
                 />
               </div>
-              {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
+              {errors.name && <TypographyP className="text-xs text-destructive mt-1">{errors.name.message}</TypographyP>}
             </div>
 
             <div className="space-y-2 relative">
-              <label className="text-sm font-medium text-foreground">Email</label>
+              <TypographyLabel className="text-sm font-medium text-foreground">Email</TypographyLabel>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -193,11 +195,11 @@ export default function SignUpPage() {
                   {...register("email")}
                 />
               </div>
-              {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
+              {errors.email && <TypographyP className="text-xs text-destructive mt-1">{errors.email.message}</TypographyP>}
             </div>
 
             <div className="space-y-2 relative">
-              <label className="text-sm font-medium text-foreground">Password</label>
+              <TypographyLabel className="text-sm font-medium text-foreground">Password</TypographyLabel>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -215,7 +217,7 @@ export default function SignUpPage() {
                   {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password && <p className="text-xs text-destructive mt-1">{errors.password.message}</p>}
+              {errors.password && <TypographyP className="text-xs text-destructive mt-1">{errors.password.message}</TypographyP>}
 
               <AnimatePresence>
                 {passwordValue.length > 0 && (
@@ -238,9 +240,9 @@ export default function SignUpPage() {
                     </div>
                     <div className="mt-1 flex items-center gap-1.5">
                       {strength === 3 && <CheckCircle2 className="h-3 w-3 text-primary" />}
-                      <span className="text-[10px] text-muted-foreground">
+                      <TypographySpan className="text-[10px] text-muted-foreground">
                         {strength > 0 && (
-                          <span
+                          <TypographySpan
                             className={
                               strength === 1
                                 ? "text-destructive font-medium"
@@ -250,17 +252,17 @@ export default function SignUpPage() {
                             }
                           >
                             {meta.label}{" "}
-                          </span>
+                          </TypographySpan>
                         )}
                         {strength < 3 && "Use 8+ chars, uppercase & a number"}
-                      </span>
+                      </TypographySpan>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
 
-            <p className="text-[10px] leading-relaxed text-muted-foreground select-none">
+            <TypographyP className="text-[10px] leading-relaxed text-muted-foreground select-none">
               By creating an account you agree to our{" "}
               <Link href="#" className="font-medium text-foreground hover:underline transition-colors">
                 Terms of Service
@@ -270,7 +272,7 @@ export default function SignUpPage() {
                 Privacy Policy
               </Link>
               .
-            </p>
+            </TypographyP>
 
             <Button
               type="submit"
@@ -283,7 +285,7 @@ export default function SignUpPage() {
           </form>
 
           <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-muted-foreground">
-            <span>Already have an account?</span>
+            <TypographySpan>Already have an account?</TypographySpan>
             <Link
               href="/sign-in"
               className="font-medium text-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"

@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH3 } from "@/components/ui/typography";
 
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
@@ -7,6 +8,7 @@ import { useUIStore } from "@/store/useUIStore";
 import { PieChart } from "lucide-react";
 import { EXPENSE_CATEGORIES } from "@/lib/categories";
 import { Card } from "@/components/ui/card";
+
 
 const DONUT_COLORS = ["#7c3aed", "#10b981", "#f43f5e", "#3b82f6", "#f59e0b", "#ec4899", "#06b6d4"];
 
@@ -41,12 +43,12 @@ export function CategoryDonutChart() {
   return (
     <Card className="p-4 md:p-6 w-full h-[350px] flex flex-col justify-between hover:shadow-md transition-all duration-200">
       <div className="flex items-center justify-between mb-2 flex-shrink-0">
-        <h3 className="text-sm font-semibold text-text-primary">
+        <TypographyH3 className="text-sm font-semibold text-text-primary">
           Spending by Category
-        </h3>
-        <span className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">
+        </TypographyH3>
+        <TypographySpan className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">
           This Month
-        </span>
+        </TypographySpan>
       </div>
 
       <div className="flex-1 flex flex-row items-center justify-between gap-4 min-h-0 w-full">
@@ -83,10 +85,10 @@ export function CategoryDonutChart() {
                 </RechartsPieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-[10px] uppercase text-text-muted font-medium tracking-[0.05em] mb-0.5">Spent</span>
-                <span className="text-base font-bold text-text-primary tracking-tight font-mono">
+                <TypographySpan className="text-[10px] uppercase text-text-muted font-medium tracking-[0.05em] mb-0.5">Spent</TypographySpan>
+                <TypographySpan className="text-base font-bold text-text-primary tracking-tight font-mono">
                   {symbol}{totalSpent.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                </span>
+                </TypographySpan>
               </div>
             </div>
 
@@ -97,18 +99,18 @@ export function CategoryDonutChart() {
                   <div key={i} className="flex items-center justify-between gap-2 border-b border-border/20 pb-1.5 last:border-0 last:pb-0">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: DONUT_COLORS[i % DONUT_COLORS.length] }} />
-                      <span className="text-[11px] text-text-secondary truncate font-medium" title={item.name}>{item.name}</span>
+                      <TypographySpan className="text-[11px] text-text-secondary truncate font-medium" title={item.name}>{item.name}</TypographySpan>
                     </div>
-                    <span className="text-[11px] font-bold text-text-primary font-mono flex-shrink-0">
+                    <TypographySpan className="text-[11px] font-bold text-text-primary font-mono flex-shrink-0">
                       {symbol}{item.value.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </span>
+                    </TypographySpan>
                   </div>
                 ))}
                 {data.length > 5 && (
                   <div className="text-right">
-                    <span className="text-[9px] text-text-muted bg-white/[0.02] border border-border/40 px-1.5 py-0.5 rounded font-medium">
+                    <TypographySpan className="text-[9px] text-text-muted bg-white/[0.02] border border-border/40 px-1.5 py-0.5 rounded font-medium">
                       +{data.length - 5} more
-                    </span>
+                    </TypographySpan>
                   </div>
                 )}
               </div>
@@ -119,8 +121,8 @@ export function CategoryDonutChart() {
             <div className="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center text-accent mb-3 border border-accent/10">
               <PieChart size={18} />
             </div>
-            <span className="text-xs font-semibold text-text-primary">No data yet</span>
-            <span className="text-[10px] text-text-muted mt-0.5">Expenses will appear here</span>
+            <TypographySpan className="text-xs font-semibold text-text-primary">No data yet</TypographySpan>
+            <TypographySpan className="text-[10px] text-text-muted mt-0.5">Expenses will appear here</TypographySpan>
           </div>
         )}
       </div>

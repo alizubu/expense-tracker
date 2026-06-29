@@ -1,8 +1,10 @@
 "use client";
+import { TypographySpan, TypographyH1, TypographyP, TypographyH2 } from "@/components/ui/typography";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+
 
 const PROFILE_TYPES = [
   { type: "MONEYBAG", label: "Moneybag", emoji: "💰", color: "#7C3AED" },
@@ -52,12 +54,12 @@ export default function OnboardingPage() {
 
         {step === 1 && (
           <div>
-            <h1 className="text-2xl font-semibold text-white mb-2">
+            <TypographyH1 className="text-2xl font-semibold text-white mb-2">
               Welcome, {session?.user?.name?.split(" ")[0]}! 👋
-            </h1>
-            <p className="text-slate-400 mb-8">
+            </TypographyH1>
+            <TypographyP className="text-slate-400 mb-8">
               Let's set up your wallet profiles. Select the ones you use:
-            </p>
+            </TypographyP>
             <div className="grid grid-cols-2 gap-3 mb-8">
               {PROFILE_TYPES.map((p) => (
                 <button
@@ -75,8 +77,8 @@ export default function OnboardingPage() {
                       : "border-white/10 hover:border-white/20"
                   }`}
                 >
-                  <span className="text-2xl">{p.emoji}</span>
-                  <span className="text-white font-medium">{p.label}</span>
+                  <TypographySpan className="text-2xl">{p.emoji}</TypographySpan>
+                  <TypographySpan className="text-white font-medium">{p.label}</TypographySpan>
                 </button>
               ))}
             </div>
@@ -93,12 +95,12 @@ export default function OnboardingPage() {
 
         {step === 2 && (
           <div>
-            <h2 className="text-xl font-semibold text-white mb-2">
+            <TypographyH2 className="text-xl font-semibold text-white mb-2">
               Set starting balances
-            </h2>
-            <p className="text-slate-400 mb-6">
+            </TypographyH2>
+            <TypographyP className="text-slate-400 mb-6">
               How much money do you currently have in each wallet?
-            </p>
+            </TypographyP>
             <div className="space-y-3 mb-8">
               {selectedProfiles.map((type) => {
                 const profile = PROFILE_TYPES.find((p) => p.type === type);
@@ -106,10 +108,10 @@ export default function OnboardingPage() {
                 return (
                   <div key={type} className="flex items-center gap-4 bg-[#1C1C27]
                                               rounded-xl p-4 border border-white/10">
-                    <span className="text-2xl">{profile.emoji}</span>
-                    <span className="text-white flex-1">{profile.label}</span>
+                    <TypographySpan className="text-2xl">{profile.emoji}</TypographySpan>
+                    <TypographySpan className="text-white flex-1">{profile.label}</TypographySpan>
                     <div className="flex items-center gap-2">
-                      <span className="text-slate-400">৳</span>
+                      <TypographySpan className="text-slate-400">৳</TypographySpan>
                       <input
                         type="number"
                         placeholder="0"

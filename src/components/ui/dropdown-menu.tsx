@@ -1,5 +1,8 @@
 "use client"
 
+import { TypographySpan } from "@/components/ui/typography";
+
+
 import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 
@@ -165,7 +168,7 @@ function DropdownMenuCheckboxItem({
       checked={checked}
       {...props}
     >
-      <span
+      <TypographySpan
         className="pointer-events-none absolute right-2 flex items-center justify-center"
         data-slot="dropdown-menu-checkbox-item-indicator"
       >
@@ -173,7 +176,7 @@ function DropdownMenuCheckboxItem({
           <CheckIcon
           />
         </MenuPrimitive.CheckboxItemIndicator>
-      </span>
+      </TypographySpan>
       {children}
     </MenuPrimitive.CheckboxItem>
   )
@@ -206,7 +209,7 @@ function DropdownMenuRadioItem({
       )}
       {...props}
     >
-      <span
+      <TypographySpan
         className="pointer-events-none absolute right-2 flex items-center justify-center"
         data-slot="dropdown-menu-radio-item-indicator"
       >
@@ -214,7 +217,7 @@ function DropdownMenuRadioItem({
           <CheckIcon
           />
         </MenuPrimitive.RadioItemIndicator>
-      </span>
+      </TypographySpan>
       {children}
     </MenuPrimitive.RadioItem>
   )
@@ -238,7 +241,7 @@ function DropdownMenuShortcut({
   ...props
 }: React.ComponentProps<"span">) {
   return (
-    <span
+    <TypographySpan
       data-slot="dropdown-menu-shortcut"
       className={cn(
         "ml-auto text-xs tracking-widest text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground",

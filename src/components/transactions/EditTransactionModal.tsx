@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyLabel, TypographyP } from "@/components/ui/typography";
 
 import { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
@@ -17,6 +18,7 @@ import { CategoryGrid } from "./CategoryGrid";
 import { ConfirmButton } from "./ConfirmButton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, ConfirmDialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+
 
 interface EditTransactionModalProps {
   transaction: Transaction;
@@ -241,7 +243,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                         transition={{ type: "spring", bounce: 0.18, duration: 0.5 }}
                       />
                     )}
-                    <span className="relative z-20">{tab.label}</span>
+                    <TypographySpan className="relative z-20">{tab.label}</TypographySpan>
                   </button>
                 );
               })}
@@ -249,11 +251,11 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
 
             {/* Amount Input */}
             <motion.div variants={itemVariants} className="flex flex-col items-center justify-center py-2 select-none">
-              <p className="text-[10px] font-bold tracking-wider text-text-muted uppercase mb-1">Amount</p>
+              <TypographyP className="text-[10px] font-bold tracking-wider text-text-muted uppercase mb-1">Amount</TypographyP>
               <div className="flex items-center justify-center gap-1.5">
-                <span className={cn("text-2xl font-bold font-mono transition-colors duration-300", typeAccent)}>
+                <TypographySpan className={cn("text-2xl font-bold font-mono transition-colors duration-300", typeAccent)}>
                   {symbol}
-                </span>
+                </TypographySpan>
                 <NumericFormat
                   value={amount || ""}
                   onValueChange={(values) => setAmount(values.floatValue || 0)}
@@ -303,9 +305,9 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
 
               {/* Date */}
               <div className="col-span-2 sm:col-span-1 space-y-1.5">
-                <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
+                <TypographyLabel className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
                   Date
-                </label>
+                </TypographyLabel>
                 <div className="relative">
                   <button
                     type="button"
@@ -366,7 +368,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                   >
                     <div className="rounded-xl border border-border bg-card-elevated p-3 space-y-3 mt-1">
                       <div className="flex items-center justify-between">
-                        <p className="text-xs font-semibold text-text-primary">New account</p>
+                        <TypographyP className="text-xs font-semibold text-text-primary">New account</TypographyP>
                         <button
                           type="button"
                           onClick={() => setShowAddAccount(false)}
@@ -420,9 +422,9 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   className="space-y-1.5"
                 >
-                  <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
+                  <TypographyLabel className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
                     Category
-                  </label>
+                  </TypographyLabel>
                   <CategoryGrid
                     categories={availableCategories}
                     selectedCategory={category}
@@ -434,7 +436,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
 
             {/* Title */}
             <motion.div variants={itemVariants} className="space-y-1.5">
-              <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Title</label>
+              <TypographyLabel className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Title</TypographyLabel>
               <Input
                 type="text"
                 value={title}
@@ -446,7 +448,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
             {/* Note & Tags */}
             <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Note (optional)</label>
+                <TypographyLabel className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Note (optional)</TypographyLabel>
                 <Input
                   type="text"
                   value={note}
@@ -455,7 +457,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Tags</label>
+                <TypographyLabel className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Tags</TypographyLabel>
                 <Input
                   type="text"
                   value={tags}

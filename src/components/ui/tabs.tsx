@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan } from "@/components/ui/typography";
 
 import * as React from "react";
 import { motion } from "framer-motion";
@@ -44,7 +45,7 @@ export function Tabs({ tabs, value, onChange, className }: TabsProps) {
                 transition={{ type: "spring", bounce: 0.18, duration: 0.5 }}
               />
             )}
-            <span className="relative z-20">{tab.label}</span>
+            <TypographySpan className="relative z-20">{tab.label}</TypographySpan>
           </button>
         );
       })}

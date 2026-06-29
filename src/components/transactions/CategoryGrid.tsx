@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan } from "@/components/ui/typography";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -97,14 +98,14 @@ export function CategoryGrid({ categories, selectedCategory, onSelect }: Categor
                   strokeWidth={2}
                 />
 
-                <span
+                <TypographySpan
                   className={cn(
                     "text-[10px] font-semibold text-center leading-tight truncate w-full px-0.5",
                     isSelected ? "text-accent" : "text-text-secondary group-hover:text-accent"
                   )}
                 >
                   {cat.label}
-                </span>
+                </TypographySpan>
               </motion.button>
             );
           })}

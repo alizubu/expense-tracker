@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan } from "@/components/ui/typography";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -37,7 +38,7 @@ export function MobileNav() {
                 <div className="absolute top-0 w-8 h-1 bg-primary rounded-b-full shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
               )}
               <route.icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium">{route.label}</span>
+              <TypographySpan className="text-[10px] font-medium">{route.label}</TypographySpan>
             </Link>
           );
         })}

@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH2 } from "@/components/ui/typography";
 
 import Link from "next/link";
 import { format } from "date-fns";
@@ -11,6 +12,7 @@ import { useProfileStore } from "@/store/useProfileStore";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { getCategoryById, getCategoryColor, getCategoryIconName } from "@/lib/categories";
 import { Card } from "@/components/ui/card";
+
 
 interface TransactionFeedProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,9 +39,9 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
   return (
     <Card className="flex flex-col w-full h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 overflow-hidden transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between flex-shrink-0 h-[32px] mb-3">
-        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+        <TypographyH2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Recent Transactions
-        </h2>
+        </TypographyH2>
         <Link 
           href="/transactions"
           className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-lg"
@@ -54,15 +56,15 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
             <div className="w-10 h-10 rounded-xl bg-surface-2 border border-white/[0.04] flex items-center justify-center mb-3">
               <Circle className="h-5 w-5 text-muted-foreground/50 animate-pulse" />
             </div>
-            <span className="text-sm font-medium text-muted-foreground">No transactions yet</span>
+            <TypographySpan className="text-sm font-medium text-muted-foreground">No transactions yet</TypographySpan>
           </div>
         ) : (
           Object.entries(groupedByDate).map(([dateStr, txns]) => (
             <div key={dateStr}>
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest flex-shrink-0">
+                <TypographySpan className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest flex-shrink-0">
                   {dateStr}
-                </span>
+                </TypographySpan>
                 <div className="h-px bg-white/[0.04] flex-1" />
               </div>
 
@@ -109,21 +111,21 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                       </div>
 
                       <div className="flex flex-col min-w-0 flex-1">
-                        <span className="text-[13px] font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                        <TypographySpan className="text-[13px] font-semibold text-foreground truncate group-hover:text-primary transition-colors">
                           {t.title}
-                        </span>
-                        <span className="text-[11px] text-muted-foreground truncate mt-0.5">
-                          {t.type === "TRANSFER" ? "Transfer" : categoryLabel} <span className="opacity-50 mx-1">·</span> {profileName}
-                        </span>
+                        </TypographySpan>
+                        <TypographySpan className="text-[11px] text-muted-foreground truncate mt-0.5">
+                          {t.type === "TRANSFER" ? "Transfer" : categoryLabel} <TypographySpan className="opacity-50 mx-1">·</TypographySpan> {profileName}
+                        </TypographySpan>
                       </div>
 
                       <div className="flex flex-col items-end flex-shrink-0 text-right">
-                        <span className={`text-[13px] font-semibold tabular-money ${amountColor}`}>
+                        <TypographySpan className={`text-[13px] font-semibold tabular-money ${amountColor}`}>
                           {prefix}{symbol}{Math.abs(t.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground font-medium mt-0.5 uppercase tracking-wider">
+                        </TypographySpan>
+                        <TypographySpan className="text-[10px] text-muted-foreground font-medium mt-0.5 uppercase tracking-wider">
                           {format(new Date(t.date), "h:mm a")}
-                        </span>
+                        </TypographySpan>
                       </div>
                     </div>
                   );

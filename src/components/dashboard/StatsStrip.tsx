@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH3 } from "@/components/ui/typography";
 
 import { useState } from "react";
 import { TrendingUp, TrendingDown, Activity, BarChart2 } from "lucide-react";
@@ -7,6 +8,7 @@ import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+
 
 interface StatsStripProps {
   netBalance: number;
@@ -27,15 +29,15 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
         
         <div className="flex justify-between items-start relative z-10 mb-4">
           <div className="space-y-1">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+            <TypographyH3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
               Total Net Balance
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-            </h3>
+              <TypographySpan className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></TypographySpan>
+            </TypographyH3>
             <div className="flex items-baseline gap-1 text-foreground">
-              <span className="text-3xl font-medium text-muted-foreground">{symbol}</span>
-              <span className="text-5xl font-semibold tracking-tighter tabular-money leading-none">
+              <TypographySpan className="text-3xl font-medium text-muted-foreground">{symbol}</TypographySpan>
+              <TypographySpan className="text-5xl font-semibold tracking-tighter tabular-money leading-none">
                 {netBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </span>
+              </TypographySpan>
             </div>
           </div>
           <button 
@@ -87,36 +89,36 @@ export function StatsStrip({ netBalance, income, expenses, sparklineData }: Stat
 
       <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-4 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
         <div className="space-y-1">
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Income</h3>
+          <TypographyH3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Income</TypographyH3>
           <div className="flex items-baseline gap-1 text-emerald-500">
-            <span className="text-xl font-medium opacity-80">{symbol}</span>
-            <span className="text-3xl font-semibold tabular-money leading-none">
+            <TypographySpan className="text-xl font-medium opacity-80">{symbol}</TypographySpan>
+            <TypographySpan className="text-3xl font-semibold tabular-money leading-none">
               {income.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-            </span>
+            </TypographySpan>
           </div>
         </div>
         <div className="flex items-center gap-2 mt-3">
           <div className="flex items-center gap-1.5 text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full text-xs font-semibold">
             <TrendingUp className="h-3.5 w-3.5" />
-            <span>This month</span>
+            <TypographySpan>This month</TypographySpan>
           </div>
         </div>
       </Card>
 
       <Card className="col-span-1 md:col-span-1 xl:col-span-1 min-h-[160px] rounded-2xl p-4 flex flex-col justify-between border-white/[0.04] bg-surface-1 shadow-sm hover:shadow-md transition-shadow duration-300">
         <div className="space-y-1">
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Expenses</h3>
+          <TypographyH3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Expenses</TypographyH3>
           <div className="flex items-baseline gap-1 text-destructive">
-            <span className="text-xl font-medium opacity-80">{symbol}</span>
-            <span className="text-3xl font-semibold tabular-money leading-none">
+            <TypographySpan className="text-xl font-medium opacity-80">{symbol}</TypographySpan>
+            <TypographySpan className="text-3xl font-semibold tabular-money leading-none">
               {expenses.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-            </span>
+            </TypographySpan>
           </div>
         </div>
         <div className="flex items-center gap-2 mt-3">
           <div className="flex items-center gap-1.5 text-destructive bg-destructive/10 px-2.5 py-1 rounded-full text-xs font-semibold">
             <TrendingDown className="h-3.5 w-3.5" />
-            <span>This month</span>
+            <TypographySpan>This month</TypographySpan>
           </div>
         </div>
       </Card>

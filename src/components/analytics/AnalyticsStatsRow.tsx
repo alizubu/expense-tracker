@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan } from "@/components/ui/typography";
 
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
@@ -74,17 +75,17 @@ export default function AnalyticsStatsRow() {
           <motion.div key={stat.label} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05 * (idx + 1) }}>
             <Card className={`p-5 flex flex-col justify-between border-l-4 ${stat.borderColorClass} bg-surface-1 border-white/[0.04] shadow-sm hover:shadow-md transition-shadow duration-300 h-full rounded-2xl relative overflow-hidden`}>
               <div className="flex items-center justify-between gap-2 mb-4 relative z-10">
-                <span className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground">
+                <TypographySpan className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground">
                   {stat.label}
-                </span>
+                </TypographySpan>
                 <div className={`p-1.5 rounded-lg ${stat.iconClass}`}>
                   <Icon size={14} />
                 </div>
               </div>
               <div className={`text-2xl md:text-3xl font-semibold tracking-tight ${stat.colorClass} flex items-baseline gap-1 tabular-money relative z-10`}>
-                {!stat.isPercentage && <span className="text-base font-medium opacity-80">{symbol}</span>}
-                <span className="leading-none">{stat.value.toLocaleString(undefined, { minimumFractionDigits: stat.decimalPlaces, maximumFractionDigits: stat.decimalPlaces })}</span>
-                {stat.isPercentage && <span className="text-base font-medium opacity-80">%</span>}
+                {!stat.isPercentage && <TypographySpan className="text-base font-medium opacity-80">{symbol}</TypographySpan>}
+                <TypographySpan className="leading-none">{stat.value.toLocaleString(undefined, { minimumFractionDigits: stat.decimalPlaces, maximumFractionDigits: stat.decimalPlaces })}</TypographySpan>
+                {stat.isPercentage && <TypographySpan className="text-base font-medium opacity-80">%</TypographySpan>}
               </div>
             </Card>
           </motion.div>

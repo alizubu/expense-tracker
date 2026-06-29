@@ -1,4 +1,5 @@
 "use client";
+import { TypographyLabel, TypographySpan, TypographyH1, TypographyP } from "@/components/ui/typography";
 
 import { signIn } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
@@ -13,6 +14,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
 
 const signInSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email address"),
@@ -123,10 +125,10 @@ export default function SignInPage() {
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg mb-4">
             <Wallet className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Welcome back</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <TypographyH1 className="text-2xl font-semibold tracking-tight text-foreground">Welcome back</TypographyH1>
+          <TypographyP className="mt-2 text-sm text-muted-foreground">
             Enter your credentials to access your dashboard
-          </p>
+          </TypographyP>
         </div>
 
         <Card className="p-6 glass border-border/50">
@@ -138,7 +140,7 @@ export default function SignInPage() {
             )}
 
             <div className="space-y-2 relative">
-              <label className="text-sm font-medium text-foreground">Email</label>
+              <TypographyLabel className="text-sm font-medium text-foreground">Email</TypographyLabel>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -149,11 +151,11 @@ export default function SignInPage() {
                   {...register("email")}
                 />
               </div>
-              {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
+              {errors.email && <TypographyP className="text-xs text-destructive mt-1">{errors.email.message}</TypographyP>}
             </div>
 
             <div className="space-y-2 relative">
-              <label className="text-sm font-medium text-foreground">Password</label>
+              <TypographyLabel className="text-sm font-medium text-foreground">Password</TypographyLabel>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -171,7 +173,7 @@ export default function SignInPage() {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password && <p className="text-xs text-destructive mt-1">{errors.password.message}</p>}
+              {errors.password && <TypographyP className="text-xs text-destructive mt-1">{errors.password.message}</TypographyP>}
             </div>
 
             <Button
@@ -185,7 +187,7 @@ export default function SignInPage() {
           </form>
 
           <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-muted-foreground">
-            <span>Don't have an account?</span>
+            <TypographySpan>Don't have an account?</TypographySpan>
             <Link
               href="/sign-up"
               className="font-medium text-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"

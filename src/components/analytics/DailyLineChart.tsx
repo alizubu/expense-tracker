@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH3 } from "@/components/ui/typography";
 
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useUIStore } from "@/store/useUIStore";
@@ -6,6 +7,7 @@ import { getCurrencySymbol } from "@/lib/currencies";
 import { Card } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TrendingDown } from "lucide-react";
+
 
 export default function DailyLineChart() {
   const { transactions } = useTransactionStore();
@@ -39,10 +41,10 @@ export default function DailyLineChart() {
   return (
     <Card className="p-6 w-full h-[350px] flex flex-col justify-between rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 hover:shadow-md transition-shadow duration-300">
       <div className="flex items-center justify-between mb-4 flex-shrink-0">
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Daily Spending</h3>
-        <span className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground bg-surface-2 px-2.5 py-1 rounded-full border border-white/[0.04]">
+        <TypographyH3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Daily Spending</TypographyH3>
+        <TypographySpan className="text-[10px] font-semibold tracking-widest uppercase text-muted-foreground bg-surface-2 px-2.5 py-1 rounded-full border border-white/[0.04]">
           Cumulative Trend
-        </span>
+        </TypographySpan>
       </div>
       <div className="flex-1 min-h-0 w-full flex items-center justify-center">
         {hasData ? (
@@ -79,8 +81,8 @@ export default function DailyLineChart() {
             <div className="w-10 h-10 rounded-xl bg-surface-2 flex items-center justify-center text-muted-foreground mb-3 border border-white/[0.04]">
               <TrendingDown size={18} />
             </div>
-            <span className="text-xs font-semibold text-foreground">No data yet</span>
-            <span className="text-[10px] text-muted-foreground mt-0.5">Cumulative spending chart will show here</span>
+            <TypographySpan className="text-xs font-semibold text-foreground">No data yet</TypographySpan>
+            <TypographySpan className="text-[10px] text-muted-foreground mt-0.5">Cumulative spending chart will show here</TypographySpan>
           </div>
         )}
       </div>

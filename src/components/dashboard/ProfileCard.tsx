@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH2 } from "@/components/ui/typography";
 
 import { motion } from "framer-motion";
 import * as LucideIcons from "lucide-react";
@@ -7,6 +8,7 @@ import { useUIStore } from "@/store/useUIStore";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
 
 function getIcon(iconName: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,9 +48,9 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
   return (
     <Card className="flex flex-col w-full h-auto lg:h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between h-[32px] mb-3 flex-shrink-0">
-        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+        <TypographyH2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Your Profiles
-        </h2>
+        </TypographyH2>
         <Button 
           variant="ghost" 
           size="sm" 
@@ -56,7 +58,7 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
           className="h-8 px-2.5 rounded-lg text-primary hover:text-primary hover:bg-primary/10 transition-colors font-semibold"
         >
           <LucideIcons.Plus size={14} className="mr-1.5" />
-          <span className="hidden sm:inline">Add New</span>
+          <TypographySpan className="hidden sm:inline">Add New</TypographySpan>
         </Button>
       </div>
 
@@ -64,7 +66,7 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
         {profiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-6">
             <LucideIcons.Wallet className="h-8 w-8 text-muted-foreground/50 mb-3 animate-pulse" />
-            <span className="text-sm font-medium text-muted-foreground">No profiles yet</span>
+            <TypographySpan className="text-sm font-medium text-muted-foreground">No profiles yet</TypographySpan>
           </div>
         ) : (
           profiles.map((profile, i) => {
@@ -87,17 +89,17 @@ export function ProfileCard({ profiles, netBalance, onAdd }: ProfileListCardProp
                   </div>
 
                   <div className="flex flex-col flex-1 min-w-0">
-                    <span className="text-[13px] font-semibold text-foreground truncate group-hover:text-primary transition-colors">{profile.name}</span>
-                    <span className="text-[11px] text-muted-foreground truncate capitalize">{profile.type.toLowerCase()}</span>
+                    <TypographySpan className="text-[13px] font-semibold text-foreground truncate group-hover:text-primary transition-colors">{profile.name}</TypographySpan>
+                    <TypographySpan className="text-[11px] text-muted-foreground truncate capitalize">{profile.type.toLowerCase()}</TypographySpan>
                   </div>
 
                   <div className="flex flex-col items-end flex-shrink-0 text-right">
-                    <span className="text-[13px] font-semibold text-foreground tabular-money tracking-tight">
+                    <TypographySpan className="text-[13px] font-semibold text-foreground tabular-money tracking-tight">
                       {symbol}{profile.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </span>
-                    <span className={`hidden sm:flex items-center justify-center text-[9px] font-semibold mt-0.5 px-2 py-0.5 rounded-full ${colors.bg} ${colors.icon} uppercase tracking-wider`}>
+                    </TypographySpan>
+                    <TypographySpan className={`hidden sm:flex items-center justify-center text-[9px] font-semibold mt-0.5 px-2 py-0.5 rounded-full ${colors.bg} ${colors.icon} uppercase tracking-wider`}>
                       {percentage.toFixed(1)}% share
-                    </span>
+                    </TypographySpan>
                   </div>
                 </div>
               </motion.div>

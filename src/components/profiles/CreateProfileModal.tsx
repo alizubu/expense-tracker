@@ -1,4 +1,5 @@
 "use client";
+import { TypographyLabel, TypographySpan, TypographyP } from "@/components/ui/typography";
 
 import { useState } from "react";
 import { PROFILE_TYPES } from "@/lib/profile-types";
@@ -10,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+
 
 interface CreateProfileModalProps {
   open: boolean;
@@ -94,9 +96,9 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Profile Type Selector */}
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none mb-2.5 block">
+            <TypographyLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none mb-2.5 block">
               Wallet Type
-            </label>
+            </TypographyLabel>
             <div className="grid grid-cols-4 gap-2">
               {PROFILE_TYPES.map((p) => (
                 <button
@@ -109,8 +111,8 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
                       : "border-border hover:border-muted-foreground hover:bg-muted text-muted-foreground"
                   }`}
                 >
-                  <span className="text-xl">{p.emoji}</span>
-                  <span className="text-[10px] font-bold leading-tight truncate w-full">{p.label}</span>
+                  <TypographySpan className="text-xl">{p.emoji}</TypographySpan>
+                  <TypographySpan className="text-[10px] font-bold leading-tight truncate w-full">{p.label}</TypographySpan>
                 </button>
               ))}
             </div>
@@ -118,7 +120,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
 
           {/* Profile Name */}
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-foreground">Profile Name</label>
+            <TypographyLabel className="text-sm font-semibold text-foreground">Profile Name</TypographyLabel>
             <Input
               placeholder={`e.g. My ${selectedType.label}`}
               value={name}
@@ -130,11 +132,11 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
 
           {/* Starting Balance */}
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-foreground">Starting Balance</label>
+            <TypographyLabel className="text-sm font-semibold text-foreground">Starting Balance</TypographyLabel>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground font-mono">
+              <TypographySpan className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground font-mono">
                 {symbol}
-              </span>
+              </TypographySpan>
               <Input
                 type="number"
                 placeholder="0.00"
@@ -150,7 +152,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
 
           {/* Description */}
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-foreground">Description (Optional)</label>
+            <TypographyLabel className="text-sm font-semibold text-foreground">Description (Optional)</TypographyLabel>
             <Input
               placeholder="e.g. Personal savings account"
               value={description}
@@ -161,7 +163,7 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
 
           {/* Preview */}
           <div className="bg-muted/50 rounded-xl p-4 border border-border">
-            <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-bold">Preview</p>
+            <TypographyP className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-bold">Preview</TypographyP>
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
@@ -170,10 +172,10 @@ export function CreateProfileModal({ open, onClose, onCreated }: CreateProfileMo
                 {selectedType.emoji}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-foreground truncate">{name || selectedType.label}</p>
-                <p className="text-muted-foreground font-semibold font-mono text-xs mt-0.5">
+                <TypographyP className="text-sm font-bold text-foreground truncate">{name || selectedType.label}</TypographyP>
+                <TypographyP className="text-muted-foreground font-semibold font-mono text-xs mt-0.5">
                   {symbol}{parseFloat(balance || "0").toLocaleString("en-US", { minimumFractionDigits: 0 })}
-                </p>
+                </TypographyP>
               </div>
             </div>
           </div>

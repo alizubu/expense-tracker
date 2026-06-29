@@ -1,8 +1,10 @@
 "use client";
+import { TypographyH2, TypographyP } from "@/components/ui/typography";
 
 import { useEffect } from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
 
 export default function ErrorBoundary({
   error,
@@ -21,10 +23,10 @@ export default function ErrorBoundary({
       <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-destructive/10">
         <AlertCircle className="h-10 w-10 text-destructive" />
       </div>
-      <h2 className="mb-2 text-2xl font-bold text-foreground tracking-tight">Something went wrong!</h2>
-      <p className="mb-8 max-w-md text-muted-foreground">
+      <TypographyH2 className="mb-2 text-2xl font-bold text-foreground tracking-tight">Something went wrong!</TypographyH2>
+      <TypographyP className="mb-8 max-w-md text-muted-foreground">
         We encountered an unexpected error while trying to load this page. Our team has been notified.
-      </p>
+      </TypographyP>
       <Button onClick={() => reset()} variant="default">
         Try again
       </Button>

@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan } from "@/components/ui/typography";
 
 import { Search, Plus, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,15 +36,15 @@ export function Topbar() {
         >
           <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
+          <TypographySpan className="sr-only">Toggle theme</TypographySpan>
         </Button>
         <Button 
           onClick={() => openModal("addTransaction")} 
           className="shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_25px_rgba(124,58,237,0.5)] h-9 rounded-lg font-medium bg-gradient-to-r from-primary to-indigo-500 text-white border-0 transition-all"
         >
           <Plus className="w-4 h-4 mr-1.5" />
-          <span className="hidden sm:inline">Add Txn</span>
-          <span className="inline sm:hidden">Add</span>
+          <TypographySpan className="hidden sm:inline">Add Txn</TypographySpan>
+          <TypographySpan className="inline sm:hidden">Add</TypographySpan>
         </Button>
       </div>
     </header>

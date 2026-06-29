@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH3 } from "@/components/ui/typography";
 
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useProfileStore } from "@/store/useProfileStore";
@@ -7,6 +8,7 @@ import { getCurrencySymbol } from "@/lib/currencies";
 import { Card } from "@/components/ui/card";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Layers } from "lucide-react";
+
 
 export default function ProfileAreaChart() {
   const { transactions } = useTransactionStore();
@@ -39,10 +41,10 @@ export default function ProfileAreaChart() {
   return (
     <Card className="p-4 md:p-6 w-full h-[350px] flex flex-col justify-between hover:shadow-md transition-all duration-200">
       <div className="flex items-center justify-between mb-4 flex-shrink-0">
-        <h3 className="text-sm font-semibold text-text-primary">Profile Balances</h3>
-        <span className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">
+        <TypographyH3 className="text-sm font-semibold text-text-primary">Profile Balances</TypographyH3>
+        <TypographySpan className="text-[11px] text-text-muted bg-white/[0.04] dark:bg-white/[0.04] px-2 py-0.5 rounded-full border border-border/40">
           Last 7 Days
-        </span>
+        </TypographySpan>
       </div>
       <div className="flex-1 min-h-0 w-full flex items-center justify-center">
         {hasData ? (
@@ -71,8 +73,8 @@ export default function ProfileAreaChart() {
             <div className="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center text-accent mb-3 border border-accent/10">
               <Layers size={18} />
             </div>
-            <span className="text-xs font-semibold text-text-primary">No data yet</span>
-            <span className="text-[10px] text-text-muted mt-0.5">Profile comparisons will show here</span>
+            <TypographySpan className="text-xs font-semibold text-text-primary">No data yet</TypographySpan>
+            <TypographySpan className="text-[10px] text-text-muted mt-0.5">Profile comparisons will show here</TypographySpan>
           </div>
         )}
       </div>

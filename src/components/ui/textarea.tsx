@@ -1,4 +1,5 @@
 "use client";
+import { TypographyLabel, TypographySpan } from "@/components/ui/typography";
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
@@ -18,12 +19,12 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className={cn("flex flex-col gap-1.5 w-full", containerClassName)}>
         {label && (
-          <label
+          <TypographyLabel
             htmlFor={textareaId}
             className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none"
           >
             {label}
-          </label>
+          </TypographyLabel>
         )}
         <textarea
           id={textareaId}
@@ -41,9 +42,9 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...props}
         />
         {error && (
-          <span className="text-[11px] text-red-500 font-medium tracking-wide">
+          <TypographySpan className="text-[11px] text-red-500 font-medium tracking-wide">
             {error}
-          </span>
+          </TypographySpan>
         )}
       </div>
     );

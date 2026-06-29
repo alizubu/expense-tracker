@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyP, TypographyH2 } from "@/components/ui/typography";
 
 import { useMemo, useState, useEffect } from "react";
 import {
@@ -14,6 +15,7 @@ import { getCategoryById, getCategoryColor } from "@/lib/categories";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+
 
 interface ChartDataItem {
   name: string;
@@ -31,11 +33,11 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
     <div className="bg-surface-3 border border-white/[0.04] rounded-lg px-3 py-2 text-xs shadow-md">
       <div className="flex items-center gap-2 mb-1">
         <div className="h-2 w-2 rounded-full" style={{ backgroundColor: data.color }} />
-        <span className="font-semibold text-foreground">{data.name}</span>
+        <TypographySpan className="font-semibold text-foreground">{data.name}</TypographySpan>
       </div>
-      <p className="text-muted-foreground">
+      <TypographyP className="text-muted-foreground">
         {symbol}{data.value.toLocaleString("en-US", { maximumFractionDigits: 0 })} ({data.percentage.toFixed(1)}%)
-      </p>
+      </TypographyP>
     </div>
   );
 }
@@ -91,12 +93,12 @@ export function SpendingChart() {
   return (
     <Card className="flex flex-col w-full h-auto sm:h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between mb-3 flex-shrink-0 h-[32px]">
-        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+        <TypographyH2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Spending By Category
-        </h2>
-        <span className="text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground bg-surface-2 px-2 py-1 rounded-md transition-colors">
+        </TypographyH2>
+        <TypographySpan className="text-[11px] font-semibold text-muted-foreground cursor-pointer hover:text-foreground bg-surface-2 px-2 py-1 rounded-md transition-colors">
           This Month ▾
-        </span>
+        </TypographySpan>
       </div>
 
       {chartData.length === 0 ? (
@@ -104,7 +106,7 @@ export function SpendingChart() {
           <div className="w-10 h-10 rounded-xl bg-surface-2 flex items-center justify-center mb-3 border border-white/[0.04]">
             <div className="w-4 h-4 border-2 border-muted-foreground rounded-full animate-pulse" />
           </div>
-          <span className="text-sm font-medium text-muted-foreground">No data yet</span>
+          <TypographySpan className="text-sm font-medium text-muted-foreground">No data yet</TypographySpan>
         </div>
       ) : (
         <div className="flex flex-col sm:flex-1 min-h-0">
@@ -131,12 +133,12 @@ export function SpendingChart() {
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none drop-shadow-md">
-              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mt-1">
+              <TypographySpan className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mt-1">
                 Spent
-              </span>
-              <span className="text-3xl font-bold text-foreground font-mono tracking-tight leading-none mt-1">
+              </TypographySpan>
+              <TypographySpan className="text-3xl font-bold text-foreground font-mono tracking-tight leading-none mt-1">
                 {symbol}{totalSpent.toLocaleString("en-US", { maximumFractionDigits: 0 })}
-              </span>
+              </TypographySpan>
             </div>
           </div>
 
@@ -144,11 +146,11 @@ export function SpendingChart() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
               {chartData.slice(0, showAllLegend ? undefined : 6).map((item) => (
                 <div key={item.name} className="flex items-center group py-1">
-                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-sm" style={{ background: item.color }} />
-                  <span className="ml-3 text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate flex-1">{item.name}</span>
-                  <span className="ml-2 font-mono font-semibold text-xs text-foreground flex-shrink-0 text-right">
+                  <TypographySpan className="w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-sm" style={{ background: item.color }} />
+                  <TypographySpan className="ml-3 text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate flex-1">{item.name}</TypographySpan>
+                  <TypographySpan className="ml-2 font-mono font-semibold text-xs text-foreground flex-shrink-0 text-right">
                     {symbol}{item.value.toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                  </span>
+                  </TypographySpan>
                 </div>
               ))}
             </div>

@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH3 } from "@/components/ui/typography";
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
@@ -12,6 +13,7 @@ import { useUIStore } from "@/store/useUIStore";
 import { getCategoryById, getCategoryColor, getCategoryIconName } from "@/lib/categories";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { Card } from "@/components/ui/card";
+
 
 export function TopCategories() {
   const { transactions } = useTransactionStore();
@@ -52,12 +54,12 @@ export function TopCategories() {
   return (
     <Card className="flex flex-col w-full h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between mb-3 flex-shrink-0 h-[32px]">
-        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+        <TypographyH3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Top Spending
-        </h3>
-        <span className="text-[11px] font-semibold text-muted-foreground bg-surface-2 px-2 py-1 rounded-md transition-colors cursor-pointer hover:text-foreground">
+        </TypographyH3>
+        <TypographySpan className="text-[11px] font-semibold text-muted-foreground bg-surface-2 px-2 py-1 rounded-md transition-colors cursor-pointer hover:text-foreground">
           This Month ▾
-        </span>
+        </TypographySpan>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0 flex flex-col justify-start pr-2 pb-2 space-y-1">
@@ -66,8 +68,8 @@ export function TopCategories() {
             <div className="w-10 h-10 rounded-xl bg-surface-2 border border-white/[0.04] flex items-center justify-center mb-3">
               <Tag className="h-5 w-5 text-muted-foreground/50" />
             </div>
-            <span className="text-sm font-medium text-muted-foreground">No expenses yet</span>
-            <span className="text-xs text-muted-foreground mt-1">Top spent categories will show here</span>
+            <TypographySpan className="text-sm font-medium text-muted-foreground">No expenses yet</TypographySpan>
+            <TypographySpan className="text-xs text-muted-foreground mt-1">Top spent categories will show here</TypographySpan>
           </div>
         ) : (
           categoryData.map((cat, index) => {
@@ -87,12 +89,12 @@ export function TopCategories() {
                 >
                   <Icon size={14} />
                 </div>
-                <span className="text-[13px] font-semibold text-foreground flex-1 truncate group-hover:text-primary transition-colors">
+                <TypographySpan className="text-[13px] font-semibold text-foreground flex-1 truncate group-hover:text-primary transition-colors">
                   {name}
-                </span>
-                <span className="text-[13px] font-bold text-foreground font-mono flex-shrink-0 tabular-money">
+                </TypographySpan>
+                <TypographySpan className="text-[13px] font-bold text-foreground font-mono flex-shrink-0 tabular-money">
                   {symbol}{cat.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                </span>
+                </TypographySpan>
               </div>
             );
           })

@@ -1,4 +1,5 @@
 "use client";
+import { TypographyLabel, TypographySpan } from "@/components/ui/typography";
 
 import { useState, useEffect } from "react";
 import { PROFILE_TYPES } from "@/lib/profile-types";
@@ -77,9 +78,9 @@ export function EditProfileModal({ open, onClose, profileId }: EditProfileModalP
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Profile Type Selector */}
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none mb-2.5 block">
+            <TypographyLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground select-none mb-2.5 block">
               Wallet Type
-            </label>
+            </TypographyLabel>
             <div className="grid grid-cols-4 gap-2">
               {PROFILE_TYPES.map((p) => (
                 <button
@@ -92,8 +93,8 @@ export function EditProfileModal({ open, onClose, profileId }: EditProfileModalP
                       : "border-border hover:border-muted-foreground hover:bg-muted text-muted-foreground"
                   }`}
                 >
-                  <span className="text-xl">{p.emoji}</span>
-                  <span className="text-[10px] font-bold leading-tight truncate w-full">{p.label}</span>
+                  <TypographySpan className="text-xl">{p.emoji}</TypographySpan>
+                  <TypographySpan className="text-[10px] font-bold leading-tight truncate w-full">{p.label}</TypographySpan>
                 </button>
               ))}
             </div>
@@ -101,7 +102,7 @@ export function EditProfileModal({ open, onClose, profileId }: EditProfileModalP
 
           {/* Profile Name */}
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-foreground">Profile Name</label>
+            <TypographyLabel className="text-sm font-semibold text-foreground">Profile Name</TypographyLabel>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -112,7 +113,7 @@ export function EditProfileModal({ open, onClose, profileId }: EditProfileModalP
 
           {/* Description */}
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-foreground">Description (Optional)</label>
+            <TypographyLabel className="text-sm font-semibold text-foreground">Description (Optional)</TypographyLabel>
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}

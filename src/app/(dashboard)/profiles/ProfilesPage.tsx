@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH1, TypographyP, TypographyH3 } from "@/components/ui/typography";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -17,6 +18,7 @@ import { CreateProfileModal } from "@/components/profiles/CreateProfileModal";
 import { EditProfileModal } from "@/components/profiles/EditProfileModal";
 import { ConfirmDialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+
 
 function getIcon(iconName: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,8 +47,8 @@ export default function ProfilesPage() {
     <div className="flex flex-col min-h-screen p-4 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-2">
         <div>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Profiles</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage your wallets and accounts</p>
+          <TypographyH1 className="text-3xl font-bold text-foreground tracking-tight">Profiles</TypographyH1>
+          <TypographyP className="text-sm text-muted-foreground mt-1">Manage your wallets and accounts</TypographyP>
         </div>
         <Button
           onClick={() => setShowCreateModal(true)}
@@ -87,10 +89,10 @@ export default function ProfilesPage() {
                         <Icon className="h-6 w-6" style={{ color: profile.color }} />
                       </div>
                       <div className="min-w-0 flex-1 mt-1">
-                        <h3 className="text-base font-semibold text-foreground truncate">{profile.name}</h3>
-                        <span className="inline-flex items-center rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground mt-1 tracking-wide">
+                        <TypographyH3 className="text-base font-semibold text-foreground truncate">{profile.name}</TypographyH3>
+                        <TypographySpan className="inline-flex items-center rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground mt-1 tracking-wide">
                           {profileType?.label || "General"}
-                        </span>
+                        </TypographySpan>
                       </div>
                     </CardItem>
 
@@ -101,11 +103,11 @@ export default function ProfilesPage() {
                     <CardItem translateZ={20} className="flex items-center gap-6 mb-6 border-t border-white/[0.04] pt-4">
                       <div className="flex items-center gap-2 min-w-0">
                         <TrendingUp className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                        <span className="text-xs text-muted-foreground font-semibold tabular-money truncate">{symbol}{monthIncome.toLocaleString()}</span>
+                        <TypographySpan className="text-xs text-muted-foreground font-semibold tabular-money truncate">{symbol}{monthIncome.toLocaleString()}</TypographySpan>
                       </div>
                       <div className="flex items-center gap-2 min-w-0">
                         <TrendingDown className="h-4 w-4 text-foreground flex-shrink-0" />
-                        <span className="text-xs text-muted-foreground font-semibold tabular-money truncate">{symbol}{monthExpense.toLocaleString()}</span>
+                        <TypographySpan className="text-xs text-muted-foreground font-semibold tabular-money truncate">{symbol}{monthExpense.toLocaleString()}</TypographySpan>
                       </div>
                     </CardItem>
                   </div>
@@ -147,7 +149,7 @@ export default function ProfilesPage() {
                 className="flex flex-col items-center justify-center gap-3 text-muted-foreground group-hover/card:text-primary w-full h-full cursor-pointer"
               >
                 <Plus className="h-8 w-8 transition-transform group-hover/card:scale-110" />
-                <span className="text-sm font-semibold tracking-wide">Add New Profile</span>
+                <TypographySpan className="text-sm font-semibold tracking-wide">Add New Profile</TypographySpan>
               </CardItem>
             </CardBody>
           </CardContainer>

@@ -1,10 +1,12 @@
 "use client";
+import { TypographySpan, TypographyH2 } from "@/components/ui/typography";
 
 import { Activity, ArrowDownCircle, AlertCircle, Tag, Layers } from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { Card } from "@/components/ui/card";
 import { getCategoryColor } from "@/lib/categories";
+
 
 interface QuickStatsProps {
   transactionsCount: number;
@@ -80,9 +82,9 @@ export function QuickStats({
 
   return (
     <Card className="flex flex-col w-full h-auto md:h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
-      <h2 className="hidden md:flex text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3 flex-shrink-0 h-[32px] items-center">
+      <TypographyH2 className="hidden md:flex text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3 flex-shrink-0 h-[32px] items-center">
         Quick Stats
-      </h2>
+      </TypographyH2>
 
       <div className="flex flex-row overflow-x-auto hide-scrollbar gap-3 py-1 md:flex-col md:overflow-visible md:gap-2.5 md:py-0 md:flex-1 md:min-h-0 touch-pan-x">
         {stats.map((stat) => {
@@ -99,18 +101,18 @@ export function QuickStats({
                 >
                   <Icon className={`w-4 h-4 ${stat.iconColor}`} style={stat.customStyle} />
                 </div>
-                <span className="text-xs md:text-sm text-muted-foreground truncate font-medium group-hover:text-foreground transition-colors">
+                <TypographySpan className="text-xs md:text-sm text-muted-foreground truncate font-medium group-hover:text-foreground transition-colors">
                   {stat.label}
-                </span>
+                </TypographySpan>
               </div>
               
               <div className="flex-shrink-0 text-left md:text-right md:w-28 mt-2 md:mt-0">
-                <span 
+                <TypographySpan 
                   className={`text-sm md:text-base font-semibold ${stat.isCurrency ? 'tabular-money' : ''} ${stat.isCapitalize ? 'capitalize' : ''} ${stat.textColor || 'text-foreground'}`}
                   style={stat.customStyle}
                 >
                   {stat.value}
-                </span>
+                </TypographySpan>
               </div>
             </div>
           );

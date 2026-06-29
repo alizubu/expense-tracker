@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan } from "@/components/ui/typography";
 
 import * as React from "react";
 import { ChevronDown, Check } from "lucide-react";
@@ -55,9 +56,9 @@ export function Select({
   return (
     <div className={cn("flex flex-col gap-1.5 w-full relative", containerClassName)} ref={containerRef}>
       {label && (
-        <span className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
+        <TypographySpan className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">
           {label}
-        </span>
+        </TypographySpan>
       )}
       <div className="relative">
         <button
@@ -73,9 +74,9 @@ export function Select({
             className
           )}
         >
-          <span className={cn(!selectedOption && "text-text-muted/60")}>
+          <TypographySpan className={cn(!selectedOption && "text-text-muted/60")}>
             {selectedOption ? selectedOption.label : placeholder}
-          </span>
+          </TypographySpan>
           <ChevronDown
             className={cn(
               "h-4 w-4 text-text-muted transition-transform duration-200",
@@ -110,7 +111,7 @@ export function Select({
                         : "text-text-secondary hover:bg-white/[0.04] hover:text-text-primary"
                     )}
                   >
-                    <span>{opt.label}</span>
+                    <TypographySpan>{opt.label}</TypographySpan>
                     {isSelected && <Check className="h-4 w-4 text-brand-purple-light" />}
                   </button>
                 );
@@ -120,9 +121,9 @@ export function Select({
         </AnimatePresence>
       </div>
       {error && (
-        <span className="text-[11px] text-red-500 font-medium tracking-wide">
+        <TypographySpan className="text-[11px] text-red-500 font-medium tracking-wide">
           {error}
-        </span>
+        </TypographySpan>
       )}
     </div>
   );

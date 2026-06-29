@@ -1,5 +1,8 @@
 "use client"
 
+import { TypographySpan } from "@/components/ui/typography";
+
+
 import * as React from "react"
 import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
 
@@ -56,7 +59,7 @@ function AvatarFallback({
 
 function AvatarBadge({ className, ...props }: React.ComponentProps<"span">) {
   return (
-    <span
+    <TypographySpan
       data-slot="avatar-badge"
       className={cn(
         "absolute right-0 bottom-0 z-10 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground bg-blend-color ring-2 ring-background select-none",

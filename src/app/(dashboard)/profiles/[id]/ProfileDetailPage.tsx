@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyP, TypographyH1, TypographyH2 } from "@/components/ui/typography";
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
@@ -16,6 +17,7 @@ import { ArrowLeft, TrendingUp, TrendingDown, Edit2, CircleDashed } from "lucide
 import Link from "next/link";
 import * as LucideIcons from "lucide-react";
 import { EditProfileModal } from "@/components/profiles/EditProfileModal";
+
 
 function getIcon(iconName: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,7 +38,7 @@ export default function ProfileDetailPage() {
   if (!profile) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <p className="text-muted-foreground">Profile not found</p>
+        <TypographyP className="text-muted-foreground">Profile not found</TypographyP>
         <Link href="/profiles" className="mt-4 text-sm text-primary hover:underline">← Back to Profiles</Link>
       </div>
     );
@@ -66,14 +68,14 @@ export default function ProfileDetailPage() {
                 <Icon className="h-8 w-8" style={{ color: profile.color }} />
               </div>
               <div className="min-w-0 flex-1">
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight truncate">{profile.name}</h1>
+                <TypographyH1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight truncate">{profile.name}</TypographyH1>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="inline-flex items-center rounded-md bg-surface-2 px-2.5 py-0.5 text-xs text-muted-foreground font-semibold tracking-wide border border-white/[0.04]">{profileType?.emoji} {profileType?.label}</span>
+                  <TypographySpan className="inline-flex items-center rounded-md bg-surface-2 px-2.5 py-0.5 text-xs text-muted-foreground font-semibold tracking-wide border border-white/[0.04]">{profileType?.emoji} {profileType?.label}</TypographySpan>
                   {profile.isDefault && (
-                    <span className="inline-flex items-center rounded-md bg-primary/10 border border-primary/20 px-2 py-0.5 text-xs font-bold text-primary tracking-wide">Default</span>
+                    <TypographySpan className="inline-flex items-center rounded-md bg-primary/10 border border-primary/20 px-2 py-0.5 text-xs font-bold text-primary tracking-wide">Default</TypographySpan>
                   )}
                 </div>
-                {profile.description && <p className="text-sm text-muted-foreground mt-3">{profile.description}</p>}
+                {profile.description && <TypographyP className="text-sm text-muted-foreground mt-3">{profile.description}</TypographyP>}
               </div>
             </div>
             <button 
@@ -85,8 +87,8 @@ export default function ProfileDetailPage() {
           </div>
 
           <div className="text-3xl md:text-4xl font-bold text-foreground tracking-tight tabular-money mb-8 flex items-baseline gap-1">
-            <span className="text-xl md:text-2xl font-semibold opacity-80">{symbol}</span>
-            <span className="leading-none">{profile.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <TypographySpan className="text-xl md:text-2xl font-semibold opacity-80">{symbol}</TypographySpan>
+            <TypographySpan className="leading-none">{profile.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TypographySpan>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/[0.04] pt-6">
@@ -94,17 +96,17 @@ export default function ProfileDetailPage() {
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex items-center gap-2 mb-3 relative z-10">
                 <TrendingUp className="h-4 w-4 text-emerald-500" />
-                <span className="text-xs text-emerald-500/80 font-bold uppercase tracking-widest">Income This Month</span>
+                <TypographySpan className="text-xs text-emerald-500/80 font-bold uppercase tracking-widest">Income This Month</TypographySpan>
               </div>
-              <p className="text-xl md:text-2xl font-semibold text-emerald-500 tabular-money relative z-10 leading-none">{symbol} {monthIncome.toLocaleString()}</p>
+              <TypographyP className="text-xl md:text-2xl font-semibold text-emerald-500 tabular-money relative z-10 leading-none">{symbol} {monthIncome.toLocaleString()}</TypographyP>
             </div>
             <div className="rounded-2xl bg-surface-2 border border-white/[0.04] p-5 relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-foreground/0 to-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="flex items-center gap-2 mb-3 relative z-10">
                 <TrendingDown className="h-4 w-4 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Expense This Month</span>
+                <TypographySpan className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Expense This Month</TypographySpan>
               </div>
-              <p className="text-xl md:text-2xl font-semibold text-foreground tabular-money relative z-10 leading-none">{symbol} {monthExpense.toLocaleString()}</p>
+              <TypographyP className="text-xl md:text-2xl font-semibold text-foreground tabular-money relative z-10 leading-none">{symbol} {monthExpense.toLocaleString()}</TypographyP>
             </div>
           </div>
         </Card>
@@ -113,7 +115,7 @@ export default function ProfileDetailPage() {
       {/* Transaction History */}
       <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.3 }}>
         <Card className="p-6 border-white/[0.04] shadow-sm bg-surface-1 rounded-2xl">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-6">Transaction History</h2>
+          <TypographyH2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-6">Transaction History</TypographyH2>
           <div className="divide-y divide-white/[0.04]">
             {profileTxns.slice(0, 20).map(txn => {
               const categoryLabel = getCategoryById(txn.category)?.label || txn.category;
@@ -136,14 +138,14 @@ export default function ProfileDetailPage() {
                     <CatIcon className="h-4 w-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{txn.title}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{categoryLabel} • {formatRelativeDate(txn.date)}</p>
+                    <TypographyP className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{txn.title}</TypographyP>
+                    <TypographyP className="text-xs text-muted-foreground mt-1">{categoryLabel} • {formatRelativeDate(txn.date)}</TypographyP>
                   </div>
-                  <p className={cn("text-sm font-semibold tabular-money flex-shrink-0", color)}>{sign}{symbol}{txn.amount.toLocaleString()}</p>
+                  <TypographyP className={cn("text-sm font-semibold tabular-money flex-shrink-0", color)}>{sign}{symbol}{txn.amount.toLocaleString()}</TypographyP>
                 </div>
               );
             })}
-            {profileTxns.length === 0 && <p className="text-center py-12 text-sm font-semibold text-muted-foreground">No transactions for this profile yet</p>}
+            {profileTxns.length === 0 && <TypographyP className="text-center py-12 text-sm font-semibold text-muted-foreground">No transactions for this profile yet</TypographyP>}
           </div>
         </Card>
       </motion.div>

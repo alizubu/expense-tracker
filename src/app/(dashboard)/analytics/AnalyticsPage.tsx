@@ -1,4 +1,5 @@
 "use client";
+import { TypographyH1, TypographyP } from "@/components/ui/typography";
 
 import { motion } from "framer-motion";
 import { useTransactionStore } from "@/store/useTransactionStore";
@@ -11,6 +12,7 @@ import DailyLineChart from "@/components/analytics/DailyLineChart";
 import ProfileAreaChart from "@/components/analytics/ProfileAreaChart";
 import { TopCategories } from "@/components/analytics/TopCategories";
 
+
 export default function AnalyticsPage() {
   const { transactions } = useTransactionStore();
 
@@ -18,8 +20,8 @@ export default function AnalyticsPage() {
     <div className="flex flex-col min-h-screen p-4 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
       <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0 }}>
         <div className="mb-2">
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Analytics & Insights</h1>
-          <p className="text-sm text-muted-foreground mt-1">Deep dive into your spending habits and trends.</p>
+          <TypographyH1 className="text-3xl font-bold text-foreground tracking-tight">Analytics & Insights</TypographyH1>
+          <TypographyP className="text-sm text-muted-foreground mt-1">Deep dive into your spending habits and trends.</TypographyP>
         </div>
       </motion.div>
 

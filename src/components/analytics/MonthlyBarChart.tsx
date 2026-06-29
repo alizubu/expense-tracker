@@ -1,10 +1,12 @@
 "use client";
+import { TypographyH3 } from "@/components/ui/typography";
 
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { useUIStore } from "@/store/useUIStore";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+
 
 export default function MonthlyBarChart() {
   const { transactions } = useTransactionStore();
@@ -32,7 +34,7 @@ export default function MonthlyBarChart() {
 
   return (
     <Card className="p-6 w-full h-[350px] flex flex-col justify-between rounded-2xl shadow-sm border border-white/[0.04] bg-surface-1 transition-shadow hover:shadow-md">
-      <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4 flex-shrink-0">Monthly Overview</h3>
+      <TypographyH3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4 flex-shrink-0">Monthly Overview</TypographyH3>
       <div className="flex-1 min-h-0 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>

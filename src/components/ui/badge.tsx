@@ -1,3 +1,4 @@
+import { TypographySpan } from "@/components/ui/typography";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +41,7 @@ export function Badge({
     : style;
 
   return (
-    <span
+    <TypographySpan
       className={cn(
         baseStyles,
         !color && variants[variant],
@@ -50,6 +51,6 @@ export function Badge({
       {...props}
     >
       {children}
-    </span>
+    </TypographySpan>
   );
 }

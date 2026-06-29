@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyH4, TypographyP } from "@/components/ui/typography";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,6 +30,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import {
+
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -65,7 +67,7 @@ export function Sidebar() {
           <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm shrink-0">
             <Wallet className="w-5 h-5" />
           </div>
-          {!sidebarCollapsed && <span>ExpenseTracker</span>}
+          {!sidebarCollapsed && <TypographySpan>ExpenseTracker</TypographySpan>}
         </div>
       </div>
 
@@ -89,7 +91,7 @@ export function Sidebar() {
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full" />
                 )}
                 <route.icon className={cn("w-5 h-5 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
-                {!sidebarCollapsed && <span>{route.label}</span>}
+                {!sidebarCollapsed && <TypographySpan>{route.label}</TypographySpan>}
               </div>
             </Link>
           );
@@ -101,14 +103,14 @@ export function Sidebar() {
         <div className="px-6 py-6 mt-auto">
           <div className="p-4 rounded-2xl bg-surface-1 border border-white/[0.04] shadow-sm relative overflow-hidden group">
             <div className="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-500 pointer-events-none" />
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Monthly Net</h4>
+            <TypographyH4 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Monthly Net</TypographyH4>
             <div className="flex items-baseline gap-1">
-              <span className="text-sm text-muted-foreground">$</span>
-              <span className="text-xl font-semibold tabular-money text-foreground">4,250.00</span>
+              <TypographySpan className="text-sm text-muted-foreground">$</TypographySpan>
+              <TypographySpan className="text-xl font-semibold tabular-money text-foreground">4,250.00</TypographySpan>
             </div>
             <div className="flex items-center gap-1 mt-2 text-xs font-medium text-emerald-500">
               <TrendingUp className="w-3 h-3" />
-              <span>+12.5% this month</span>
+              <TypographySpan>+12.5% this month</TypographySpan>
             </div>
           </div>
         </div>
@@ -134,8 +136,8 @@ export function Sidebar() {
                 </div>
                 {!sidebarCollapsed && (
                   <div className="flex flex-col items-start truncate text-left">
-                    <span className="text-sm font-semibold truncate text-foreground">{session?.user?.name || "User"}</span>
-                    <span className="text-xs text-muted-foreground truncate">{session?.user?.email || "Pro Plan"}</span>
+                    <TypographySpan className="text-sm font-semibold truncate text-foreground">{session?.user?.name || "User"}</TypographySpan>
+                    <TypographySpan className="text-xs text-muted-foreground truncate">{session?.user?.email || "Pro Plan"}</TypographySpan>
                   </div>
                 )}
               </div>
@@ -147,8 +149,8 @@ export function Sidebar() {
           <DropdownMenuContent align="start" side="right" sideOffset={12} className="w-56 mb-2 rounded-xl border border-white/[0.04] bg-surface-1/90 backdrop-blur-xl shadow-xl p-1.5">
             <div className="font-semibold px-2 py-1.5">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none text-foreground">{session?.user?.name || "User"}</p>
-                <p className="text-[11px] leading-none text-muted-foreground">{session?.user?.email || "Pro Plan"}</p>
+                <TypographyP className="text-sm font-medium leading-none text-foreground">{session?.user?.name || "User"}</TypographyP>
+                <TypographyP className="text-[11px] leading-none text-muted-foreground">{session?.user?.email || "Pro Plan"}</TypographyP>
               </div>
             </div>
             <DropdownMenuSeparator className="bg-white/[0.04]" />

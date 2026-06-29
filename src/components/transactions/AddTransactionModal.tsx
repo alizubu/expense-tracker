@@ -1,4 +1,5 @@
 "use client";
+import { TypographySpan, TypographyLabel, TypographyP } from "@/components/ui/typography";
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
@@ -20,6 +21,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+
 
 interface AddTransactionModalProps {
   onClose: () => void;
@@ -230,7 +232,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
-                  <span className="relative z-20">{tab.label}</span>
+                  <TypographySpan className="relative z-20">{tab.label}</TypographySpan>
                 </button>
               );
             })}
@@ -238,11 +240,11 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
 
           {/* Amount Input */}
           <motion.div variants={itemVariants} className="flex flex-col items-center justify-center py-2 select-none">
-            <p className="text-[10px] font-bold tracking-wider text-text-muted uppercase mb-1">Amount</p>
+            <TypographyP className="text-[10px] font-bold tracking-wider text-text-muted uppercase mb-1">Amount</TypographyP>
             <div className={cn("flex items-center justify-center gap-1.5 transition-all duration-300 rounded-2xl px-6 py-2", type === "INCOME" ? "shadow-[0_0_30px_rgba(16,185,129,0.15)]" : type === "EXPENSE" ? "shadow-[0_0_30px_rgba(244,63,94,0.15)]" : "shadow-[0_0_30px_rgba(59,130,246,0.15)]")}>
-              <span className={cn("text-3xl font-bold font-mono transition-colors duration-300", typeAccent)}>
+              <TypographySpan className={cn("text-3xl font-bold font-mono transition-colors duration-300", typeAccent)}>
                 {symbol}
-              </span>
+              </TypographySpan>
               <NumericFormat
                 value={amount || ""}
                 onValueChange={(values) => setAmount(values.floatValue || 0)}
@@ -292,9 +294,9 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
 
             {/* Date */}
             <div className="w-full max-w-[200px] flex flex-col items-center space-y-2 mt-2">
-              <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none text-center">
+              <TypographyLabel className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none text-center">
                 Date
-              </label>
+              </TypographyLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <button
@@ -305,7 +307,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                     )}
                   >
                     <CalendarIcon className="h-4 w-4 text-text-muted flex-shrink-0" />
-                    {date ? format(new Date(date), "PPP") : <span>Pick a date</span>}
+                    {date ? format(new Date(date), "PPP") : <TypographySpan>Pick a date</TypographySpan>}
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -336,7 +338,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                 >
                   <div className="rounded-xl border border-border bg-card-elevated p-3 space-y-3 mt-1">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs font-semibold text-text-primary">New account</p>
+                      <TypographyP className="text-xs font-semibold text-text-primary">New account</TypographyP>
                       <button
                         type="button"
                         onClick={() => setShowAddAccount(false)}
@@ -390,9 +392,9 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 className="space-y-2 flex flex-col items-center w-full mt-2"
               >
-                <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none text-center">
+                <TypographyLabel className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none text-center">
                   Category
-                </label>
+                </TypographyLabel>
                 <CategoryGrid
                   categories={availableCategories}
                   selectedCategory={category}
@@ -404,7 +406,7 @@ export function AddTransactionModal({ onClose, defaultType = "EXPENSE" }: AddTra
 
           {/* Title */}
           <motion.div variants={itemVariants} className="space-y-1.5">
-            <label className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Title</label>
+            <TypographyLabel className="text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none">Title</TypographyLabel>
             <Input
               type="text"
               value={title}

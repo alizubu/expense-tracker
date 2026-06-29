@@ -1,4 +1,5 @@
 "use client";
+import { TypographyLabel, TypographyH1, TypographyH3, TypographyP } from "@/components/ui/typography";
 
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -25,6 +26,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { getCategoryById } from "@/lib/categories";
+
 
 
 const profileSchema = z.object({
@@ -276,7 +278,7 @@ export function ProfileClient() {
     <div className="p-4 lg:p-6 max-w-[1200px] mx-auto space-y-6">
       <div className="flex items-center gap-3 mb-2">
         <UserCircle className="w-6 h-6 text-primary" />
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Your Profile</h1>
+        <TypographyH1 className="text-2xl font-semibold tracking-tight text-foreground">Your Profile</TypographyH1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -295,34 +297,34 @@ export function ProfileClient() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h3 className="font-semibold text-foreground">{session?.user?.name || "User"}</h3>
-                  <p className="text-sm text-muted-foreground">{session?.user?.email}</p>
+                  <TypographyH3 className="font-semibold text-foreground">{session?.user?.name || "User"}</TypographyH3>
+                  <TypographyP className="text-sm text-muted-foreground">{session?.user?.email}</TypographyP>
                 </div>
               </div>
 
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  <TypographyLabel className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                     Full Name
-                  </label>
+                  </TypographyLabel>
                   <Input 
                     {...form.register("name")} 
                     className="bg-surface-2 border-white/[0.04] focus-visible:ring-primary" 
                   />
                   {form.formState.errors.name && (
-                    <p className="text-xs text-destructive">{form.formState.errors.name.message}</p>
+                    <TypographyP className="text-xs text-destructive">{form.formState.errors.name.message}</TypographyP>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  <TypographyLabel className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                     Email Address
-                  </label>
+                  </TypographyLabel>
                   <Input 
                     disabled 
                     value={session?.user?.email || ""} 
                     className="bg-surface-2/50 border-white/[0.04] text-muted-foreground cursor-not-allowed" 
                   />
-                  <p className="text-[10px] text-muted-foreground">Email cannot be changed.</p>
+                  <TypographyP className="text-[10px] text-muted-foreground">Email cannot be changed.</TypographyP>
                 </div>
                 <Button 
                   type="submit" 
@@ -376,7 +378,7 @@ export function ProfileClient() {
               {/* Import Section */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-foreground">Import Transactions</h3>
+                  <TypographyH3 className="text-sm font-semibold text-foreground">Import Transactions</TypographyH3>
                   {fileToImport && (
                     <Button 
                       variant="ghost" 
@@ -395,8 +397,8 @@ export function ProfileClient() {
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <Upload className="w-8 h-8 text-muted-foreground mb-3" />
-                    <p className="text-sm font-medium text-foreground">Click to upload .xlsx file</p>
-                    <p className="text-xs text-muted-foreground mt-1">Max file size: 5MB</p>
+                    <TypographyP className="text-sm font-medium text-foreground">Click to upload .xlsx file</TypographyP>
+                    <TypographyP className="text-xs text-muted-foreground mt-1">Max file size: 5MB</TypographyP>
                     <input 
                       type="file" 
                       ref={fileInputRef} 
@@ -408,7 +410,7 @@ export function ProfileClient() {
                 ) : isParsing ? (
                   <div className="p-8 flex flex-col items-center justify-center text-center border border-white/[0.04] rounded-xl bg-surface-2/50">
                     <Loader2 className="w-8 h-8 text-primary animate-spin mb-3" />
-                    <p className="text-sm text-muted-foreground">Parsing Excel file...</p>
+                    <TypographyP className="text-sm text-muted-foreground">Parsing Excel file...</TypographyP>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -416,10 +418,10 @@ export function ProfileClient() {
                       <div className="flex items-center gap-3">
                         <FileSpreadsheet className="w-5 h-5 text-emerald-500" />
                         <div>
-                          <p className="text-sm font-medium text-foreground">{fileToImport.name}</p>
-                          <p className="text-xs text-muted-foreground">
+                          <TypographyP className="text-sm font-medium text-foreground">{fileToImport.name}</TypographyP>
+                          <TypographyP className="text-xs text-muted-foreground">
                             {parsedRows.length} rows found • {validCount} valid
-                          </p>
+                          </TypographyP>
                         </div>
                       </div>
                       <Button 

@@ -1,4 +1,5 @@
 "use client";
+import { TypographyLabel, TypographySpan } from "@/components/ui/typography";
 
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
@@ -22,9 +23,9 @@ interface AccountSelectorProps {
 export function AccountSelector({ profiles, selectedId, onChange, label, onAddNew }: AccountSelectorProps) {
   return (
     <div className="flex flex-col items-center w-full">
-      <label className="mb-2 block text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none text-center">
+      <TypographyLabel className="mb-2 block text-[12px] font-semibold uppercase tracking-wider text-text-secondary select-none text-center">
         {label}
-      </label>
+      </TypographyLabel>
 
       <div className="flex items-center justify-center gap-2 flex-wrap pb-1">
         {profiles.map((p) => {
@@ -47,7 +48,7 @@ export function AccountSelector({ profiles, selectedId, onChange, label, onAddNe
                 className="w-4 h-4 flex-shrink-0"
                 style={{ color: isSelected ? "inherit" : p.color }}
               />
-              <span>{p.name}</span>
+              <TypographySpan>{p.name}</TypographySpan>
             </button>
           );
         })}
