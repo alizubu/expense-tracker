@@ -7,7 +7,7 @@ import { CreateProfileModal } from "@/components/profiles/CreateProfileModal";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useTransactionStore } from "@/store/useTransactionStore";
 import { StatsStrip } from "@/components/dashboard/StatsStrip";
-import { QuickStats } from "@/components/dashboard/QuickStats";
+
 import { ProfileCard } from "@/components/dashboard/ProfileCard";
 import { SpendingChart } from "@/components/dashboard/SpendingChart";
 import { TransactionFeed } from "@/components/dashboard/TransactionFeed";
@@ -151,25 +151,16 @@ export function DashboardClient() {
         />
       </motion.div>
 
-      {/* ROW 2: Profiles, Quick Stats, Spending Chart */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4 items-stretch">
-        <div className="h-auto md:h-full">
+      {/* ROW 2: Profiles, Spending Chart */}
+      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4 items-stretch">
+        <div className="h-auto md:h-full lg:col-span-2">
           <ProfileCard 
             profiles={profiles} 
             netBalance={netBalance} 
             onAdd={() => setProfileModalOpen(true)} 
           />
         </div>
-        <div className="h-auto md:h-full">
-          <QuickStats 
-            transactionsCount={transactionsCount}
-            avgDailySpend={avgDailySpend}
-            largestExpense={largestExpense}
-            topCategory={topCategory}
-            profilesCount={profiles.length}
-          />
-        </div>
-        <div className="h-auto md:h-full md:col-span-2 xl:col-span-1">
+        <div className="h-auto md:h-full lg:col-span-1">
           <SpendingChart />
         </div>
       </motion.div>
