@@ -92,12 +92,12 @@ export default function MonthlyBarChart() {
               itemStyle={{ color: "hsl(var(--foreground))", fontSize: "14px", fontWeight: "bold" }}
               labelStyle={{ color: "hsl(var(--muted-foreground))", marginBottom: "6px" }}
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              formatter={(value: any, name: string) => [
+              formatter={((value: any, name: any) => [
                 <span key="val" className={name === "Income" ? "text-emerald-500" : "text-destructive"}>
                   {symbol}{value.toLocaleString()}
                 </span>,
                 <span key="name" className="text-muted-foreground ml-1">{name}</span>
-              ]}
+              ]) as any}
             />
             <Legend 
               wrapperStyle={{ fontSize: "11px", paddingTop: "15px", fontWeight: "bold" }}

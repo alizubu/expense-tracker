@@ -97,7 +97,7 @@ export default function ProfileAreaChart() {
                 itemStyle={{ color: "hsl(var(--foreground))", fontSize: "14px", fontWeight: "bold" }}
                 labelStyle={{ color: "hsl(var(--muted-foreground))", marginBottom: "6px" }}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                formatter={(value: any, name: string) => [`${symbol}${value.toLocaleString()}`, name]}
+                formatter={(value: any, name: any) => [`${symbol}${value.toLocaleString()}`, name]}
                 cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }}
               />
               {profiles.map((p) => (
