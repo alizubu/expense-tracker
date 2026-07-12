@@ -1,18 +1,14 @@
 "use client";
 import { TypographySpan, TypographyH2 } from "@/components/ui/typography";
-
 import Link from "next/link";
 import { format } from "date-fns";
-import { 
-  ArrowLeftRight, CircleDashed, Circle
-} from "lucide-react";
+import { ArrowLeftRight, CircleDashed, ArrowRight } from "lucide-react";
 import * as Icons from "lucide-react";
 import { useUIStore } from "@/store/useUIStore";
 import { useProfileStore } from "@/store/useProfileStore";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { getCategoryById, getCategoryColor, getCategoryIconName } from "@/lib/categories";
 import { Card } from "@/components/ui/card";
-
 
 interface TransactionFeedProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,38 +33,39 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
   });
 
   return (
-    <Card className="flex flex-col w-full h-full p-4 rounded-2xl shadow-sm border-white/[0.04] bg-surface-1 overflow-hidden transition-shadow hover:shadow-md">
-      <div className="flex items-center justify-between flex-shrink-0 h-[32px] mb-3">
-        <TypographyH2 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
-          Recent Transactions
+    <div className="flex flex-col w-full">
+      <div className="flex items-center justify-between mb-6">
+        <TypographyH2 className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">
+          Recent Activity
         </TypographyH2>
         <Link 
           href="/transactions"
-          className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-lg"
+          className="group flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/80 transition-colors"
         >
-          View all →
+          View all <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
 
-      <div className="flex flex-col flex-1 space-y-3 overflow-y-auto custom-scrollbar pr-2 pb-2">
+      <Card className="flex flex-col flex-1 p-2 sm:p-4 rounded-[24px] shadow-sm border-white/[0.03] bg-surface-1/40 backdrop-blur-2xl transition-all">
         {transactions.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center py-6">
-            <div className="w-10 h-10 rounded-xl bg-surface-2 border border-white/[0.04] flex items-center justify-center mb-3">
-              <Circle className="h-5 w-5 text-muted-foreground/50 animate-pulse" />
+          <div className="flex flex-col items-center justify-center h-48 text-center py-6">
+            <div className="w-14 h-14 rounded-full bg-surface-2/50 border border-white/[0.04] flex items-center justify-center mb-4 ring-1 ring-white/5">
+              <CircleDashed className="h-6 w-6 text-muted-foreground/40 animate-[spin_4s_linear_infinite]" />
             </div>
-            <TypographySpan className="text-sm font-medium text-muted-foreground">No transactions yet</TypographySpan>
+            <TypographySpan className="text-sm font-semibold text-muted-foreground">No recent activity</TypographySpan>
+            <TypographySpan className="text-xs text-muted-foreground/60 mt-1">Your transactions will appear here</TypographySpan>
           </div>
         ) : (
           Object.entries(groupedByDate).map(([dateStr, txns]) => (
-            <div key={dateStr}>
-              <div className="flex items-center gap-3 mb-2">
-                <TypographySpan className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest flex-shrink-0">
+            <div key={dateStr} className="mb-4 last:mb-0">
+              <div className="flex items-center gap-4 mb-3 px-2">
+                <TypographySpan className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-[0.15em] flex-shrink-0">
                   {dateStr}
                 </TypographySpan>
-                <div className="h-px bg-white/[0.04] flex-1" />
+                <div className="h-px bg-gradient-to-r from-white/[0.05] to-transparent flex-1" />
               </div>
 
-              <div className="space-y-0.5">
+              <div className="space-y-1">
                 {txns.map((t) => {
                   const categoryDef = getCategoryById(t.category);
                   const categoryLabel = categoryDef?.label || t.category;
@@ -88,7 +85,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                   let amountColor = "text-foreground";
                   let prefix = "";
                   if (t.type === "INCOME") {
-                    amountColor = "text-emerald-500";
+                    amountColor = "text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]";
                     prefix = "+";
                   } else if (t.type === "EXPENSE") {
                     amountColor = "text-foreground";
@@ -100,32 +97,37 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
                   return (
                     <div 
                       key={t.id}
-                      onClick={() => openModal("addTransaction")} // Ideally open an edit modal
-                      className="flex items-center gap-2.5 py-2.5 px-3 rounded-xl hover:bg-surface-2 cursor-pointer transition-colors group border border-transparent hover:border-white/[0.04]"
+                      onClick={() => openModal("addTransaction")}
+                      className="flex items-center gap-4 py-3 px-3 sm:px-4 rounded-[16px] hover:bg-surface-2/60 cursor-pointer transition-all duration-300 group border border-transparent hover:border-white/[0.04] relative overflow-hidden"
                     >
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                      
                       <div 
-                        className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                        className="w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0 shadow-sm transition-transform duration-300 group-hover:scale-110 ring-1 ring-white/5 group-hover:ring-white/10 relative z-10"
                         style={{ backgroundColor: `${catColor}1a`, color: catColor }}
                       >
-                        <Icon size={16} />
+                        <Icon size={18} />
                       </div>
 
-                      <div className="flex flex-col min-w-0 flex-1">
-                        <TypographySpan className="text-[13px] font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                      <div className="flex flex-col min-w-0 flex-1 relative z-10">
+                        <TypographySpan className="text-[14px] font-semibold text-foreground truncate group-hover:text-primary transition-colors tracking-tight">
                           {t.title}
                         </TypographySpan>
-                        <TypographySpan className="text-[11px] text-muted-foreground truncate mt-0.5">
-                          {t.type === "TRANSFER" ? "Transfer" : categoryLabel} <TypographySpan className="opacity-50 mx-1">·</TypographySpan> {profileName}
+                        <TypographySpan className="text-[11px] text-muted-foreground/80 truncate mt-0.5 font-medium">
+                          {t.type === "TRANSFER" ? "Transfer" : categoryLabel} <TypographySpan className="opacity-40 mx-1">·</TypographySpan> {profileName}
                         </TypographySpan>
                       </div>
 
-                      <div className="flex flex-col items-end flex-shrink-0 text-right">
-                        <TypographySpan className={`text-[13px] font-semibold tabular-money ${amountColor}`}>
+                      <div className="flex flex-col items-end flex-shrink-0 text-right relative z-10">
+                        <TypographySpan className={`text-[15px] font-bold tabular-money tracking-tight ${amountColor}`}>
                           {prefix}{symbol}{Math.abs(t.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </TypographySpan>
-                        <TypographySpan className="text-[10px] text-muted-foreground font-medium mt-0.5 uppercase tracking-wider">
-                          {format(new Date(t.date), "h:mm a")}
-                        </TypographySpan>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <TypographySpan className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-wider">
+                            {format(new Date(t.date), "h:mm a")}
+                          </TypographySpan>
+                          <ArrowRight className="w-3 h-3 text-muted-foreground/0 group-hover:text-primary/70 transition-all -translate-x-2 group-hover:translate-x-0 opacity-0 group-hover:opacity-100" />
+                        </div>
                       </div>
                     </div>
                   );
@@ -134,7 +136,7 @@ export function TransactionFeed({ transactions }: TransactionFeedProps) {
             </div>
           ))
         )}
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

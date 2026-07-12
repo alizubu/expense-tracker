@@ -135,44 +135,48 @@ export function DashboardClient() {
   }
 
   return (
-    <motion.div 
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
-      className="p-4 space-y-3 lg:space-y-4 max-w-[1600px] mx-auto"
-    >
-      {/* ROW 1: Hero Stats (Bento Grid) */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 lg:gap-4">
-        <StatsStrip 
-          netBalance={netBalance}
-          income={income}
-          expenses={expenses}
-          sparklineData={sparklineData.length > 0 ? sparklineData : [{ value: netBalance }, { value: netBalance }]}
-        />
-      </motion.div>
+    <div className="relative min-h-screen w-full overflow-hidden">
+      {/* Premium ambient background glow */}
+      <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[140%] max-w-[1400px] h-[800px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-primary/5 to-transparent rounded-[100%] blur-[120px] pointer-events-none -z-10 opacity-70 dark:opacity-40" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-blue-500/5 to-transparent rounded-full blur-[120px] pointer-events-none -z-10 opacity-50 dark:opacity-30" />
 
-      {/* ROW 2: Profiles, Spending Chart */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4 items-stretch">
-        <div className="h-auto md:h-full lg:col-span-2">
-          <ProfileCard 
-            profiles={profiles} 
-            netBalance={netBalance} 
-            onAdd={() => setProfileModalOpen(true)} 
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="p-4 md:p-6 lg:p-8 space-y-6 lg:space-y-8 max-w-[1600px] mx-auto relative z-10"
+      >
+        {/* ROW 1: Hero Stats */}
+        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+          <StatsStrip 
+            netBalance={netBalance}
+            income={income}
+            expenses={expenses}
+            sparklineData={sparklineData.length > 0 ? sparklineData : [{ value: netBalance }, { value: netBalance }]}
           />
-        </div>
-        <div className="h-auto md:h-full lg:col-span-1">
-          <SpendingChart />
-        </div>
-      </motion.div>
+        </motion.div>
 
-      {/* ROW 3: Transactions Feed & Top Categories */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 xl:grid-cols-3 gap-3 lg:gap-4 items-stretch">
-        <div className="xl:col-span-2 h-auto lg:h-[500px]">
-          <TransactionFeed transactions={transactions} />
+        {/* MAIN CONTENT SPLIT */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 items-start">
+          
+          {/* LEFT COLUMN: Activity & Wallets (65%) */}
+          <motion.div variants={itemVariants} className="xl:col-span-2 space-y-6 lg:space-y-8">
+            <ProfileCard 
+              profiles={profiles} 
+              netBalance={netBalance} 
+              onAdd={() => setProfileModalOpen(true)} 
+            />
+            <TransactionFeed transactions={transactions} />
+          </motion.div>
+
+          {/* RIGHT COLUMN: Analytics (35%) */}
+          <motion.div variants={itemVariants} className="xl:col-span-1 space-y-6 lg:space-y-8">
+            <SpendingChart />
+            <TopCategories />
+          </motion.div>
+
         </div>
-        <div className="xl:col-span-1 h-auto lg:h-[500px]">
-          <TopCategories />
-        </div>
+
       </motion.div>
 
       <CreateProfileModal
@@ -180,6 +184,6 @@ export function DashboardClient() {
         onClose={() => setProfileModalOpen(false)}
         onCreated={fetchDashboard}
       />
-    </motion.div>
+    </div>
   );
 }
