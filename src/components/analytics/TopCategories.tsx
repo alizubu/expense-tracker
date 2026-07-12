@@ -73,8 +73,8 @@ export function TopCategories() {
             <TypographySpan className="text-[11px] font-medium text-muted-foreground/60 mt-1">Top spent categories will appear here</TypographySpan>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
-            {categoryData.map((cat) => {
+          <div className="flex flex-col gap-3">
+            {categoryData.map((cat, index) => {
               const categoryDef = getCategoryById(cat.id);
               const name = categoryDef?.label || cat.id;
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,40 +83,51 @@ export function TopCategories() {
               return (
                 <div 
                   key={cat.id} 
-                  className="flex flex-col p-4 rounded-[20px] bg-surface-2/20 border border-transparent hover:border-white/[0.04] hover:bg-surface-2/40 transition-all duration-300 group/cat cursor-pointer"
+                  className="relative flex items-center p-4 rounded-[20px] bg-surface-2/20 border border-transparent hover:border-white/[0.04] hover:bg-surface-2/40 transition-all duration-300 group/cat cursor-pointer overflow-hidden"
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div 
-                        className="flex h-10 w-10 rounded-[12px] items-center justify-center flex-shrink-0 transition-transform duration-500 group-hover/cat:scale-110 shadow-inner"
-                        style={{ backgroundColor: `${cat.color}15`, color: cat.color, boxShadow: `inset 0 0 0 1px ${cat.color}20` }} 
-                      >
-                        <Icon size={18} />
-                      </div>
-                      <div className="flex flex-col">
-                        <TypographySpan className="text-[14px] font-bold text-foreground truncate group-hover/cat:text-primary transition-colors tracking-tight">
-                          {name}
+                  {/* Subtle Background Progress Fill */}
+                  <div 
+                    className="absolute left-0 top-0 h-full opacity-[0.03] group-hover/cat:opacity-[0.06] transition-all duration-1000 ease-out z-0 rounded-r-3xl"
+                    style={{ width: `${cat.fillRatio}%`, backgroundColor: cat.color }}
+                  />
+                  
+                  <div className="relative z-10 flex items-center w-full min-w-0 gap-4">
+                    {/* Rank Indicator */}
+                    <TypographySpan className="text-[12px] font-bold text-muted-foreground/30 w-5 flex-shrink-0 tabular-nums">
+                      {(index + 1).toString().padStart(2, '0')}
+                    </TypographySpan>
+
+                    {/* Icon */}
+                    <div 
+                      className="flex h-11 w-11 rounded-[14px] items-center justify-center flex-shrink-0 transition-transform duration-500 group-hover/cat:scale-110 shadow-inner"
+                      style={{ backgroundColor: `${cat.color}15`, color: cat.color, boxShadow: `inset 0 0 0 1px ${cat.color}20` }} 
+                    >
+                      <Icon size={20} />
+                    </div>
+
+                    {/* Text Details (min-w-0 for truncation) */}
+                    <div className="flex flex-col flex-1 min-w-0 justify-center">
+                      <TypographySpan className="text-[14px] font-bold text-foreground truncate group-hover/cat:text-primary transition-colors tracking-tight">
+                        {name}
+                      </TypographySpan>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <TypographySpan className="text-[11px] font-medium text-muted-foreground/60">
+                          {cat.percentage.toFixed(1)}%
                         </TypographySpan>
-                        <TypographySpan className="text-[11px] font-medium text-muted-foreground/60 mt-0.5">
-                          {cat.percentage.toFixed(1)}% of total
-                        </TypographySpan>
+                        {/* Sleek inline progress bar */}
+                        <div className="h-1.5 flex-1 max-w-[60px] bg-surface-2/60 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full rounded-full transition-all duration-1000"
+                            style={{ width: `${cat.fillRatio}%`, backgroundColor: cat.color }}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <TypographySpan className="text-[15px] font-bold text-foreground tabular-money">
+
+                    {/* Amount */}
+                    <TypographySpan className="text-[15px] font-bold text-foreground tabular-money flex-shrink-0 text-right min-w-[70px]">
                       {symbol}{cat.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </TypographySpan>
-                  </div>
-                  
-                  {/* Progress Bar Container */}
-                  <div className="w-full h-2 bg-surface-2/50 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full rounded-full transition-all duration-1000 ease-out"
-                      style={{ 
-                        width: `${cat.fillRatio}%`, 
-                        backgroundColor: cat.color,
-                        boxShadow: `0 0 10px ${cat.color}60`
-                      }}
-                    />
                   </div>
                 </div>
               );

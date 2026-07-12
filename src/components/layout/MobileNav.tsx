@@ -10,15 +10,14 @@ const routes = [
   { icon: ArrowRightLeft, href: "/transactions", label: "Transact" },
   { icon: Users, href: "/profiles", label: "Wallets" },
   { icon: BarChart3, href: "/analytics", label: "Stats" },
-  { icon: Settings, href: "/settings", label: "Settings" },
 ];
 
 export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="lg:hidden fixed bottom-6 left-4 right-4 z-50 pb-safe pointer-events-none">
-      <div className="flex items-center justify-around h-16 px-2 bg-surface-1/60 backdrop-blur-3xl border border-white/[0.08] shadow-2xl rounded-full pointer-events-auto relative overflow-hidden">
+    <nav className="lg:hidden fixed bottom-4 left-4 right-4 z-50 pb-safe pointer-events-none">
+      <div className="flex items-center justify-around h-14 px-2 bg-surface-1/60 backdrop-blur-3xl border border-white/[0.08] shadow-2xl rounded-full pointer-events-auto relative overflow-hidden">
         {/* Glow */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 pointer-events-none" />
         
