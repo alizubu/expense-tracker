@@ -1,6 +1,5 @@
 "use client";
 import { TypographySpan, TypographyH1, TypographyP } from "@/components/ui/typography";
-
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTransactionStore } from "@/store/useTransactionStore";
@@ -12,26 +11,15 @@ import { formatGroupDate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { 
   Search, Trash2, X, ChevronDown, 
-  ArrowDownUp, ReceiptText, CircleDashed, Menu, Plus
+  ArrowDownUp, ReceiptText, CircleDashed, Menu, Plus,
+  ArrowRight
 } from "lucide-react";
 import * as Icons from "lucide-react";
 import { EditTransactionModal } from "@/components/transactions/EditTransactionModal";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { AnimatedSearch } from "@/components/ui/animated-search";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -73,19 +61,19 @@ export default function TransactionsPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen p-4 lg:p-8 max-w-7xl mx-auto w-full">
+    <div className="flex flex-col min-h-screen p-4 lg:p-8 max-w-6xl mx-auto w-full relative">
+      {/* Background Glow */}
+      <div className="fixed top-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+
       {/* Mobile Topbar */}
-      <div className="sticky top-0 z-40 lg:hidden flex items-center justify-between h-14 -mx-4 px-4 bg-background/95 backdrop-blur-md border-b border-border/50 mb-4">
-        <button onClick={openSidebar} className="flex items-center justify-center w-8 h-8 rounded-md bg-surface-2 border border-border">
-          <Menu size={16} className="text-muted-foreground" />
+      <div className="sticky top-0 z-40 lg:hidden flex items-center justify-between h-16 -mx-4 px-4 bg-background/60 backdrop-blur-3xl border-b border-white/[0.04] mb-6">
+        <button onClick={openSidebar} className="flex items-center justify-center w-10 h-10 rounded-[14px] bg-surface-1 border border-white/[0.04] active:scale-95 transition-transform">
+          <Menu size={18} className="text-foreground" />
         </button>
-        <TypographySpan className="text-sm font-semibold text-foreground flex-1 text-center">Transactions</TypographySpan>
+        <TypographySpan className="text-sm font-bold text-foreground flex-1 text-center tracking-wide">Transactions</TypographySpan>
         <div className="flex items-center gap-2">
-          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="flex items-center justify-center w-8 h-8 rounded-md bg-surface-2 border border-border">
-            <Search size={15} className="text-muted-foreground" />
-          </button>
-          <button onClick={() => openModal("addTransaction")} className="flex items-center justify-center w-8 h-8 rounded-md bg-primary shadow-sm">
-            <Plus size={16} className="text-primary-foreground" />
+          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="flex items-center justify-center w-10 h-10 rounded-[14px] bg-surface-1 border border-white/[0.04] active:scale-95 transition-transform">
+            <Search size={16} className="text-foreground" />
           </button>
         </div>
       </div>
@@ -93,25 +81,24 @@ export default function TransactionsPage() {
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div
-            initial={{ y: -8, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -8, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="sticky top-14 z-30 lg:hidden w-full bg-background border-b border-border/50 -mx-4 px-4 py-2 mb-4"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="lg:hidden w-full overflow-hidden mb-6"
           >
-            <div className="relative flex items-center w-full h-10 rounded-md bg-surface-2 border border-border px-3 focus-within:ring-2 focus-within:ring-primary/20">
-              <Search size={14} className="text-muted-foreground" />
+            <div className="relative flex items-center w-full h-12 rounded-[16px] bg-surface-1/50 backdrop-blur-md border border-white/[0.06] px-4 focus-within:ring-1 focus-within:ring-primary/50 focus-within:border-primary/50 transition-all shadow-sm">
+              <Search size={16} className="text-muted-foreground/80" />
               <input
                 autoFocus
                 type="text"
-                placeholder="Search transactions..."
+                placeholder="Search anything..."
                 value={filters.search}
                 onChange={(e) => setFilters({ search: e.target.value })}
-                className="flex-1 bg-transparent border-none text-sm text-foreground placeholder:text-muted-foreground focus:outline-none ml-2"
+                className="flex-1 bg-transparent border-none text-[15px] font-medium text-foreground placeholder:text-muted-foreground focus:outline-none ml-3"
               />
               {filters.search.length > 0 && (
                 <button onClick={() => setFilters({ search: "" })} className="p-1">
-                  <X size={13} className="text-muted-foreground" />
+                  <X size={14} className="text-muted-foreground" />
                 </button>
               )}
             </div>
@@ -120,73 +107,116 @@ export default function TransactionsPage() {
       </AnimatePresence>
 
       {/* Desktop Header */}
-      <div className="hidden lg:flex items-center justify-between mb-8 relative">
-        <div className="flex-1">
-          <TypographyH1 className="text-3xl font-bold text-foreground tracking-tight">Transactions</TypographyH1>
-          <TypographyP className="text-sm text-muted-foreground mt-1">Manage and view your financial history.</TypographyP>
-        </div>
-        
-        <div className="flex-1 flex justify-center absolute left-1/2 -translate-x-1/2">
-          <AnimatedSearch
-            value={filters.search}
-            onChange={(val) => setFilters({ search: val })}
-            placeholders={["Search transactions...", "Search amounts...", "Search categories..."]}
-          />
+      <div className="hidden lg:flex items-center justify-between mb-10">
+        <div>
+          <TypographyH1 className="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/70">
+            Transactions
+          </TypographyH1>
+          <TypographyP className="text-[13px] text-muted-foreground/80 mt-1.5 font-medium tracking-wide">
+            Manage and view your financial history
+          </TypographyP>
         </div>
 
-        <div className="flex-1 flex justify-end">
-          <Button 
+        <div className="flex items-center gap-4">
+          <div className="relative flex items-center w-64 h-11 rounded-full bg-surface-1/40 backdrop-blur-md border border-white/[0.04] px-4 focus-within:w-80 focus-within:bg-surface-1/60 focus-within:ring-1 focus-within:ring-primary/30 transition-all duration-300 shadow-sm group">
+            <Search size={14} className="text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={filters.search}
+              onChange={(e) => setFilters({ search: e.target.value })}
+              className="flex-1 bg-transparent border-none text-[13px] font-medium text-foreground placeholder:text-muted-foreground focus:outline-none ml-2.5"
+            />
+            {filters.search.length > 0 && (
+              <button onClick={() => setFilters({ search: "" })} className="text-muted-foreground hover:text-foreground">
+                <X size={12} />
+              </button>
+            )}
+          </div>
+          
+          <button 
             onClick={() => openModal("addTransaction")}
-            className="shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_25px_rgba(124,58,237,0.5)] h-9 rounded-lg font-medium bg-gradient-to-r from-primary to-indigo-500 text-white border-0 transition-all"
+            className="group relative flex items-center gap-2 h-11 px-5 rounded-full font-bold text-[13px] text-primary-foreground transition-all shadow-[0_4px_20px_rgba(var(--primary),0.3)] hover:shadow-[0_4px_25px_rgba(var(--primary),0.5)] hover:-translate-y-0.5"
           >
-            <Plus size={16} className="mr-1.5" />
-            Add Txn
-          </Button>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary to-indigo-500 rounded-full" />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out rounded-full" />
+            <Plus size={14} className="relative z-10" />
+            <TypographySpan className="relative z-10 tracking-wide">New Record</TypographySpan>
+          </button>
         </div>
       </div>
 
-      {/* Filters & Actions */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div className="flex gap-2 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-2 sm:pb-0">
+      {/* Summary Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-5 mb-8">
+        <div className="p-5 lg:p-6 rounded-[24px] border border-white/[0.03] bg-surface-1/30 backdrop-blur-2xl relative overflow-hidden group">
+          <div className="absolute -right-8 -bottom-8 opacity-[0.02] group-hover:opacity-[0.04] transition-opacity">
+            <ArrowDownUp className="w-32 h-32" />
+          </div>
+          <TypographySpan className="text-[10px] uppercase font-bold text-muted-foreground/60 tracking-[0.2em] mb-1.5 block">Net Flow</TypographySpan>
+          <TypographySpan className="text-2xl lg:text-3xl font-bold tabular-money tracking-tighter text-foreground">
+            {symbol}{filtered.reduce((sum, t) => sum + (t.type === "EXPENSE" ? -t.amount : t.amount), 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+          </TypographySpan>
+        </div>
+        <div className="p-5 lg:p-6 rounded-[24px] border border-white/[0.03] bg-surface-1/30 backdrop-blur-2xl relative overflow-hidden group">
+          <div className="absolute -right-8 -bottom-8 opacity-[0.02] group-hover:opacity-[0.04] transition-opacity">
+            <ReceiptText className="w-32 h-32" />
+          </div>
+          <TypographySpan className="text-[10px] uppercase font-bold text-muted-foreground/60 tracking-[0.2em] mb-1.5 block">Total Records</TypographySpan>
+          <TypographySpan className="text-2xl lg:text-3xl font-bold tabular-money tracking-tighter text-foreground">{filtered.length}</TypographySpan>
+        </div>
+        <div className="hidden md:flex p-5 lg:p-6 rounded-[24px] border border-white/[0.03] bg-surface-1/30 backdrop-blur-2xl relative overflow-hidden group flex-col justify-center">
+          <div className="absolute -right-8 -bottom-8 opacity-[0.02] group-hover:opacity-[0.04] transition-opacity text-destructive">
+            <ArrowDownUp className="w-32 h-32" />
+          </div>
+          <TypographySpan className="text-[10px] uppercase font-bold text-muted-foreground/60 tracking-[0.2em] mb-1.5 block">Max Single</TypographySpan>
+          <TypographySpan className="text-2xl lg:text-3xl font-bold tabular-money tracking-tighter text-destructive">
+            {symbol}{filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)).toLocaleString(undefined, { maximumFractionDigits: 0 }) : 0}
+          </TypographySpan>
+        </div>
+      </div>
+
+      {/* Filters Sticky Bar */}
+      <div className="sticky top-16 lg:top-0 z-30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-4 bg-background/80 backdrop-blur-3xl border-b border-white/[0.02] mb-6 -mx-4 px-4 lg:mx-0 lg:px-0">
+        <div className="flex gap-2 overflow-x-auto hide-scrollbar w-full sm:w-auto">
           {(["ALL", "INCOME", "EXPENSE", "TRANSFER"] as const).map((t) => {
             const isActive = filters.type === t;
-            let activeStyles = "bg-primary text-primary-foreground border-primary";
-            if (t === "INCOME") { activeStyles = "bg-emerald-500 text-white border-emerald-500"; }
-            if (t === "EXPENSE") { activeStyles = "bg-destructive text-destructive-foreground border-destructive"; }
-            if (t === "TRANSFER") { activeStyles = "bg-slate-500 text-white border-slate-500"; }
+            let activeClass = "bg-primary text-primary-foreground border-primary shadow-[0_0_12px_rgba(var(--primary),0.3)]";
+            if (t === "INCOME") activeClass = "bg-emerald-500 text-white border-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]";
+            if (t === "EXPENSE") activeClass = "bg-destructive text-white border-destructive shadow-[0_0_12px_rgba(239,68,68,0.3)]";
+            if (t === "TRANSFER") activeClass = "bg-slate-500 text-white border-slate-500 shadow-[0_0_12px_rgba(100,116,139,0.3)]";
 
             return (
               <Badge
                 key={t}
                 variant={isActive ? "default" : "secondary"}
                 className={cn(
-                  "cursor-pointer text-xs px-3 py-1 font-medium whitespace-nowrap transition-colors",
-                  isActive ? activeStyles : "hover:bg-surface-2 bg-surface-1 border-white/[0.04]"
+                  "cursor-pointer text-[10px] font-bold uppercase tracking-wider px-3.5 py-1.5 transition-all duration-300",
+                  isActive ? activeClass : "hover:bg-surface-2 bg-surface-1/50 border-white/[0.05] text-muted-foreground/80 hover:text-foreground"
                 )}
                 onClick={() => setFilters({ type: t })}
               >
-                {t === "ALL" ? "All" : t.charAt(0) + t.slice(1).toLowerCase()}
+                {t === "ALL" ? "All" : t}
               </Badge>
             )
           })}
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end bg-surface-2/30 p-1 rounded-xl border border-white/[0.04] shadow-sm backdrop-blur-md">
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger render={
-              <Button variant="ghost" size="sm" className="h-8 rounded-lg hover:bg-surface-2/50 font-medium text-muted-foreground hover:text-foreground">
+              <Button variant="ghost" className="h-9 px-3 rounded-xl bg-surface-1/40 border border-white/[0.04] hover:bg-surface-2/60 font-medium text-[12px] text-muted-foreground hover:text-foreground">
                 <ArrowDownUp size={14} className="mr-2" />
                 {sortOptions.find(o => o.value === filters.sortBy)?.label || "Sort"}
                 <ChevronDown size={14} className="ml-2 opacity-50" />
               </Button>
             } />
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="rounded-[16px] border border-white/[0.05] bg-surface-1/90 backdrop-blur-2xl p-1.5 shadow-xl">
               {sortOptions.map(opt => (
                 <DropdownMenuItem 
                   key={opt.value}
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onClick={() => setFilters({ sortBy: opt.value as any })}
-                  className={cn(filters.sortBy === opt.value && "bg-surface-2 font-medium")}
+                  className={cn("rounded-[10px] text-[12px] font-medium px-3 py-2 cursor-pointer transition-colors", filters.sortBy === opt.value && "bg-surface-2 text-primary")}
                 >
                   {opt.label}
                 </DropdownMenuItem>
@@ -194,156 +224,116 @@ export default function TransactionsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <div className="w-px h-4 bg-white/[0.08]" />
-
           <Button
             variant="ghost"
-            size="sm"
             onClick={toggleTrashView}
-            className={cn("h-8 rounded-lg font-medium transition-colors", filters.showDeleted ? "bg-destructive/10 text-destructive hover:bg-destructive/20" : "text-muted-foreground hover:text-foreground hover:bg-surface-2/50")}
+            className={cn(
+              "h-9 px-3 rounded-xl border font-bold text-[12px] transition-all", 
+              filters.showDeleted 
+                ? "bg-destructive/10 border-destructive/20 text-destructive hover:bg-destructive/20" 
+                : "bg-surface-1/40 border-white/[0.04] text-muted-foreground hover:text-foreground hover:bg-surface-2/60"
+            )}
           >
             <Trash2 size={14} className="mr-2" />
-            {filters.showDeleted ? "Exit Trash" : "View Trash"}
+            {filters.showDeleted ? "Exit Trash" : "Trash"}
           </Button>
         </div>
       </div>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <Card className="p-4 sm:p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm relative overflow-hidden group">
-          <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
-            <ArrowDownUp className="w-20 h-20" />
-          </div>
-          <TypographySpan className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Total</TypographySpan>
-          <TypographySpan className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-foreground truncate">
-            {symbol}{filtered.reduce((sum, t) => sum + (t.type === "EXPENSE" ? -t.amount : t.amount), 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}
-          </TypographySpan>
-        </Card>
-        <Card className="p-4 sm:p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm relative overflow-hidden group">
-          <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
-            <ReceiptText className="w-20 h-20" />
-          </div>
-          <TypographySpan className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Count</TypographySpan>
-          <TypographySpan className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-foreground truncate">{filtered.length}</TypographySpan>
-        </Card>
-        <Card className="p-4 sm:p-6 rounded-2xl border-white/[0.04] bg-surface-1 flex flex-col justify-center shadow-sm relative overflow-hidden group">
-          <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
-            <ArrowDownUp className="w-20 h-20 text-destructive" />
-          </div>
-          <TypographySpan className="text-[10px] uppercase font-semibold text-muted-foreground tracking-widest mb-1">Largest</TypographySpan>
-          <TypographySpan className="text-lg sm:text-xl font-bold tabular-money tracking-tight text-destructive truncate">
-            {symbol}{filtered.length > 0 ? Math.max(...filtered.map(t => t.amount)).toLocaleString(undefined, { maximumFractionDigits: 0 }) : 0}
-          </TypographySpan>
-        </Card>
-      </div>
-
-      {/* Transactions List */}
-      <Card className="flex-1 overflow-hidden flex flex-col rounded-2xl border-white/[0.04] bg-surface-1 shadow-sm">
+      {/* Transactions Feed */}
+      <div className="flex-1 pb-20 lg:pb-10">
         {filtered.length === 0 ? (
-          <div className="py-16">
+          <div className="py-20 flex flex-col items-center justify-center border border-dashed border-white/[0.05] rounded-[32px] bg-surface-1/10 backdrop-blur-sm">
             <EmptyState
               icon={ReceiptText}
-              title="No transactions yet"
-              description="Add your first transaction or clear filters to see your feed."
+              title="No records found"
+              description="Adjust your filters or add a new transaction to get started."
               actionLabel="Add Transaction"
               onAction={() => openModal("addTransaction")}
             />
           </div>
         ) : (
-          <div className="overflow-x-auto hide-scrollbar">
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent border-b border-white/[0.04]">
-                  <TableHead className="w-[60px] pl-4"></TableHead>
-                  <TableHead className="text-left text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Transaction</TableHead>
-                  <TableHead className="hidden md:table-cell text-left text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Category</TableHead>
-                  <TableHead className="hidden sm:table-cell text-left text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Profile</TableHead>
-                  <TableHead className="hidden lg:table-cell text-center text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Date</TableHead>
-                  <TableHead className="text-right text-[10px] uppercase tracking-widest text-muted-foreground font-semibold pr-4">Amount</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {Array.from(grouped.entries()).map(([dateLabel, txns]) => (
-                  <React.Fragment key={dateLabel}>
-                    <TableRow className="bg-transparent hover:bg-transparent border-none">
-                      <TableCell colSpan={6} className="py-2 px-4">
-                        <div className="flex items-center gap-3">
-                          <TypographySpan className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest shrink-0">{dateLabel}</TypographySpan>
-                          <div className="h-px bg-white/[0.04] w-full" />
+          <div className="flex flex-col gap-8">
+            {Array.from(grouped.entries()).map(([dateLabel, txns]) => (
+              <div key={dateLabel} className="flex flex-col gap-3">
+                <div className="flex items-center gap-3 px-1">
+                  <TypographySpan className="text-[10px] font-bold text-muted-foreground/50 uppercase tracking-[0.2em]">{dateLabel}</TypographySpan>
+                  <div className="h-px bg-white/[0.03] flex-1" />
+                </div>
+                
+                <div className="flex flex-col gap-1.5">
+                  {txns.map((transaction) => {
+                    const profile = getProfile(transaction.profileId);
+                    const categoryLabel = getCategoryById(transaction.category)?.label || transaction.category;
+                    
+                    let catColor = getCategoryColor(transaction.category);
+                    let iconName = getCategoryIconName(transaction.category);
+                    
+                    if (transaction.type === "TRANSFER") {
+                      catColor = "hsl(var(--muted-foreground))";
+                      iconName = "ArrowLeftRight";
+                    }
+
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const Icon = (Icons as any)[iconName] || CircleDashed;
+                    const sign = transaction.type === "INCOME" ? "+" : transaction.type === "EXPENSE" ? "" : "→";
+                    
+                    return (
+                      <div
+                        key={transaction.id}
+                        onClick={() => setEditTxnId(transaction.id)}
+                        className="group flex items-center justify-between p-3 sm:px-5 sm:py-4 rounded-[20px] bg-surface-1/20 border border-transparent hover:bg-surface-2/40 hover:border-white/[0.03] hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden relative"
+                      >
+                        {/* Hover Sheen */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out pointer-events-none" />
+
+                        <div className="flex items-center gap-4 z-10">
+                          <div 
+                            className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 transition-transform duration-500 group-hover:scale-110 shadow-inner"
+                            style={{ backgroundColor: `${catColor}15`, color: catColor, boxShadow: `inset 0 0 0 1px ${catColor}20` }}
+                          >
+                            <Icon size={18} />
+                          </div>
+                          <div className="flex flex-col">
+                            <TypographySpan className="font-bold text-[14px] text-foreground tracking-tight group-hover:text-primary transition-colors">{transaction.title}</TypographySpan>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <TypographySpan className="text-[11px] font-medium text-muted-foreground/70">{categoryLabel}</TypographySpan>
+                              <div className="w-1 h-1 rounded-full bg-white/[0.1]" />
+                              <TypographySpan className="text-[11px] font-medium text-muted-foreground/70">{profile?.name || "Unknown"}</TypographySpan>
+                              <div className="hidden sm:block w-1 h-1 rounded-full bg-white/[0.1]" />
+                              <TypographySpan className="hidden sm:block text-[11px] font-medium text-muted-foreground/50 tabular-nums">
+                                {new Date(transaction.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </TypographySpan>
+                            </div>
+                          </div>
                         </div>
-                      </TableCell>
-                    </TableRow>
-                    {txns.map((transaction) => {
-                      const profile = getProfile(transaction.profileId);
-                      const categoryLabel = getCategoryById(transaction.category)?.label || transaction.category;
-                      
-                      let catColor = getCategoryColor(transaction.category);
-                      let iconName = getCategoryIconName(transaction.category);
-                      
-                      if (transaction.type === "TRANSFER") {
-                        catColor = "hsl(var(--muted-foreground))";
-                        iconName = "ArrowLeftRight";
-                      }
 
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      const Icon = (Icons as any)[iconName] || CircleDashed;
-
-                      const amountColor =
-                        transaction.type === "INCOME" ? "text-emerald-500"
-                        : transaction.type === "EXPENSE" ? "text-foreground"
-                        : "text-muted-foreground";
-
-                      const sign = transaction.type === "INCOME" ? "+" : transaction.type === "EXPENSE" ? "" : "→";
-
-                      return (
-                        <TableRow 
-                          key={transaction.id}
-                          onClick={() => setEditTxnId(transaction.id)}
-                          className="cursor-pointer transition-colors hover:bg-surface-2/50 border-b border-white/[0.02] group"
-                        >
-                          <TableCell className="pl-4 py-2">
-                            <div 
-                              className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm transition-transform group-hover:scale-110"
-                              style={{ backgroundColor: `${catColor}15`, color: catColor, boxShadow: `0 0 10px ${catColor}10` }}
-                            >
-                              <Icon size={14} />
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-left py-2">
-                            <div className="font-medium text-foreground text-[13px] group-hover:text-primary transition-colors">{transaction.title}</div>
-                            <div className="text-[11px] text-muted-foreground sm:hidden mt-0.5">
-                              {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel} • {profile?.name}
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell text-muted-foreground text-[13px] text-left py-2">
-                            {transaction.type === "TRANSFER" ? "Transfer" : categoryLabel}
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell text-muted-foreground text-[13px] text-left py-2">
-                            {profile?.name || "Unknown"}
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell text-muted-foreground text-[11px] text-center py-2">
-                            {new Date(transaction.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </TableCell>
-                          <TableCell className="text-right pr-4 py-2">
-                            <TypographySpan className={cn(
-                              "inline-flex items-center px-2 py-0.5 rounded-md text-[13px] tabular-money font-semibold tracking-tight",
-                              transaction.type === "INCOME" ? "bg-emerald-500/10 text-emerald-500" :
-                              transaction.type === "EXPENSE" ? "bg-surface-2 text-foreground" :
-                              "bg-slate-500/10 text-slate-500"
-                            )}>
+                        <div className="flex items-center gap-4 z-10">
+                          <div className={cn(
+                            "flex items-center justify-center px-3 py-1.5 rounded-[10px] transition-transform duration-300 group-hover:scale-[1.02]",
+                            transaction.type === "INCOME" ? "bg-emerald-500/10 text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.1)]" :
+                            transaction.type === "EXPENSE" ? "bg-surface-3/50 text-foreground" :
+                            "bg-slate-500/10 text-slate-500"
+                          )}>
+                            <TypographySpan className="text-[14px] tabular-money font-bold tracking-tighter">
                               {sign}{symbol}{Math.abs(transaction.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                             </TypographySpan>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </React.Fragment>
-                ))}
-              </TableBody>
-            </Table>
+                          </div>
+                          
+                          {/* Slide-in Arrow */}
+                          <div className="w-0 opacity-0 -ml-4 group-hover:w-5 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300 flex justify-end">
+                            <ArrowRight size={16} className="text-muted-foreground/50" />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         )}
-      </Card>
+      </div>
 
       {/* Edit Modal */}
       {editTxnId && editTransaction && (
