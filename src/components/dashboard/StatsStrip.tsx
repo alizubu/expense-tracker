@@ -4,7 +4,7 @@ import { TrendingUp, TrendingDown, Wallet } from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currencies";
 import { useUIStore } from "@/store/useUIStore";
 import { Card } from "@/components/ui/card";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useMemo } from "react";
 
 interface StatsStripProps {
   netBalance: number;
@@ -22,37 +22,46 @@ function Sparkline({ data, color, className }: { data: { value: number }[]; colo
   const height = 36;
   const padding = 2;
 
-  if (data.length < 2) return null;
+  const pathData = useMemo(() => {
+    if (data.length < 2) return null;
 
-  const values = data.map(d => d.value);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
+    const values = data.map(d => d.value);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const range = max - min || 1;
 
-  const points = values.map((v, i) => ({
-    x: padding + (i / (values.length - 1)) * (width - padding * 2),
-    y: padding + (1 - (v - min) / range) * (height - padding * 2),
-  }));
+    const points = values.map((v, i) => ({
+      x: padding + (i / (values.length - 1)) * (width - padding * 2),
+      y: padding + (1 - (v - min) / range) * (height - padding * 2),
+    }));
 
-  // Smooth curve through points using catmull-rom → cubic bezier
-  const d = points.reduce((acc, point, i, arr) => {
-    if (i === 0) return `M ${point.x},${point.y}`;
-    const p0 = arr[Math.max(0, i - 2)];
-    const p1 = arr[i - 1];
-    const p2 = point;
-    const p3 = arr[Math.min(arr.length - 1, i + 1)];
-    const cp1x = p1.x + (p2.x - p0.x) / 6;
-    const cp1y = p1.y + (p2.y - p0.y) / 6;
-    const cp2x = p2.x - (p3.x - p1.x) / 6;
-    const cp2y = p2.y - (p3.y - p1.y) / 6;
-    return `${acc} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
-  }, "");
+    // Smooth curve through points using catmull-rom → cubic bezier
+    const d = points.reduce((acc, point, i, arr) => {
+      if (i === 0) return `M ${point.x},${point.y}`;
+      const p0 = arr[Math.max(0, i - 2)];
+      const p1 = arr[i - 1];
+      const p2 = point;
+      const p3 = arr[Math.min(arr.length - 1, i + 1)];
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      return `${acc} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
+    }, "");
+
+    return { d, points };
+  }, [data]);
 
   useEffect(() => {
     if (pathRef.current) {
       setPathLength(pathRef.current.getTotalLength());
     }
-  }, [d]);
+  }, [pathData]);
+
+  if (!pathData) return null;
+
+  const { d, points } = pathData;
+
 
   return (
     <svg
