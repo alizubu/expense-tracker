@@ -20,8 +20,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    /* Single Confident Accent (Electric Indigo) */
-    --primary: 238 81% 67%;
+    /* Warm Teal Accent */
+    --primary: 172 66% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 240 4.8% 95.9%;
@@ -30,7 +30,7 @@
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 238 81% 67%;
+    --accent: 172 66% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -38,7 +38,7 @@
 
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 238 81% 67%;
+    --ring: 172 66% 50%;
     --radius: 1rem;
 
     /* Expense Tracker Specific */
@@ -62,8 +62,8 @@
     --popover: 240 10% 13%;
     --popover-foreground: 0 0% 98%;
 
-    /* Single Confident Accent (Electric Indigo) */
-    --primary: 238 81% 67%;
+    /* Warm Teal Accent */
+    --primary: 172 66% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 240 5% 12%;
@@ -72,7 +72,7 @@
     --muted: 240 5% 12%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 238 81% 67%;
+    --accent: 172 66% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 68%;
@@ -80,7 +80,7 @@
 
     --border: 240 5% 15%;
     --input: 240 5% 15%;
-    --ring: 238 81% 67%;
+    --ring: 172 66% 50%;
     --radius: 1rem;
 
     /* Expense Tracker Specific */
@@ -109,11 +109,18 @@
 
   /* Consistent Tabular Numbers for Money */
   .tabular-money {
-    @apply font-mono tabular-nums tracking-tight;
+    @apply font-mono tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  /* Currency Symbol — reliable ৳ rendering */
+  .currency-symbol {
+    font-family: 'Noto Sans Bengali', var(--font-inter), system-ui, sans-serif;
   }
 }
 
 @layer utilities {
+  /* Custom scrollbar */
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
     height: 4px;
@@ -127,5 +134,64 @@
   .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+
+  /* Hide scrollbar completely */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Sparkline draw-in animation */
+  @keyframes sparkline-draw {
+    from {
+      stroke-dashoffset: var(--sparkline-length, 200);
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .animate-sparkline-draw {
+    animation: sparkline-draw 1.2s ease-out forwards;
+  }
+
+  /* Bar fill-in animation */
+  @keyframes bar-fill-in {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+  .animate-bar-fill {
+    animation: bar-fill-in 0.8s ease-out forwards;
+    transform-origin: left;
+  }
+
+  /* Ambient mesh drift */
+  @keyframes mesh-drift {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(30px, -20px) scale(1.05);
+    }
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+  }
+  .animate-mesh-drift {
+    animation: mesh-drift 20s ease-in-out infinite;
+  }
+  .animate-mesh-drift-reverse {
+    animation: mesh-drift 25s ease-in-out infinite reverse;
+  }
+  .animate-mesh-drift-slow {
+    animation: mesh-drift 30s ease-in-out infinite;
+    animation-delay: -10s;
   }
 }

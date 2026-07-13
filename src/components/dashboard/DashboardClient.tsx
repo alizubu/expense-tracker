@@ -11,7 +11,6 @@ import { StatsStrip } from "@/components/dashboard/StatsStrip";
 import { ProfileCard } from "@/components/dashboard/ProfileCard";
 import { SpendingChart } from "@/components/dashboard/SpendingChart";
 import { TransactionFeed } from "@/components/dashboard/TransactionFeed";
-import { TopCategories } from "@/components/analytics/TopCategories";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -80,36 +79,17 @@ export function DashboardClient() {
       });
   }, [currentMonthTxns, netBalance, income, expenses]);
 
-  const transactionsCount = currentMonthTxns.length;
-  const avgDailySpend = expenses / Math.max(1, now.getDate());
-  const largestExpense = currentMonthTxns.filter(t => t.type === "EXPENSE").reduce((max, t) => Math.max(max, t.amount), 0);
-  
-  const expenseByCategory = currentMonthTxns
-     .filter(t => t.type === "EXPENSE")
-     .reduce((acc, t) => { 
-       acc[t.category] = (acc[t.category] || 0) + t.amount; 
-       return acc; 
-     }, {} as Record<string, number>);
-     
-  const topCategory = Object.entries(expenseByCategory).sort((a,b) => b[1] - a[1])[0]?.[0] || "-";
-
   if (status === "loading" || loading) {
     return (
-      <div className="flex w-full h-auto flex-col space-y-6 p-6 lg:p-8 max-w-[1600px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-          <Skeleton className="h-[140px] w-full" />
-          <Skeleton className="h-[140px] w-full" />
-          <Skeleton className="h-[140px] w-full" />
-          <Skeleton className="h-[140px] w-full" />
+      <div className="flex w-full h-auto flex-col space-y-4 p-4 lg:p-6 max-w-[1440px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <Skeleton className="h-[110px] w-full rounded-xl" />
+          <Skeleton className="h-[110px] w-full rounded-xl" />
+          <Skeleton className="h-[110px] w-full rounded-xl" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <Skeleton className="h-[320px] w-full" />
-          <Skeleton className="h-[320px] w-full" />
-          <Skeleton className="h-[320px] w-full" />
-        </div>
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <Skeleton className="h-[500px] w-full xl:col-span-2" />
-          <Skeleton className="h-[500px] w-full xl:col-span-1" />
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+          <Skeleton className="h-[300px] w-full xl:col-span-2 rounded-xl" />
+          <Skeleton className="h-[300px] w-full xl:col-span-1 rounded-xl" />
         </div>
       </div>
     );
@@ -136,18 +116,21 @@ export function DashboardClient() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Premium ambient background glow */}
-      <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[140%] max-w-[1400px] h-[800px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-primary/5 to-transparent rounded-[100%] blur-[120px] pointer-events-none -z-10 opacity-70 dark:opacity-40" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-blue-500/5 to-transparent rounded-full blur-[120px] pointer-events-none -z-10 opacity-50 dark:opacity-30" />
+      {/* Animated gradient mesh — signature premium element */}
+      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div className="absolute top-[-20%] left-[10%] w-[600px] h-[600px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/12 via-primary/4 to-transparent rounded-full blur-[100px] opacity-30 dark:opacity-15 animate-mesh-drift" />
+        <div className="absolute bottom-[-10%] right-[5%] w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-rose-500/10 via-rose-500/3 to-transparent rounded-full blur-[100px] opacity-25 dark:opacity-12 animate-mesh-drift-reverse" />
+        <div className="absolute top-[30%] right-[20%] w-[400px] h-[400px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-500/8 via-indigo-500/2 to-transparent rounded-full blur-[80px] opacity-20 dark:opacity-10 animate-mesh-drift-slow" />
+      </div>
 
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="p-4 md:p-6 lg:p-8 space-y-6 lg:space-y-8 max-w-[1600px] mx-auto relative z-10"
+        className="p-3 md:p-4 lg:p-6 space-y-4 lg:space-y-5 max-w-[1440px] mx-auto relative z-10"
       >
         {/* ROW 1: Hero Stats */}
-        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <StatsStrip 
             netBalance={netBalance}
             income={income}
@@ -157,10 +140,10 @@ export function DashboardClient() {
         </motion.div>
 
         {/* MAIN CONTENT SPLIT */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 lg:gap-4 items-start">
           
-          {/* LEFT COLUMN: Activity & Wallets (65%) */}
-          <motion.div variants={itemVariants} className="xl:col-span-2 space-y-6 lg:space-y-8">
+          {/* LEFT COLUMN: Wallets & Activity (65%) */}
+          <motion.div variants={itemVariants} className="xl:col-span-2 space-y-4 lg:space-y-5">
             <ProfileCard 
               profiles={profiles} 
               netBalance={netBalance} 
@@ -169,10 +152,9 @@ export function DashboardClient() {
             <TransactionFeed transactions={transactions} />
           </motion.div>
 
-          {/* RIGHT COLUMN: Analytics (35%) */}
-          <motion.div variants={itemVariants} className="xl:col-span-1 space-y-6 lg:space-y-8">
+          {/* RIGHT COLUMN: Analytics (35%) — single unified card */}
+          <motion.div variants={itemVariants} className="xl:col-span-1">
             <SpendingChart />
-            <TopCategories />
           </motion.div>
 
         </div>

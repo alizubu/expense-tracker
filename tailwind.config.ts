@@ -21,7 +21,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", "sans-serif"],
+        sans: ["var(--font-inter)", "'Noto Sans Bengali'", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -87,13 +87,29 @@ const config = {
         "shimmer": {
           from: { backgroundPosition: "200% 0" },
           to: { backgroundPosition: "-200% 0" },
-        }
+        },
+        "bar-fill-in": {
+          from: { transform: "scaleX(0)" },
+          to: { transform: "scaleX(1)" },
+        },
+        "sparkline-draw": {
+          from: { strokeDashoffset: "var(--sparkline-length, 200)" },
+          to: { strokeDashoffset: "0" },
+        },
+        "mesh-drift": {
+          "0%": { transform: "translate(0, 0) scale(1)" },
+          "50%": { transform: "translate(30px, -20px) scale(1.05)" },
+          "100%": { transform: "translate(0, 0) scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "shimmer": "shimmer 1.5s ease-in-out infinite",
+        "bar-fill": "bar-fill-in 0.8s ease-out forwards",
+        "sparkline": "sparkline-draw 1.2s ease-out forwards",
+        "mesh-drift": "mesh-drift 20s ease-in-out infinite",
       },
     },
   },
